@@ -1,0 +1,17 @@
+body {
+	font-family: "Segoe UI", "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.jumbotron {
+	background-color: #ff8c00;
+	color: white;
+	-webkit-font-smoothing: antialiased;
+	text-shadow: 0 0.5px 0 rgba(0,0,0,0.7);
+}
+
+.jumbotron .container {
+	background-image: url("../img/media.png");
+	background-position: 100% -10%;
+	background-repeat: no-repeat;
+	background-size: contain;
+}

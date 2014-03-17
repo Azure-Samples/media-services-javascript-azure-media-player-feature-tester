@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
+		<!-- Latest compiled and minified Bootstrap CSS -->
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/vendor/modernizr-2.7.1.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#"><img src="http://az213233.vo.msecnd.net/Content/4.1.00298.9.140312-1104/Images/layout-brand-sm.png" alt="Windows Azure"></a>
+				</div>
+				<div class="navbar-collapse collapse">
+
+				</div><!--/.navbar-collapse -->
+		    </div>
+		</div>
+
+		<!-- Main jumbotron for a primary marketing message or call to action -->
+		<div class="jumbotron">
+			<div class="container">
+				<h1>Azure Media Services</h1>
+				<h3>Browser Playback</h3>
+				<p>Try out video streaming from Azure Media Services in HTML5, Silverlight and a Flash players.</p>
+				<!-- <p><a class="btn btn-primary btn-lg" role="button">Learn more »</a></p> -->
+			</div>
+		</div>
+
+		<div class="container">
+			<!-- Example row of columns -->
+			<div class="row">
+				<div class="col-md-4">
+					<h2>Flash OSMF / SMP</h2>
+					<p>You can use the Adobe <a href="http://osmf.org/" target="_blank">Open Source Media Framework (OSMF)</a> or <a href="http://www.osmf.org/strobe_mediaplayback.html" target="_blank">Strobe Media Playback (SMP)</a> to playback content from Azure Media Services. Try out the Flash player below</p>
+					<p>We currently support Smooth Streaming and MPEG-DASH content in the player.</p>
+					<p><a href="href="http://osmf.org/" target="_blank" class="btn btn-default" role="button">View details »</a></p>
+				</div>
+				<div class="col-md-4">
+					<h2>HTML5 Video</h2>
+					<p>You can use a standard browser that supports <a href="http://en.wikipedia.org/wiki/HTML5_video" target="_blank">HTML5 Video element</a> to playback content hosted on Windows Azure Media Services. Try out the HTML5 video player below. </p>
+					<p>We currently support MP4 or MPEG-DASH content in the player. For MPEG-DASH, we use the <a href="https://github.com/Dash-Industry-Forum/dash.js" target="_blank">dash.js</a>.</p>
+					<p><a class="btn btn-default" href="http://en.wikipedia.org/wiki/HTML5_video" target="_blank" role="button">View details »</a></p>
+				</div>
+				<div class="col-md-4">
+					<h2>Silverlight MMPPF</h2>
+					<p>You can use Silverlight based <a href="http://playerframework.codeplex.com" target=_blank">Microsoft Media Platform Player Framework (MMPPF)</a> to playback content from Azure Media Services. Try out the Silverlight player below</p>
+					<p>We currently support Smooth Streaming and MPEG-DASH content with <a href="http://www.microsoft.com/PlayReady/" target="_blank">Microsoft PlayReady DRM</a> protection in the player.</p>
+					<p><a class="btn btn-default" href="http://playerframework.codeplex.com" target=_blank" role="button">View details »</a></p>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-md-offset-3 col-md-9">
+					<div class="form-group">
+						<label for="exampleInputFile">URL from Azure Media Services</label>
+						<input type="text" class="form-control" id="playback-url" value="http://wams.edgesuite.net/media/SintelTrailer_MP4_from_WAME/sintel_trailer-1080p.ism/manifest">
+						<p class="help-block">The URL should always end in <i>/manifest</i>.</p>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<ul class="nav nav-pills nav-stacked well">
+						<li data-player="flash"><a href="index.html?player=flash">Flash OSMF</a></li>
+						<li data-player="silverlight"><a href="index.html?player=silverlight">Silverlight MMPPF</a></li>
+						<li data-player="html5"><a href="index.html?player=html5">HTML5 Video</a></li>
+					</ul>
+				</div>
+				<div class="col-md-9">
+					<section class="flash" style="display:none;">
+						<p><button class="btn btn-xs btn-default">Microsoft Smooth Streaming</button>&nbsp;<button class="btn btn-xs btn-default">MPEG-DASH</button>&nbsp;<button class="btn btn-xs btn-success disabled">Clear Key AES encryption</button></p>
+						<object width="100%" height="500" type="application/x-shockwave-flash" data="http://osmf.org/dev/2.0gm/StrobeMediaPlayback.swf" id="flashPlayer" style="visibility: visible;">
+							<param name="wmode" value="direct">
+							<param name="flashvars" value="src=http://wams.edgesuite.net/media/SintelTrailer_MP4_from_WAME/sintel_trailer-1080p.ism/manifest&amp;autoPlay=true&amp;plugin_AdaptiveStreamingPlugin=http://wamsclient.cloudapp.net/release/MSAdaptiveStreamingPlugin-v1.0.9-beta-osmf2.0.swf&amp;AdaptiveStreamingPlugin_retryLive=true&amp;AdaptiveStreamingPlugin_retryInterval=10">
+						</object>
+					</section>
+					<section class="silverlight" style="display:none;">
+						<p><button class="btn btn-xs btn-default">Microsoft Smooth Streaming</button>&nbsp;<button class="btn btn-xs btn-default">MPEG-DASH</button>&nbsp;<button class="btn btn-xs btn-success disabled">Clear Key AES encryption</button>&nbsp;<button class="btn btn-xs btn-success disabled">Microsoft PlayReady DRM</button></p>
+						<div id="silverlightControlHost">
+							<object data="data:application/x-silverlight-2," type="application/x-silverlight-2" width="100%" height="500">
+								<param name="source" value="assets/SmoothStreamingPlayer.xap">
+								<param name="onError" value="onSilverlightError">
+								<param name="background" value="white">
+								<param name="minRuntimeVersion" value="5.0.61118.0">
+								<param name="autoUpgrade" value="true">
+								<param name="enableGPUAcceleration" value="true">
+								<param name="InitParams" value="selectedcaptionstream=textstream_eng,mediaurl=http://wams.edgesuite.net/media/SintelTrailer_MP4_from_WAME/sintel_trailer-1080p.ism/manifest">
+								<a href="http://go.microsoft.com/fwlink/?LinkID=149156&amp;v=4.0.50401.0" style="text-decoration:none">
+									<img src="http://go.microsoft.com/fwlink/?LinkId=161376" alt="Get Microsoft Silverlight" style="border-style:none">
+								</a>
+							</object>
+							<iframe id="_sl_historyFrame" style="visibility:hidden;height:0px;width:0px;border:0px"></iframe>
+						</div>
+					</section>
+					<section class="html5" style="display:none;">
+						<p><button class="btn btn-xs btn-default">MPEG-DASH</button>&nbsp;<button class="btn btn-xs btn-default">MP4</button>&nbsp;<button class="btn btn-xs btn-success disabled">Clear Key AES encryption</button></p>
+					</section>
+				</div>
+			</div>
+			<footer>
+				<p>© Microsoft Corporation 2014</p>
+			</footer>
+		</div> <!-- /container -->
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+    </body>
+</html>
