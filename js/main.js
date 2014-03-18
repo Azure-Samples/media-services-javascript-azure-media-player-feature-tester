@@ -85,7 +85,7 @@ var setFlashUrl = function(url) {
 	flashvars.plugin_AdaptiveStreamingPlugin = 'http://wamsclient.cloudapp.net/release/MSAdaptiveStreamingPlugin-v1.0.9-beta-osmf2.0.swf';
 	flashvars.AdaptiveStreamingPlugin_retryLive = 'true';
 	flashvars.AdaptiveStreamingPlugin_retryInterval = '10';
-	var parameters = {};
+	var parameters = {allowfullscreen:'true'};
 	parameters.wmode = 'direct';
 	var attributes = {};
 	swfobject.embedSWF('http://osmf.org/dev/2.0gm/StrobeMediaPlayback.swf', 'flashPlayer', "100%", "500", '10.1.0', false, flashvars, parameters, attributes, null);
