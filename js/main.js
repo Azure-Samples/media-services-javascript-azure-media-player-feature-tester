@@ -4,6 +4,24 @@ var config = {
 	mp4url: "http://wams.edgesuite.net/media/SintelTrailer_MP4_from_WAME/sintel_trailer-1080p_3400.mp4",
 	format: "smooth"
 };
+// put function into jQuery namespace
+jQuery.redirect = function(url, params) {
+
+    url = url || window.location.href || '';
+    url =  url.match(/\?/) ? url : url + '?';
+
+    for ( var key in params ) {
+        var re = RegExp( ';?' + key + '=?[^&;]*', 'g' );
+        url = url.replace( re, '');
+        url += ';' + key + '=' + params[key]; 
+    }  
+    // cleanup url 
+    url = url.replace(/[;&]$/, '');
+    url = url.replace(/\?[;&]/, '?'); 
+    url = url.replace(/[;&]{2}/g, ';');
+    // $(location).attr('href', url);
+    window.location.replace( url ); 
+};
 
 var queryString = function () {
 	// This function is anonymous, is executed immediately and 
@@ -29,6 +47,9 @@ var queryString = function () {
 } ();
 
 var initialize = function() {
+	//reset any state
+	// reset();
+
 	//read query strings
 	if(queryString.url) {
 		config.url = queryString.url;
@@ -56,11 +77,21 @@ var initialize = function() {
 	}
 
 	//setup UI
+	
 	$("."+config.player).show();
+	
 	$("[data-player='"+config.player+"']").toggleClass("active");
 	$("[data-format='"+config.format+"']").toggleClass("btn-default");
 	$("[data-format='"+config.format+"']").toggleClass("btn-primary");
 };
+
+var reset = function() {
+	//Hide all the players and show just the one we need
+	$("section").hide();
+	//reset ui elements
+	$("[data-player='*']").removeClass("active");
+	$("[data-format='*']").removeClass("btn-primary").addClass("btn-default");
+}
 
 var getUrl = function(config) {
 	switch (config.format) {
@@ -103,6 +134,33 @@ $(document).ready(function() {
 	initialize();
 
 	$("a#change-url").click(function(){
-		$("#config-modal").modal();
-	})
+		$("#config-modal").modal('show');
+	});
+
+	$("button[data-format]").click(function(e){
+		config.format = $(e.currentTarget).attr("data-format");
+		window.location.search="?player="+config.player+"&format="+config.format+"&url="+config.url+"&mp4url="+config.mp4url;
+	});
+
+	$("li[data-player] a").click(function(e){
+		config.player = $(e.currentTarget).parent().attr("data-player");
+		if(config.player === "html5") {
+			config.format = "mp4";
+		}
+		window.location.search="?player="+config.player+"&format="+config.format+"&url="+config.url+"&mp4url="+config.mp4url;
+		return false;
+	});
+
+	$("#config-modal #config-save").click(function(e){
+		config.player = $("#player option:selected").val();
+		config.url = $("#adaptive-url").val();
+		config.mp4url = $("#mp4-url").val();
+		config.format = $("#format option:selected").val();
+		$("#config-modal").on('hidden.bs.modal', function (e) {
+			// initialize();
+			/*$.redirect( location.href, config);*/
+			window.location.search="?player="+config.player+"&format="+config.format+"&url="+config.url+"&mp4url="+config.mp4url;
+		});
+		$("#config-modal").modal('hide');
+	});
 });
