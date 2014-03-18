@@ -15,3 +15,7 @@ body {
 	background-repeat: no-repeat;
 	background-size: contain;
 }
+
+.jumbotron .container li {
+	font-size: 20px;
+}
