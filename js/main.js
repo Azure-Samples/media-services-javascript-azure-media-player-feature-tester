@@ -76,10 +76,14 @@ var initialize = function() {
 			break;
 	}
 
+	//setup modal dialog
+	$("#config-modal #player option[value='"+config.player+"'").attr("selected", "selected");
+	$("#config-modal #adaptive-url").val(config.url);
+	$("#config-modal #mp4-url").val(config.mp4url);
+	$("#config-modal #format option[value='"+config.format+"']").attr("selected", "selected");
+
 	//setup UI
-	
 	$("."+config.player).show();
-	
 	$("[data-player='"+config.player+"']").toggleClass("active");
 	$("[data-format='"+config.format+"']").toggleClass("btn-default");
 	$("[data-format='"+config.format+"']").toggleClass("btn-primary");
