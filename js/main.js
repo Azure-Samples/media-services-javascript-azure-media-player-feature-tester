@@ -153,6 +153,10 @@ $(document).ready(function() {
 		config.player = $(e.currentTarget).parent().attr("data-player");
 		if(config.player === "html5") {
 			config.format = "mp4";
+		} else {
+			if(config.format === "mp4") {
+				config.format = "smooth";
+			}
 		}
 		window.location.search="?player="+config.player+"&format="+config.format+"&url="+config.url+"&mp4url="+config.mp4url;
 		return false;
