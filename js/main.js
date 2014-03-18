@@ -60,6 +60,9 @@ var initialize = function() {
 	if(queryString.format) {
 		config.format = queryString.format;
 	}
+	if(queryString.mp4url) {
+		config.mp4url = queryString.mp4url;
+	}
 	console.log("Config chosen is: Player - "+ config.player + ", Format - "+config.format+", url - " + config.url);
 
 	//get ther right format specific url
