@@ -91,7 +91,7 @@ var setFlashUrl = function(url) {
 };
 
 var setSilverlightUrl = function(url) {
-
+	$("param[name='InitParams']").attr("value", "mediaurl="+url);
 };
 
 var setHtml5Url = function(url) {
