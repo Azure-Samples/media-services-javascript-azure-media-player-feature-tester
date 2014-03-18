@@ -1,3 +1,10 @@
+var config = {
+	player: "flash",
+	url: "http://wams.edgesuite.net/media/SintelTrailer_MP4_from_WAME/sintel_trailer-1080p.ism/manifest",
+	mp4url: "",
+	format: "smooth"
+};
+
 var queryString = function () {
   // This function is anonymous, is executed immediately and 
   // the return value is assigned to QueryString!
@@ -21,16 +28,54 @@ var queryString = function () {
     return query_string;
 } ();
 
-var getUrl = function() {
-	switch (queryString.format) {
-		case "smooth":
-			return queryString.url;
+var initialize = function() {
+	//read query strings
+	if(queryString.url) {
+		config.url = queryString.url;
+	}
+	if(queryString.player) {
+		config.player = queryString.player;
+	}
+	if(queryString.format) {
+		config.format = queryString.format;
+	}
+	console.log("Config chosen is: Player - "+ config.player + ", Format - "+config.format+", url - " + config.url);
+
+	var url = getUrl(config);
+	switch (config.player) {
+		case "flash":
+			setFlashUrl(url);
 			break;
-		case "mpeg-dash":
-			return queryString.url + "(format=mpd-time-csf)";
+		case "silverlight":
+			setSilverlightUrl(url);
+			break;
+		case "html5":
+			setHtml5Url(url);
 			break;
 	}
-}
+
+	//setup UI
+	$("."+config.player).show();
+	$("[data-player='"+config.player+"']").toggleClass("active");
+	$("[data-format='"+config.format+"']").toggleClass("btn-default");
+	$("[data-format='"+config.format+"']").toggleClass("btn-primary");
+};
+
+var getUrl = function(config) {
+	switch (config.format) {
+		case "smooth":
+			return config.url;
+			break;
+		case "mpeg-dash":
+			return config.url + "(format=mpd-time-csf)";
+			break;
+		case "mp4":
+			return config.mp4url;
+			break
+		default:
+			return null;
+	}
+};
 
 var setFlashUrl = function(url) {
 	var flashvars = {};
@@ -43,41 +88,20 @@ var setFlashUrl = function(url) {
 	parameters.wmode = 'direct';
 	var attributes = {};
 	swfobject.embedSWF('http://osmf.org/dev/2.0gm/StrobeMediaPlayback.swf', 'flashPlayer', "100%", "500", '10.1.0', false, flashvars, parameters, attributes, null);
-}
+};
 
 var setSilverlightUrl = function(url) {
 
-}
+};
 
 var setHtml5Url = function(url) {
 
-}
+};
 
 $( document ).ready(function() {
-	if(!queryString.player) {
-		queryString.player = "flash";
-	}
-	if(!queryString.url) {
-		queryString.url = "http://wams.edgesuite.net/media/SintelTrailer_MP4_from_WAME/sintel_trailer-1080p.ism/manifest";
-	}
-	if(!queryString.format) {
-		queryString.format = "smooth";
-	}
-	
-	console.log("Player chosen is: "+queryString.player);
-    $("."+queryString.player).show();
-	
-	var url = getUrl(queryString.url);
-	switch (queryString.player) {
-		case "flash":
-			setFlashUrl(url);
-			break;
-		case "silverlight":
-			setSilverlightUrl(url);
-			break;
-		case "html5":
-			setHtml5Url(url);
-			break;
-	}
-	$("[data-player='"+queryString.player+"']").toggleClass("active");
+	initialize();
+
+	$("a#change-url").click(function(){
+		$("#config-modal").modal();
+	})
 });
