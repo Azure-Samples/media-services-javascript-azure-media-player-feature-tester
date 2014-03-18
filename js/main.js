@@ -1,7 +1,7 @@
 var config = {
 	player: "flash",
 	url: "http://wams.edgesuite.net/media/SintelTrailer_MP4_from_WAME/sintel_trailer-1080p.ism/manifest",
-	mp4url: "",
+	mp4url: "http://wams.edgesuite.net/media/SintelTrailer_MP4_from_WAME/sintel_trailer-1080p_3400.mp4",
 	format: "smooth"
 };
 
@@ -96,7 +96,7 @@ var setSilverlightUrl = function(url) {
 };
 
 var setHtml5Url = function(url) {
-
+	$("video source").attr("src", url);
 };
 
 $(document).ready(function() {
