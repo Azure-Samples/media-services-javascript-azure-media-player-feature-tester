@@ -80,10 +80,8 @@ var initialize = function() {
 	}
 
 	//setup modal dialog
-	$("#config-modal #player option[value='"+config.player+"'").attr("selected", "selected");
-	$("#config-modal #adaptive-url").val(config.url);
-	$("#config-modal #mp4-url").val(config.mp4url);
-	$("#config-modal #format option[value='"+config.format+"']").attr("selected", "selected");
+	$(".config-body #adaptive-url").val(config.url);
+	$(".config-body #mp4-url").val(config.mp4url);
 
 	//setup UI
 	$("."+config.player).show();
@@ -141,7 +139,8 @@ $(document).ready(function() {
 	initialize();
 
 	$("a#change-url").click(function(){
-		$("#config-modal").modal('show');
+		//$("#config-modal").modal('show');
+		$(".config-body").show();
 	});
 
 	$("button[data-format]").click(function(e){
@@ -162,16 +161,13 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$("#config-modal #config-save").click(function(e){
-		config.player = $("#player option:selected").val();
+	$(".config-body #config-save").click(function(e){
 		config.url = $("#adaptive-url").val();
 		config.mp4url = $("#mp4-url").val();
-		config.format = $("#format option:selected").val();
-		$("#config-modal").on('hidden.bs.modal', function (e) {
-			// initialize();
-			/*$.redirect( location.href, config);*/
-			window.location.search="?player="+config.player+"&format="+config.format+"&url="+config.url+"&mp4url="+config.mp4url;
-		});
-		$("#config-modal").modal('hide');
+		$(".config-body").hide();
+		window.location.search="?player="+config.player+"&format="+config.format+"&url="+config.url+"&mp4url="+config.mp4url;
+	});
+	$(".config-body #config-close").click(function(e){
+		$(".config-body").hide();
 	});
 });

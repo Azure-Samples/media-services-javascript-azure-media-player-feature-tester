@@ -20,6 +20,10 @@ body {
 	font-size: 18px;
 }
 
+.config-body {
+	padding-bottom: 25px;
+}
+
 @media (min-width: 768px) {
 	.container .value-item {
 		min-height: 280px;
