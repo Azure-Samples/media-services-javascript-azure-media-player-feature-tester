@@ -2,6 +2,10 @@ body {
 	font-family: "Segoe UI", "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.player-page {
+	padding-bottom: 20px!important;
+}
+
 .jumbotron {
 	background-color: #ff8c00;
 	color: white;
