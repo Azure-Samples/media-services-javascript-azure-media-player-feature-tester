@@ -140,7 +140,7 @@ $(document).ready(function() {
 
 	$("a#change-url").click(function(){
 		//$("#config-modal").modal('show');
-		$(".config-body").show();
+		$(".config-body").toggle();
 	});
 
 	$("button[data-format]").click(function(e){

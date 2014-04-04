@@ -96,6 +96,53 @@
 				</div>
 			</div>
 			<hr>
+			<div class="row">
+				<div class="col-md-3">
+					<ul class="nav nav-pills nav-stacked well">
+						<li data-player="flash"><a href="">Flash OSMF</a></li>
+						<li data-player="silverlight"><a href="">Silverlight MMPPF</a></li>
+						<li data-player="html5"><a href="">HTML5 Video</a></li>
+					</ul>
+				</div>
+				<div class="col-md-9">
+					<section class="flash" style="display:none;">
+						<object width="100%" height="500" type="application/x-shockwave-flash" data="http://osmf.org/dev/2.0gm/StrobeMediaPlayback.swf" id="flashPlayer" style="visibility: visible;">
+							<param name="wmode" value="direct">
+							<param name="flashvars" value="src=&amp;autoPlay=true&amp;allowFullScreen=true&amp;plugin_AdaptiveStreamingPlugin=http://wamsclient.cloudapp.net/release/MSAdaptiveStreamingPlugin-v1.0.9-beta-osmf2.0.swf&amp;AdaptiveStreamingPlugin_retryLive=true&amp;AdaptiveStreamingPlugin_retryInterval=10">
+						</object>
+						<p><button data-format="smooth" class="btn btn-xs btn-default">Microsoft Smooth Streaming</button>&nbsp;<button data-format="mpeg-dash" class="btn btn-xs btn-default">MPEG-DASH</button>&nbsp;<button class="btn btn-xs btn-success disabled">Clear Key AES encryption</button></p>
+					</section>
+					<section class="silverlight" style="display:none;">						
+						<div id="silverlightControlHost">
+							<object data="data:application/x-silverlight-2," type="application/x-silverlight-2" width="100%" height="500">
+								<param name="source" value="assets/SmoothStreamingPlayer.xap">
+								<param name="onError" value="onSilverlightError">
+								<param name="background" value="white">
+								<param name="minRuntimeVersion" value="5.0.61118.0">
+								<param name="autoUpgrade" value="true">
+								<param name="enableGPUAcceleration" value="true">
+								<param name="InitParams" value="selectedcaptionstream=textstream_eng,mediaurl=">
+								<a href="http://go.microsoft.com/fwlink/?LinkID=149156&amp;v=4.0.50401.0" style="text-decoration:none">
+									<img src="http://go.microsoft.com/fwlink/?LinkId=161376" alt="Get Microsoft Silverlight" style="border-style:none">
+								</a>
+							</object>
+							<iframe id="_sl_historyFrame" style="visibility:hidden;height:0px;width:0px;border:0px"></iframe>
+						</div>
+						<p><button data-format="smooth" class="btn btn-xs btn-default">Microsoft Smooth Streaming</button>&nbsp;<button data-format="mpeg-dash" class="mpeg-dash btn btn-xs btn-default">MPEG-DASH</button>&nbsp;<button class="btn btn-xs btn-success disabled">Clear Key AES encryption</button>&nbsp;<button class="btn btn-xs btn-success disabled">Microsoft PlayReady DRM</button></p>
+					</section>
+					<section class="html5" style="display:none;">						
+						<video width="100%" height="500" controls="true" autoplay="true">
+							<source src="" type="video/mp4">
+							Your browser does not support the video tag.
+						</video>
+						<p><button data-format="mpeg-dash" class="btn btn-xs btn-default">MPEG-DASH</button>&nbsp;<button data-format="mp4" class="btn btn-xs btn-default">MP4</button>&nbsp;<button class="btn btn-xs btn-success disabled">Clear Key AES encryption</button></p>
+					</section>
+					<a id="change-url" class="pull-right btn btn-xs btn-warning btn-default">
+						<span class="glyphicon glyphicon-cog"></span>&nbsp;change url
+					</a>
+					<div class="muted">Sintel video - © copyright Blender Foundation | <a href="durian.blender.org" target="_blank">durian.blender.org</a></div>
+				</div>
+			</div>
 			<div class="config-body row" style="display:none;">
 				<div class="col-md-9 col-md-offset-3">
 					<div class="form-group">
@@ -126,53 +173,6 @@
 					</div> -->
 					<button id="config-close" type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
 					<button id="config-save" type="button" class="btn btn-sm btn-primary">Save changes</button>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-3">
-					<ul class="nav nav-pills nav-stacked well">
-						<li data-player="flash"><a href="">Flash OSMF</a></li>
-						<li data-player="silverlight"><a href="">Silverlight MMPPF</a></li>
-						<li data-player="html5"><a href="">HTML5 Video</a></li>
-					</ul>
-				</div>
-				<div class="col-md-9">
-					<a id="change-url" class="pull-right btn btn-xs btn-warning btn-default">
-						<span class="glyphicon glyphicon-cog"></span>&nbsp;change url
-					</a>
-					<section class="flash" style="display:none;">
-						<p><button data-format="smooth" class="btn btn-xs btn-default">Microsoft Smooth Streaming</button>&nbsp;<button data-format="mpeg-dash" class="btn btn-xs btn-default">MPEG-DASH</button>&nbsp;<button class="btn btn-xs btn-success disabled">Clear Key AES encryption</button></p>
-						<object width="100%" height="500" type="application/x-shockwave-flash" data="http://osmf.org/dev/2.0gm/StrobeMediaPlayback.swf" id="flashPlayer" style="visibility: visible;">
-							<param name="wmode" value="direct">
-							<param name="flashvars" value="src=&amp;autoPlay=true&amp;allowFullScreen=true&amp;plugin_AdaptiveStreamingPlugin=http://wamsclient.cloudapp.net/release/MSAdaptiveStreamingPlugin-v1.0.9-beta-osmf2.0.swf&amp;AdaptiveStreamingPlugin_retryLive=true&amp;AdaptiveStreamingPlugin_retryInterval=10">
-						</object>
-					</section>
-					<section class="silverlight" style="display:none;">
-						<p><button data-format="smooth" class="btn btn-xs btn-default">Microsoft Smooth Streaming</button>&nbsp;<button data-format="mpeg-dash" class="mpeg-dash btn btn-xs btn-default">MPEG-DASH</button>&nbsp;<button class="btn btn-xs btn-success disabled">Clear Key AES encryption</button>&nbsp;<button class="btn btn-xs btn-success disabled">Microsoft PlayReady DRM</button></p>
-						<div id="silverlightControlHost">
-							<object data="data:application/x-silverlight-2," type="application/x-silverlight-2" width="100%" height="500">
-								<param name="source" value="assets/SmoothStreamingPlayer.xap">
-								<param name="onError" value="onSilverlightError">
-								<param name="background" value="white">
-								<param name="minRuntimeVersion" value="5.0.61118.0">
-								<param name="autoUpgrade" value="true">
-								<param name="enableGPUAcceleration" value="true">
-								<param name="InitParams" value="selectedcaptionstream=textstream_eng,mediaurl=">
-								<a href="http://go.microsoft.com/fwlink/?LinkID=149156&amp;v=4.0.50401.0" style="text-decoration:none">
-									<img src="http://go.microsoft.com/fwlink/?LinkId=161376" alt="Get Microsoft Silverlight" style="border-style:none">
-								</a>
-							</object>
-							<iframe id="_sl_historyFrame" style="visibility:hidden;height:0px;width:0px;border:0px"></iframe>
-						</div>
-					</section>
-					<section class="html5" style="display:none;">
-						<p><button data-format="mpeg-dash" class="btn btn-xs btn-default">MPEG-DASH</button>&nbsp;<button data-format="mp4" class="btn btn-xs btn-default">MP4</button>&nbsp;<button class="btn btn-xs btn-success disabled">Clear Key AES encryption</button></p>
-						<video width="100%" height="500" controls="true" autoplay="true">
-							<source src="" type="video/mp4">
-							Your browser does not support the video tag.
-						</video>
-					</section>
-					<div class="muted">Sintel video - © copyright Blender Foundation | <a href="durian.blender.org" target="_blank">durian.blender.org</a></div>
 				</div>
 			</div>
 			<footer>
