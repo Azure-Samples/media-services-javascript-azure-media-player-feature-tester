@@ -11,6 +11,7 @@ body {
 	color: white;
 	-webkit-font-smoothing: antialiased;
 	text-shadow: 0 0.5px 0 rgba(0,0,0,0.7);
+	padding-bottom: 20px!important;
 }
 
 .jumbotron .container {
@@ -31,6 +32,6 @@ body {
 
 @media (min-width: 768px) {
 	.container .value-item {
-		min-height: 280px;
+		min-height: 205px;
 	}
 }
