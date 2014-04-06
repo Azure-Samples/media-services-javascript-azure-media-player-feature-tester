@@ -70,12 +70,15 @@ var initialize = function() {
 	switch (config.player) {
 		case "flash":
 			setFlashUrl(url);
+			$('#embed-url').show();
 			break;
 		case "silverlight":
 			setSilverlightUrl(url);
+			$('#embed-url').show();
 			break;
 		case "html5":
 			setHtml5Url(url);
+			$('#embed-url').hide();
 			break;
 	}
 
@@ -165,7 +168,13 @@ $(document).ready(function() {
 	});*/
 
 	$('#embed-url').click(function(e){
-		alert("Almost there!");
+		//alert("Almost there!");
+		$('.embed-code-box textarea').val($('.'+config.player+' object')[0].outerHTML);
+		$('.embed-code-box').toggle();
+	});
+
+	$('.embed-code-box .close').click(function(e){
+		$('.embed-code-box').hide();
 	});
 
 	$(".config-body #config-save").click(function(e){

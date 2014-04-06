@@ -25,6 +25,10 @@ body {
 	font-size: 18px;
 }
 
+.embed-code-box {
+	padding-bottom:25px;
+}
+
 .config-body {
 	padding-bottom: 25px;
 	padding-top: 25px;

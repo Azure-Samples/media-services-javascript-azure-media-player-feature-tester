@@ -54,9 +54,14 @@
 					</ul>
 				</div>
 				<div class="col-md-8">
-					<a id="embed-url" class="pull-right btn btn-xs btn-warning btn-default">
+					<div class="embed-code-box well" style="display:none;">
+						<button type="button" class="close" aria-hidden="true">&times;</button>
+						<p>Copy the text below and add it to your web page</p>
+						<textarea class="form-control" rows="3"></textarea>
+					</div>
+					<!-- <a id="embed-url" class="pull-right btn btn-xs btn-warning">
 						<span class="glyphicon glyphicon-cloud-download"></span>&nbsp;get embed url
-					</a>
+					</a> -->
 					<section class="flash" style="display:none;">
 						<p><button data-format="smooth" class="btn btn-xs btn-default">Microsoft Smooth Streaming</button>&nbsp;<button data-format="mpeg-dash" class="btn btn-xs btn-default">MPEG-DASH</button><!-- &nbsp;<button class="btn btn-xs btn-success disabled">Clear Key AES encryption</button> --></p>
 						<object width="100%" height="500" type="application/x-shockwave-flash" data="http://osmf.org/dev/2.0gm/StrobeMediaPlayback.swf" id="flashPlayer" style="visibility: visible;">
@@ -66,21 +71,18 @@
 					</section>
 					<section class="silverlight" style="display:none;">
 						<p><button data-format="smooth" class="btn btn-xs btn-default">Microsoft Smooth Streaming</button>&nbsp;<button data-format="mpeg-dash" class="mpeg-dash btn btn-xs btn-default">MPEG-DASH</button><!-- &nbsp;<button class="btn btn-xs btn-success disabled">Clear Key AES encryption</button>&nbsp;<button class="btn btn-xs btn-success disabled">Microsoft PlayReady DRM</button> --></p>					
-						<div id="silverlightControlHost">
-							<object data="data:application/x-silverlight-2," type="application/x-silverlight-2" width="100%" height="500">
-								<param name="source" value="assets/SmoothStreamingPlayer.xap">
-								<param name="onError" value="onSilverlightError">
-								<param name="background" value="white">
-								<param name="minRuntimeVersion" value="5.0.61118.0">
-								<param name="autoUpgrade" value="true">
-								<param name="enableGPUAcceleration" value="true">
-								<param name="InitParams" value="selectedcaptionstream=textstream_eng,mediaurl=">
-								<a href="http://go.microsoft.com/fwlink/?LinkID=149156&amp;v=4.0.50401.0" style="text-decoration:none">
-									<img src="http://go.microsoft.com/fwlink/?LinkId=161376" alt="Get Microsoft Silverlight" style="border-style:none">
-								</a>
-							</object>
-							<iframe id="_sl_historyFrame" style="visibility:hidden;height:0px;width:0px;border:0px"></iframe>
-						</div>
+						<object data="data:application/x-silverlight-2," type="application/x-silverlight-2" width="100%" height="500">
+							<param name="source" value="assets/SmoothStreamingPlayer.xap">
+							<param name="onError" value="onSilverlightError">
+							<param name="background" value="white">
+							<param name="minRuntimeVersion" value="5.0.61118.0">
+							<param name="autoUpgrade" value="true">
+							<param name="enableGPUAcceleration" value="true">
+							<param name="InitParams" value="selectedcaptionstream=textstream_eng,mediaurl=">
+							<a href="http://go.microsoft.com/fwlink/?LinkID=149156&amp;v=4.0.50401.0" style="text-decoration:none">
+								<img src="http://go.microsoft.com/fwlink/?LinkId=161376" alt="Get Microsoft Silverlight" style="border-style:none">
+							</a>
+						</object>
 					</section>
 					<section class="html5" style="display:none;">
 						<p><!-- <button data-format="mpeg-dash" class="btn btn-xs btn-default">MPEG-DASH</button>&nbsp; --><button data-format="mp4" class="btn btn-xs btn-default">MP4</button><!-- &nbsp;<button class="btn btn-xs btn-success disabled">Clear Key AES encryption</button> --></p>
@@ -104,7 +106,6 @@
 						<input type="text" class="input-sm form-control" id="mp4-url" value="http://wams.edgesuite.net/media/SintelTrailer_MP4_from_WAME/sintel_trailer-1080p_3400.mp4">
 						<p class="help-block">The URL should always end in <i>/*.mp4</i>.</p>
 					</div>
-					<!-- <a href="#" id="ss-url" data-type="text" data-title="Update Adaptive URL from WAMS">FOO BAR</a> -->
 					<button id="config-save" type="button" class="btn btn-sm btn-primary">update player</button>
 				</div>
 			</div>
