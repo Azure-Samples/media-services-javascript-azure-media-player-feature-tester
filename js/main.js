@@ -71,14 +71,20 @@ var initialize = function() {
 		case "flash":
 			setFlashUrl(url);
 			$('#embed-url').show();
+			$('.config-body .adaptive').show();
+			$('.config-body .mp4').hide();
 			break;
 		case "silverlight":
 			setSilverlightUrl(url);
 			$('#embed-url').show();
+			$('.config-body .adaptive').show();
+			$('.config-body .mp4').hide();
 			break;
 		case "html5":
 			setHtml5Url(url);
 			$('#embed-url').hide();
+			$('.config-body .adaptive').hide();
+			$('.config-body .mp4').show();
 			break;
 	}
 
