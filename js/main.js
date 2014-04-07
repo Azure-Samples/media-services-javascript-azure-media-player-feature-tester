@@ -70,17 +70,27 @@ var initialize = function() {
 	switch (config.player) {
 		case "flash":
 			setFlashUrl(url);
+			$('#embed-url').show();
+			$('.config-body .adaptive').show();
+			$('.config-body .mp4').hide();
 			break;
 		case "silverlight":
 			setSilverlightUrl(url);
+			$('#embed-url').show();
+			$('.config-body .adaptive').show();
+			$('.config-body .mp4').hide();
 			break;
 		case "html5":
 			setHtml5Url(url);
+			$('#embed-url').hide();
+			$('.config-body .adaptive').hide();
+			$('.config-body .mp4').show();
 			break;
 	}
 
 	//setup modal dialog
 	$(".config-body #adaptive-url").val(config.url);
+	$(".config-body #ss-url").val(config.url);
 	$(".config-body #mp4-url").val(config.mp4url);
 
 	//setup UI
@@ -138,11 +148,6 @@ var setHtml5Url = function(url) {
 $(document).ready(function() {
 	initialize();
 
-	$("a#change-url").click(function(){
-		//$("#config-modal").modal('show');
-		$(".config-body").toggle();
-	});
-
 	$("button[data-format]").click(function(e){
 		config.format = $(e.currentTarget).attr("data-format");
 		window.location.search="?player="+config.player+"&format="+config.format+"&url="+config.url+"&mp4url="+config.mp4url;
@@ -161,13 +166,26 @@ $(document).ready(function() {
 		return false;
 	});
 
+	/*$('#ss-url').editable({
+		success: function(response, newValue) {
+			config.url = newValue;
+			window.location.search="?player="+config.player+"&format="+config.format+"&url="+config.url+"&mp4url="+config.mp4url;
+		}
+	});*/
+
+	$('#embed-url').click(function(e){
+		//alert("Almost there!");
+		$('.embed-code-box textarea').val($('.'+config.player+' object')[0].outerHTML);
+		$('.embed-code-box').toggle();
+	});
+
+	$('.embed-code-box .close').click(function(e){
+		$('.embed-code-box').hide();
+	});
+
 	$(".config-body #config-save").click(function(e){
 		config.url = $("#adaptive-url").val();
 		config.mp4url = $("#mp4-url").val();
-		$(".config-body").hide();
 		window.location.search="?player="+config.player+"&format="+config.format+"&url="+config.url+"&mp4url="+config.mp4url;
-	});
-	$(".config-body #config-close").click(function(e){
-		$(".config-body").hide();
 	});
 });
