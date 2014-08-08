@@ -134,7 +134,7 @@ var setFlashUrl = function(url) {
 	var parameters = {allowfullscreen:'true'};
 	parameters.wmode = 'direct';
 	var attributes = {};
-	swfobject.embedSWF('http://D28C.wpc.azureedge.net/80D28C/amsplayer/assets/StrobeMediaPlayback2.swf', 'flashPlayer', "100%", "500", '10.1.0', false, flashvars, parameters, attributes, null);
+	swfobject.embedSWF('http://D28C.wpc.azureedge.net/80D28C/amsplayer/assets/StrobeMediaPlayback2.0.swf', 'flashPlayer', "100%", "500", '10.1.0', false, flashvars, parameters, attributes, null);
 };
 
 var setSilverlightUrl = function(url) {
