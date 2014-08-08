@@ -128,13 +128,13 @@ var setFlashUrl = function(url) {
 	var flashvars = {};
 	flashvars.src = url;
 	flashvars.autoPlay = 'true';
-	flashvars.plugin_AdaptiveStreamingPlugin = 'http://wamsclient.cloudapp.net/release/MSAdaptiveStreamingPlugin-v1.0.10-beta-osmf2.0.swf';
+	flashvars.plugin_AdaptiveStreamingPlugin = 'http://D28C.wpc.azureedge.net/80D28C/amsplayer/assets/MSAdaptiveStreamingPlugin-v1.0.9-beta-osmf2.0.swf';
 	flashvars.AdaptiveStreamingPlugin_retryLive = 'true';
 	flashvars.AdaptiveStreamingPlugin_retryInterval = '10';
 	var parameters = {allowfullscreen:'true'};
 	parameters.wmode = 'direct';
 	var attributes = {};
-	swfobject.embedSWF('http://wamsclient.cloudapp.net/release/StrobeMediaPlayback.2.0.f11.swf', 'flashPlayer', "100%", "500", '10.1.0', false, flashvars, parameters, attributes, null);
+	swfobject.embedSWF('http://D28C.wpc.azureedge.net/80D28C/amsplayer/assets/StrobeMediaPlayback2.swf', 'flashPlayer', "100%", "500", '10.1.0', false, flashvars, parameters, attributes, null);
 };
 
 var setSilverlightUrl = function(url) {
