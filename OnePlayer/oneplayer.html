@@ -25,92 +25,45 @@
 
 </head>
 <body>
-    <!-- Add your site or application content here -->
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#"><img src="../img/logo.png" alt="Windows Azure"></a>
-            </div>
-            <div class="navbar-collapse collapse">
-            </div><!--/.navbar-collapse -->
-        </div>
-    </div>
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <div class="container">
-            <h1><span style="color:#27A7DF;">One</span>Player</h1>
-            <p class="lead">Reach the most popular devices anywhere with the best possible format for the device!</p>
-            <div class="row">
-                <div class="col-sm-6 col-md-2">
-                    <ul class="list-unstyled">
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;MPEG-DASH</li>
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;HLS</li>
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;Smooth</li>
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;MP4</li>
-                    </ul>
-                </div>
-                <div class="col-sm-6 col-md-2">
-                    <ul class="list-unstyled">
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;Internet Explorer</li>
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;Chrome</li>
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;Firefox</li>
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;Safari</li>
-                    </ul>
-                </div>
-                <div class="col-sm-6 col-md-2">
-                    <ul class="list-unstyled">
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;Desktop</li>
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;iOS</li>
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;Android</li>
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;Windows Phone</li>
-                    </ul>
-                </div>
-                <div class="col-sm-6 col-md-2">
-                    <ul class="list-unstyled">
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;HTML5</li>
-                        <li><span class="glyphicon glyphicon-ok"></span>&nbsp;Flash Fallback</li>
-                        <!--<li><span class="glyphicon glyphicon-ok"></span>&nbsp;Silverlight Fallback</li>-->
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+	<!-- Add your site or application content here -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><img src="./img/logo.png" alt="Windows Azure"></a>
+			</div>
+			<div class="navbar-collapse collapse">
 
-    <div class="container">
-        <!--<div class="row">
-            <div class="value-item">
-                <h2>OnePlayer</h2>
-                <p>
-                    OnePlayer provides a simple, customizable, player experience to Azure Media Services customers across a wide range of browsers and devices.
-                    OnePlayer detects your device capabilties and automatically selects between <strong>MPEG-DASH</strong>, <strong>Smooth</strong>, <strong>HLS</strong> streams utilizing Azure Media Services for the best possible viewing experience.
-                </p>
-                <p>
-                    OnePlayer will enable support for customizable heuristics, skins, ads, analytics, protected content as well as maintain an extensible architecture for businesses to easily adapt to their needs.
-                    OnePlayer utilizes industry standards, such as <strong>HTML5</strong>, Media Source Extensions (<strong>MSE</strong>) and Encrypted Media Extensions (<strong>EME</strong>) to provide an enriched adaptive streaming experience
-                </p>
-                <p><a href="http://www.windowsazure.com/" target="_blank" class="btn btn-default" role="button">Learn More »</a></p>
-            </div>
-        </div>
-        <hr>-->
-        <div class="row">
-
-            <div class="col-md-4 well" style="height:500px">
-                <h3>What is this?</h3>
-                <p>We have this page for you to try out the playback options with Azure Media Services.</p>
-                <ol>
-                    <li>Select a sample or input a video URL from your <a href="http://manage.azure.com">Azure Media Services account</a></li>
-                    <li>Update Player</li>
-                </ol>
-                <p><!-- If you like the player, you can click the get embed url button and get the embed code to use on your website.  -->Also, you can copy the URL from the browser's navigation pane and share this page.</p>
-                <p>Don't have an Azure Media Services account, no worries: <a href="http://azure.microsoft.com/en-us/pricing/free-trial/" class="btn btn-warning">start your free trial</a></p>
-                <h3>Source Format: <span id="sourceFormat"></span></h3>
-            </div>
+			</div><!--/.navbar-collapse -->
+		</div>
+	</div>
+	<!-- Main jumbotron for a primary marketing message or call to action -->
+	<div class="jumbotron player-page">
+		<center>
+			<h3>Reach the most popular devices anywhere with the best possible format for the device!</h3>
+		</center>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 well">
+				<h3>What is this?</h3>
+				<p>We have this page for you to try out the playback options with Azure Media Services.</p>
+				<ol>
+					<li>Select a sample or input a video URL from your <a href="http://manage.azure.com">Azure Media Services account</a></li>
+					<li>Update Player</li>
+				</ol>
+				<p><!-- If you like the player, you can click the get embed url button and get the embed code to use on your website.  -->Also, you can copy the URL from the browser's navigation pane and share this page.</p>
+				<p>Don't have an Azure Media Services account, no worries: <a href="http://azure.microsoft.com/en-us/pricing/free-trial/" class="btn btn-warning">start you free trial</a></p>
+				<h3>Chosen Player Options</h3>
+				<ul class="nav nav-pills nav-stacked">
+					<li>Source Format: <span id="sourceFormat"></span></li>
+				</ul>
+			</div>
 
             <div class="col-md-8">
 
