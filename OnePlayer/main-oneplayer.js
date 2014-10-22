@@ -69,38 +69,30 @@ var initialize = function () {
 };
 
 var appendSourceUrl = function (url) {
-    //var myPlayer = videojs("oneplayer", { techOrder: ["onePlayer", "html5", "osmfss", "flash"], "nativeControlsForTouch": false });
-    //myPlayer.src([
-    //  { src: "http://iis-wms101/clienttestmedia/Automation/Smooth/H264/EE4-H264/Content.ism/manifest(format=mpd-time-csf)", type: "application/dash+xml" },
-    //  { src: "http://iis-wms101/clienttestmedia/Automation/Smooth/H264/EE4-H264/Content.ism/manifest(format=m3u8-aapl)", type: "application/vnd.apple.mpegurl" },
-    //]);
     var myPlayer = videojs("oneplayer", { techOrder: ["onePlayer", "html5", "osmfss", "flash"], "nativeControlsForTouch": false });
-    //var myPlayer = videojs("oneplayerVideo", { techOrder: ["osmfss"], "nativeControlsForTouch": false });
 
-    if (url.match('/manifest$')) {
-        //$(".oneplayer").append('<video id="oneplayerVideo" class="video vjs-default-skin vjs-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster="" data-setup=\'{"techOrder": ["oneplayer", "html5" , "osmfss" , "flash" ], "nativeControlsForTouch":false}\'> <source src="' + url + '" type="application/vnd.ms-sstr+xml"> <source src="' + url + '(format=mpd-time-csf)" type="application/dash+xml"> <source src="' + url + '(format=m3u8-aapl)" type="application/vnd.apple.mpegurl"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>');
+    if (url.toLowerCase().match('/manifest$')) {
         myPlayer.src([
             { src: url, type: "application/vnd.ms-sstr+xml" },
             { src: url + "(format=mpd-time-csf)", type: "application/dash+xml" },
             { src: url + "(format=m3u8-aapl-v3)", type: "application/vnd.apple.mpegurl" },
         ]);
 
-    } else if (url.match('.mp4$')) {
-        //$(".oneplayer").append('<video id="vid1" class="video-js vjs-default-skin" autoplay controls preload="auto" width="100%" height="500" poster="" data-setup=\'{"techOrder": ["onePlayer", "html5", "osmfss", "flash"], "nativeControlsForTouch": false, "autoplay": true}\'> <source src="' + url + '" type="video/mp4"></video>');
+    } else if (url.toLowerCase().match('.mp4$')) {
         myPlayer.src([{ src: url, type: "video/mp4" }, ]);
-    } else if (url.match('.flv$')) {
+    } else if (url.toLowerCase().match('.flv$')) {
         myPlayer.src([{ src: url, type: "video/x-flv" }, ]);
-    } else if (url.match('.ogv$')) {
+    } else if (url.toLowerCase().match('.ogv$')) {
         myPlayer.src([{ src: url, type: "video/ogg" }, ]);
-    } else if (url.match('.webm$')) {
+    } else if (url.toLowerCase().match('.webm$')) {
         myPlayer.src([{ src: url, type: "video/webm" }, ]);
-    } else if (url.match('.3gp$')) {
+    } else if (url.toLowerCase().match('.3gp$')) {
         myPlayer.src([{ src: url, type: "video/3gp" }, ]);
-    } else if (url.match('/manifest!$')) {
+    } else if (url.toLowerCase().match('/manifest!$')) {
         myPlayer.src([{ src: url.substring(0, url.length - 1), type: "application/vnd.ms-sstr+xml" }, ]);
-    } else if (url.match('format=mpd-time-csf')) {
+    } else if (url.toLowerCase().match('format=mpd-time-csf')) {
         myPlayer.src([{ src: url, type: "application/dash+xml" }, ]);
-    } else if (url.match('format=m3u8-aapl')) {
+    } else if (url.toLowerCase().match('format=m3u8-aapl')) {
         myPlayer.src([{ src: url, type: "application/vnd.apple.mpegurl" }, ]);
     }
 };

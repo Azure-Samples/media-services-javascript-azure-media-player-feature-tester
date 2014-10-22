@@ -8245,7 +8245,7 @@ videojs.Osmfss = videojs.MediaTechController.extend({
                 'playerId': player.id(),
                 'controlBarMode': 'none',
                 'playButtonOverlay': 'false',
-                'plugin_AdaptiveStreamingPlugin': 'MSAdaptiveStreamingPlugin-v1.0.11-osmf2.0.swf',
+                'plugin_AdaptiveStreamingPlugin': 'MSAdaptiveStreamingPlugin-v1.0.12-osmf2.0.swf',
                 'AdaptiveStreamingPlugin_retryLive': 'true',
 
                 // SWF Callback Function
