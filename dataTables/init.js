@@ -109,7 +109,7 @@ $(document).ready(function () {
                     if (url.trim().toLowerCase().match('.mp4$')) {
                         return "<a href=" + url.trim() + ">MP4</a>";
                     } else if (url.trim().toLowerCase().match('manifest$')) {
-                        return "<a href=" + url.trim() + ">Smooth</a>, <a href=" + url.trim() + "(format=mpd-time-csf)" + ">DASH</a>, <a href=" + url.trim() + "(format=m3u8-aapl)" + ">HLSv4</a>, <a href=" + url.trim() + "(format=m3u8-aapl=v3)" + ">HLSv3</a>";
+                        return "<a href=" + url.trim() + ">Smooth</a>, <a href=" + url.trim() + "(format=mpd-time-csf)" + ">DASH</a>, <a href=" + url.trim() + "(format=m3u8-aapl)" + ">HLSv4</a>, <a href=" + url.trim() + "(format=m3u8-aapl-v3)" + ">HLSv3</a>";
                     } else {
                         return url;
                     }
