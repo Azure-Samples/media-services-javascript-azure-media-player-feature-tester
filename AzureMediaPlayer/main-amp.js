@@ -461,7 +461,7 @@ $(document).ready(function () {
                     break;
             }
         }
-        $('.embed-code-box textarea').val('<iframe src="amsplayer.azurewebsites.net/AzureMediaPlayer/azuremediaplayer_iframe.html?url=' + config.url + embedOptions + '" name="azuremediaplayer" scrolling="no" frameborder="no" align="center" height="280px" width="500px" allowfullscreen></iframe>');
+        $('.embed-code-box textarea').val('<iframe src="http://amsplayer.azurewebsites.net/AzureMediaPlayer/azuremediaplayer_iframe.html?url=' + config.url + embedOptions + '" name="azuremediaplayer" scrolling="no" frameborder="no" align="center" height="280px" width="500px" allowfullscreen></iframe>');
         $('.embed-code-box').toggle();
     });
 
