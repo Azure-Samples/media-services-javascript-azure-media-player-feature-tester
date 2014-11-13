@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Embedding Test</title>
+
+
+</head>
+<body>
+    <!--<h1>HTML5 Embed</h1>
+    
+    <link href="http://iis-wms101/Amit/wamsplayer-dataTable/oneplayer/video-js.min.css" rel="stylesheet" type="text/css">
+    <script src="http://iis-wms101/Amit/wamsplayer-dataTable/oneplayer/video.combined.js">
+        vjs.options.osmfss.swf = 'http://amsplayer.azurewebsites.net/oneplayer/StrobeMediaPlayback.2.0.swf';
+        vjs.options.osmfss.plugin = 'http://amsplayer.azurewebsites.net/oneplayer/MSAdaptiveStreamingPlugin-v1.0.12-osmf2.0.swf';
+    </script>
+
+    <video id="vid1" class="video-js vjs-default-skin vjs-big-play-centered" autoplay controls preload="auto" width="500" height="280"
+           data-setup='{"techOrder": ["onePlayer", "osmfss", "html5", "flash"], "nativeControlsForTouch": false}'>
+        <source src="http://iis-wms101/clienttestmedia/Automation/Smooth/H264/EE4-H264/Content.ism/manifest" type="application/vnd.ms-sstr+xml">
+        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+    </video>
+
+  <textarea id="txtLog" style="width:500px" rows="10"></textarea>
+
+  <script>
+    UrlRewriter.expandSourceTags(["DASH", "SMOOTH", "HLS-V3", "HLS-V4"]);
+    vid = document.getElementById("vid1");
+
+    // When setting options through the video tag we need to wait
+    // until video.js does the HTML "video" tag scan before any call
+    // to videojs() otherwise the data-setup options are lost.
+    window.addEventListener("load", function () {
+      var myPlayer = videojs("vid1");
+      var txtLog = document.getElementById("txtLog");
+      txtLog.value = "user-agent: " + navigator.userAgent + "\n\n" +
+                     "tech:       " + myPlayer.techName + "\n\n" +
+                     "mime:       " + myPlayer.currentType();
+    });
+  </script>-->
+  <br/>
+    <h1>iFrame Embedding</h1>
+    <iframe src="../azuremediaplayer_iframe.html?url=http://iis-wms101/clienttestmedia/Automation/Smooth/H264/EE4-H264/Content.ism/manifest" name="azuremediaplayer" scrolling="no" frameborder="no" align="center" height="280px" width="500px" allowfullscreen></iframe> 
+
+</body>
+</html>

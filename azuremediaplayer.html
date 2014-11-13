@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Azure Media Services OnePlayer</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/vendor/modernizr-2.7.1.min.js"></script>
+    <script src="js/vendor/jquery-1.11.0.min.js"></script>
+
+    <!-- Load Azure Media Player -->
+    <link href="AzureMediaPlayer/video-js.min.css" rel="stylesheet" type="text/css">
+    <script src="AzureMediaPlayer/video.combined.min.141107.js"></script>
+
+    <!--Load Plugins-->
+    <script src="AzureMediaPlayer/Plugins/hotkeys.js"></script>
+    <script src="AzureMediaPlayer/Plugins/videojs.watermark.js"></script>
+    <link href="AzureMediaPlayer/Plugins/videojs.watermark.css" rel="stylesheet" type="text/css">
+
+    <!-- Set the location of the flash SWF -->
+    <script>
+        vjs.options.osmfss.swf = 'assets/StrobeMediaPlayback.2.0.swf';
+        vjs.options.osmfss.plugin = 'assets/MSAdaptiveStreamingPlugin-v1.0.12-osmf2.0.swf';
+        vjs.options.flash.swf = 'AzureMediaPlayer/video-js.swf';
+    </script>
+</head>
+<body onload="loadImage()">
+    <!-- Add your site or application content here -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>-->
+                <a class="navbar-brand" href="http://azure.microsoft.com/en-us/services/media-services/" style="color:white"><img style="vertical-align:text-top" src="img/logo2.png" alt="Microsoft Azure Media Services"></a>
+            </div>
+            <div class="navbar-collapse collapse">
+            </div><!--/.navbar-collapse -->
+        </div>
+    </div>
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron player-page">
+        <center>
+            <h3>Reach the most popular devices anywhere with the best possible format for the device!</h3>
+        </center>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-4">
+                <div class="embed-code-box well" style="display:none;">
+                    <button type="button" class="close" aria-hidden="true">&times;</button>
+                    <p style="font-size: 0.85em;">Copy the text below and add it to your web page (make sure you update player before copying the code)</p>
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+                <div>
+                    <a id="embed-url" class="pull-right btn btn-xs btn-warning">
+                        <span class="glyphicon glyphicon-cloud-download"></span>&nbsp;get embed code
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 col-md-push-4">
+                <section>
+                    <!--ADD RESOLVER CODE AND VIDEO.JS CONFIGURATIONS-->
+                    <div class="oneplayer" id="video">
+                        <video id="oneplayer" class="oneplayer video-js vjs-default-skin vjs-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster="">
+                            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+                        </video>
+
+                    </div>
+                </section>
+                <div id="copyrightInfo" class="muted"></div>
+
+                <div class="config-body row">
+                    <div class="well">
+
+                        <div class="form-group adaptive">
+
+                            <label for="adaptive-url">Adaptive streaming URL from Azure Media Services</label><br /><br />
+
+                            <div class="row">
+                                <div class="col-md-2">Samples:</div>
+                                <div class="col-md-10">
+                                    <select class="form-control" id="selectSource" style="width: 100%">
+                                        <option value=" " disabled selected>
+                                            Select a sample
+                                        </option>
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest">
+                                            Azure Media Services Overview
+                                        </option>
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/1aaaf152-c6ad-42df-8399-3e7111680284/BigBuckBunny_Trailer_WAMEH264AdaptiveBitrateMP4Set1080p.ism/manifest">
+                                            Big Buck Bunny Trailer (H264 Adaptive Bitrate MP4 Set 1080p Preset)
+                                        </option>
+
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/e534d9e8-d2dd-4861-a23d-4c530e059a5d/ElephantsDream_WAMEH264Broadband720p.ism/manifest">
+                                            Elephants Dream (H264 Broadband 720p Preset)
+                                        </option>
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/Sintel_WAMEH264AdaptiveBitrateMP4SetSD4x3iOSCellularOnly.ism/manifest">
+                                            Sintel - with Subtitles (H264 Adaptive Bitrate MP4 Set SD4x3 iOS Cellular Only Preset)
+                                        </option>
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/c02faa73-b49c-4304-a1f2-7a4a4858754b/sintel_trailer-1080p.mp4">
+                                            Sintel Trailer (MP4)
+                                        </option>
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TearsOfSteel_WAMEH264SmoothStreaming720p.ism/manifest">
+                                            Tears Of Steel - with Subtitles (H264 Smooth Streaming 720p Preset)
+                                        </option>
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/cdc285bd-4f9b-422b-9f9f-c1cabcce04d2/BigBuckBunny.ism/manifest">
+                                            Dynamic AES Encrypted (Token) Content
+                                        </option>
+                                        <option value="http://b028.wpc.azureedge.net/80B028/Samples/a38e6323-95e9-4f1f-9b38-75eba91704e4/5f2ce531-d508-49fb-8152-647eba422aec.ism/manifest">
+                                            Live - 24x7
+                                        </option>
+                                        <!--<option value="http://nimbuspmblu.origin.mediaservices.windows.net:80/2f4df059-e489-4295-a081-7830eb036fbc/29dd8dea-b795-4137-aee0-2f4be8414cef.ism/manifest(format=mpd-time-csf,filtername=1c6aaaf3-d1b2-40e5-ad77-e32aeacdf0c5)?startTime=7671109272&endTime=9297492092">
+                                            Amber SubClip Generated Link
+                                        </option>-->
+                                    </select>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-2">URL:</div>
+                                <div class="col-md-10">
+                                    <span><input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="adaptive-url" value="http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-2">
+                                    <span id="urlHelp" class="help-block" style="font-size: 0.85em; padding-left: 0.5em;">The URL should end in <i>*/manifest</i> or <i>*.mp4</i></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="help-block" style="float: right; font-size: 0.85em;padding-right:0.5em"><input type="checkbox" name="advanced" value="advanced">Advanced Options</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="advancedOptions">
+
+                            <label for="adaptive-url">Advanced Options </label><span class="help-block" style="font-size: 0.85em;padding-right:0.5em">Please note: not all formats are playable by all techs</span>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-2">Format:</div>
+                                <div class="col-md-6">
+                                    <select id="selectFormat" style="width: 100%" class="form-control">
+                                        <option value="auto" selected>Azure Auto-Generated</option>
+                                        <option value="dash">DASH</option>
+                                        <option value="smooth">Smooth</option>
+                                        <option value="hls">HLS</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div id="formatOther" class="col-md-4">
+                                    <input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="formatOtherVal" value="MIME_Type">
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-2">Tech:</div>
+                                <div class="col-md-6">
+                                    <select id="selectTech" style="width: 100%" class="form-control">
+                                        <option value="auto" selected>Auto Select</option>
+                                        <option value="js">JavaScript</option>
+                                        <option value="flash">Flash</option>
+                                        <!--<option value="silverlight">Silverlight</option>-->
+                                        <option value="html5">Native HTML5</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-2">Protection:</div>
+                                <div class="col-md-6">
+                                    <select id="selectContentProtection" style="width: 100%" class="form-control">
+                                        <option value="none" selected>None</option>
+                                        <option value="aes">AES</option>
+                                        <!--<option value="playready">PlayReady</option>-->
+                                        <!--<option value="widevine">Widevine</option>-->
+                                    </select>
+                                </div>
+                                <div id="protectionOther" class="col-md-4">
+                                    <input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="aesToken" value="Token">
+                                </div>
+                            </div>
+                            <br /><br />
+                        </div>
+                        <button id="config-save" type="button" class="btn btn-sm btn-primary">update player</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-md-pull-8 well">
+                <h3>What is this?</h3>
+                <p>We have this page for you to try out the playback options with Azure Media Services.</p>
+                <ol>
+                    <li>Select a sample or input a video URL from your <a href="http://manage.azure.com">Azure Media Services account</a></li>
+                    <li>Update Player</li>
+                </ol>
+                <p><!-- If you like the player, you can click the get embed url button and get the embed code to use on your website.  -->Also, you can copy the URL from the browser's navigation pane and share this page.</p>
+                <p>Don't have an Azure Media Services account, no worries: <a href="http://azure.microsoft.com/en-us/pricing/free-trial/" class="btn btn-warning">start your free trial</a></p>
+                <h3>Chosen Player Options</h3>
+                <ul class="nav nav-pills nav-stacked">
+                    <li>Source Format: <span id="sourceFormat"></span></li>
+                    <li>Tech: <span id="tech"></span></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p class="pull-right"><a href="http://www.microsoft.com/privacystatement/en-us/OnlineServices/Default.aspx" target="_blank">Privacy Statement</a> // <a href="http://azure.microsoft.com/en-us/support/legal/website-terms-of-use/" target="_blank">Terms of Use</a></p>
+            <p class="pull-right"></p>
+            <p>© Microsoft Corporation 2014</p>
+        </footer>
+    </div> <!-- /container -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>-->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="AzureMediaPlayer/main-amp.js"></script>
+    <script>
+        function loadImage() {
+            myPlayer.watermark({
+                file: 'img/playerbrand.png',
+                xpos: 0,
+                ypos: 0,
+                xrepeat: 0,
+                opacity: 0
+            });
+
+            myPlayer.hotkeys({
+                volumeStep: 0.1,
+                seekStep: 5,
+                enableMute: true,
+                enableFullscreen: true
+            });
+        }
+    </script>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-53885406-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

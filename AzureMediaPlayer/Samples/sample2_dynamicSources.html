@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Video.js Wrapper Sandbox</title>
+
+  <link href="../video-js.min.css" rel="stylesheet" type="text/css">
+
+  <script src="../video.combined.min.141107.js"></script>
+
+
+  <!-- Set the location of the flash SWF -->
+  <script>
+    vjs.options.osmfss.swf = '../StrobeMediaPlayback.2.0.swf';
+  </script>
+
+</head>
+<body>
+  <p style="background-color:#eee; border: 1px solid #777; padding: 10px; font-size: .8em; line-height: 1.5em; font-family: Verdana, sans-serif;">Video.js test</p>
+
+  <video id="vid1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="264"
+         poster="http://video-js.zencoder.com/oceans-clip.png">
+    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+  </video>
+  <textarea id="txtLog" style="width:640px" rows="10"></textarea>
+
+  <script>
+      var myPlayer = videojs("vid1", { techOrder: ["onePlayer", "html5", "osmfss", "flash"], "nativeControlsForTouch": false });
+      
+    myPlayer.src([
+      { src: "http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest", type: "application/vnd.ms-sstr+xml" },
+      { src: "http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest(format=mpd-time-csf)", type: "application/dash+xml" },
+      { src: "http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest(format=m3u8-aapl)", type: "application/vnd.apple.mpegurl" },
+    ]);
+
+    var txtLog = document.getElementById("txtLog");
+    videojs("vid1").ready(function () {
+      var myPlayer = this;
+      txtLog.value = "user-agent: " + navigator.userAgent + "\n\n" +
+                     "tech:       " + myPlayer.techName + "\n\n" +
+                     "mime:       " + myPlayer.currentType();
+    })
+  </script>
+
+</body>
+</html>
