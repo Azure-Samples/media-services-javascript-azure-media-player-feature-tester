@@ -364,7 +364,7 @@ $(document).ready(function () {
                     break;
                 case "aes":
                     options += "&protection=aes";
-                    if ($("#aesToken").val() != "Token") {
+                    if ($("#aesToken").val() != "Token" && $("#aesToken").val().trim() != "") {
                         options += "&aestoken=" + encodeURIComponent($("#aesToken").val()).replace(/'/g, "%27").replace(/"/g, "%22");
                     }
                     break;
@@ -448,7 +448,7 @@ $(document).ready(function () {
                 case "aes":
                     embedOptions += "&protection=aes";
                     if (config.aestoken) {
-                        embedOptions += "&aestoken=" + encodeURIComponent(config.aestoken).replace(/'/g, "%27").replace(/"/g, "%22");
+                        embedOptions += "&aestoken=" + config.aestoken;
                     }
                     break;
                 case "playready":
