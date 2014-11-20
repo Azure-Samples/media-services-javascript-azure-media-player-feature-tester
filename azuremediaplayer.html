@@ -15,7 +15,7 @@
 
     <!-- Load Azure Media Player -->
     <link href="AzureMediaPlayer/video-js.min.css" rel="stylesheet" type="text/css">
-    <script src="AzureMediaPlayer/video.combined.min.141107.js"></script>
+    <script src="AzureMediaPlayer/video.combined.min.141120.js"></script>
 
     <!--Load Plugins-->
     <script src="AzureMediaPlayer/Plugins/hotkeys.js"></script>
@@ -25,13 +25,13 @@
     <!-- Set the location of the flash SWF -->
     <script>
         vjs.options.osmfss.swf = 'assets/StrobeMediaPlayback.2.0.swf';
-        vjs.options.osmfss.plugin = 'assets/MSAdaptiveStreamingPlugin-v1.0.12-osmf2.0.swf';
+        vjs.options.osmfss.plugin = 'assets/MSAdaptiveStreamingPlugin-v1.0.13-osmf2.0.swf';
         vjs.options.flash.swf = 'AzureMediaPlayer/video-js.swf';
     </script>
 </head>
 <body onload="loadImage()">
     <!-- Add your site or application content here -->
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="z-index:10000">
         <div class="container">
             <div class="navbar-header">
                 <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -40,7 +40,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>-->
-                <a class="navbar-brand" href="http://azure.microsoft.com/en-us/services/media-services/" style="color:white"><img style="vertical-align:text-top" src="img/logo2.png" alt="Microsoft Azure Media Services"></a>
+                <a class="navbar-brand" href="http://azure.microsoft.com/en-us/services/media-services/" style="color:white"><img style="vertical-align:text-top" src="img/logo4.png" alt="Microsoft Azure Media Services"></a>
             </div>
             <div class="navbar-collapse collapse">
             </div><!--/.navbar-collapse -->
@@ -71,10 +71,9 @@
         <div class="row">
             <div class="col-md-8 col-md-push-4">
                 <section>
-                    <!--ADD RESOLVER CODE AND VIDEO.JS CONFIGURATIONS-->
-                    <div class="oneplayer" id="video">
-                        <video id="oneplayer" class="oneplayer video-js vjs-default-skin vjs-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster="">
-                            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+                    <div id="video">
+                        <video id="azuremediaplayer" class="video-js vjs-default-skin vjs-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster="">
+                            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
                         </video>
 
                     </div>
@@ -118,8 +117,14 @@
                                             Dynamic AES Encrypted (Token) Content
                                         </option>
                                         <option value="http://b028.wpc.azureedge.net/80B028/Samples/a38e6323-95e9-4f1f-9b38-75eba91704e4/5f2ce531-d508-49fb-8152-647eba422aec.ism/manifest">
-                                            Live - 24x7
+                                            Live (Smooth Ingest)- 24x7
                                         </option>
+                                        <!--<option value="http://samplescdn.origin.mediaservices.windows.net/777ac0bb-ecb8-4782-96e7-8cf1638c2d7f/TearsofSteel_StaticPlayReady_WAMEH264SmoothStreaming1080p.ism/manifest">
+                                            PlayReady (static) Encrypted Content
+                                        </option>-->
+                                        <!--<option value="http://samplescdn.origin.mediaservices.windows.net/f3b5ab7a-00bf-4bda-8ec4-023f575118dd/azure.ism/manifest">
+                                            PlayReady (dynamic) Encrypted Content
+                                        </option>-->
                                         <!--<option value="http://nimbuspmblu.origin.mediaservices.windows.net:80/2f4df059-e489-4295-a081-7830eb036fbc/29dd8dea-b795-4137-aee0-2f4be8414cef.ism/manifest(format=mpd-time-csf,filtername=1c6aaaf3-d1b2-40e5-ad77-e32aeacdf0c5)?startTime=7671109272&endTime=9297492092">
                                             Amber SubClip Generated Link
                                         </option>-->
@@ -200,7 +205,7 @@
                 <h3>What is this?</h3>
                 <p>We have this page for you to try out the playback options with Azure Media Services.</p>
                 <ol>
-                    <li>Select a sample or input a video URL from your <a href="http://manage.azure.com">Azure Media Services account</a></li>
+                    <li>Select a sample or input a video URL from your <a href="http://manage.windowsazure.com">Azure Media Services account</a></li>
                     <li>Update Player</li>
                 </ol>
                 <p><!-- If you like the player, you can click the get embed url button and get the embed code to use on your website.  -->Also, you can copy the URL from the browser's navigation pane and share this page.</p>
@@ -209,6 +214,7 @@
                 <ul class="nav nav-pills nav-stacked">
                     <li>Source Format: <span id="sourceFormat"></span></li>
                     <li>Tech: <span id="tech"></span></li>
+                    <!--<li>Source: <span id="source"></span></li>-->
                 </ul>
             </div>
 

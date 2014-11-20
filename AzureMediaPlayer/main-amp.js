@@ -166,7 +166,7 @@ var initialize = function () {
 var appendSourceUrl = function (url) {
 
     if (config.format == "auto") {
-        if (url.trim().toLowerCase().match('.ism/manifest')) {
+        if ((url.trim().toLowerCase().match('.ism/manifest')) || (url.trim().toLowerCase().match('.isml/manifest'))) {
             var mySourceList = [
                 { src: url.trim() },
                 //type: "application/vnd.ms-sstr+xml" },
@@ -217,7 +217,7 @@ var appendSourceUrl = function (url) {
             vjs.options.osmfss.flashVars = { AdaptiveStreamingPlugin_encryptionKeyToken: config.aestoken };
             vjs.options.techOrder = ["osmfss"];
         } else {
-            vjs.options.techOrder = ["onePlayer", "html5"];
+            vjs.options.techOrder = ["osmfss", "html5"];
         }
     } else if (config.protection == "playready") {
         //not supported yet
@@ -251,7 +251,7 @@ var appendSourceUrl = function (url) {
         ];
     }
 
-    myPlayer = videojs("oneplayer", myOptions);
+    myPlayer = videojs("azuremediaplayer", myOptions);
 
 };
 
@@ -299,6 +299,8 @@ $(document).ready(function () {
             default:
                 $("#tech").append(myPlayer.techName);
         }
+
+        //$("#source").append(myPlayer.currentSrc());
 
         if (config.url.match(/sintel/i)) {
             $("#copyrightInfo").append('Sintel video - &copy; copyright Blender Foundation | <a href="http://durian.blender.org" target="_blank">durian.blender.org</a>');
