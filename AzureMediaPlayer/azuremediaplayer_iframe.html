@@ -9,15 +9,19 @@
     <script src="../js/vendor/jquery-1.11.0.min.js"></script>
     <link href="video-js.min.css" rel="stylesheet" type="text/css">
 
-    <script src="video.combined.min.141121.js"></script>
+    <script src="video.combined.min.141126.js"></script>
     <script>
         vjs.options.osmfss.swf = 'StrobeMediaPlayback.2.0.swf';
         vjs.options.osmfss.plugin = 'MSAdaptiveStreamingPlugin-v1.0.13-osmf2.0.swf';
         vjs.options.flash.swf = 'video-js.swf';
     </script>
+    <!--Load Plugins-->
+    <script src="Plugins/hotkeys.js"></script>
+    <script src="Plugins/videojs.watermark.js"></script>
+    <link href="Plugins/videojs.watermark.css" rel="stylesheet" type="text/css">
 
 </head>
-<body>
+<body onload="loadImage()">
     <div id="videoWrapper1" class="alt" align="center">
         <div id="videoWrapper">
             <video id="azuremediaplayer" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" width="100%" height="100%" poster="">
@@ -37,6 +41,25 @@
         <script src="main-amp.js"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
         <script>
+            function loadImage() {
+                myPlayer.watermark({
+                    file: '../img/playerbrand.png',
+                    xpos: 0,
+                    ypos: 0,
+                    xrepeat: 0,
+                    opacity: 0
+                });
+
+                myPlayer.hotkeys({
+                    volumeStep: 0.1,
+                    seekStep: 5,
+                    enableMute: true,
+                    enableFullscreen: true
+                });
+            }
+        </script>
+
+        <script>
             (function (i, s, o, g, r, a, m) {
                 i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
                     (i[r].q = i[r].q || []).push(arguments)
@@ -48,6 +71,6 @@
             ga('send', 'pageview');
 
         </script>
-        </div>
+    </div>
 </body>
 </html>
