@@ -300,7 +300,7 @@ $(document).ready(function () {
                 $("#tech").append(myPlayer.techName);
         }
 
-        //$("#source").append(myPlayer.currentSrc());
+        //$("#source").append("Source: "+ myPlayer.currentSrc());
 
         if (config.url.match(/sintel/i)) {
             $("#copyrightInfo").append('Sintel video - &copy; copyright Blender Foundation | <a href="http://durian.blender.org" target="_blank">durian.blender.org</a>');
