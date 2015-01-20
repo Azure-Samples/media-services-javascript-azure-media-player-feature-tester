@@ -15,7 +15,6 @@
     
     <!-- Azure Media Player -->
     <link href="AzureMediaPlayer/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet" type="text/css">
-    <!--<script src="AzureMediaPlayer/azuremediaplayer.min.150112.js"></script>-->
     <script src="AzureMediaPlayer/azuremediaplayer.min.150119.js"></script>
 
     <!--Load Plugins-->
@@ -182,7 +181,7 @@
                                         <option value="dash">DASH</option>
                                         <option value="smooth">Smooth</option>
                                         <option value="hls">HLS</option>
-                                        <!--<option value="mp4">Progressive MP4</option>-->
+                                        <option value="mp4">Progressive MP4</option>
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
@@ -234,13 +233,6 @@
                 <p><!-- If you like the player, you can click the get embed url button and get the embed code to use on your website.  -->Also, you can copy the URL from the browser's navigation pane and share this page.</p>
                 <p>Don't have an Azure Media Services account, no worries: <a href="http://azure.microsoft.com/en-us/pricing/free-trial/" class="btn btn-warning">start your free trial</a></p>
                 <h3>Chosen Player Options</h3>
-                <!--<ul class="nav nav-pills nav-stacked">
-                    <li>Source Format: <span id="sourceFormat"></span></li>
-                    <li>Tech: <span id="tech"></span></li>
-                    <li>Protection: <span id="protection"></span></li>
-                    <li>Token: <span id="currentToken"></span></li>
-                    <li><span id="source"></span></li>
-                </ul>-->
                 <table style="width:100%">
                     <!--<tr>
                         <td>Source URL:</td>
@@ -277,7 +269,7 @@
     <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>-->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/plugins.js"></script>
-    <script src="AzureMediaPlayer/main-amp.js"></script>
+    <script src="AzureMediaPlayer/main-amp.150119.js"></script>
     <script>
         function loadImage() {
             myPlayer.watermark({
