@@ -12,21 +12,23 @@
     <link rel="stylesheet" href="css/main.css">
     <script src="js/vendor/modernizr-2.7.1.min.js"></script>
     <script src="js/vendor/jquery-1.11.0.min.js"></script>
-
-    <!-- Load Azure Media Player -->
-    <link href="AzureMediaPlayer/video-js.min.css" rel="stylesheet" type="text/css">
-    <script src="AzureMediaPlayer/video.combined.min.141126.js"></script>
+    
+    <!-- Azure Media Player -->
+    <link href="AzureMediaPlayer/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet" type="text/css">
+    <!--<script src="AzureMediaPlayer/azuremediaplayer.min.150112.js"></script>-->
+    <script src="AzureMediaPlayer/azuremediaplayer.min.150119.js"></script>
 
     <!--Load Plugins-->
-    <script src="AzureMediaPlayer/Plugins/hotkeys.js"></script>
-    <script src="AzureMediaPlayer/Plugins/videojs.watermark.js"></script>
-    <link href="AzureMediaPlayer/Plugins/videojs.watermark.css" rel="stylesheet" type="text/css">
+    <script src="AzureMediaPlayer/plugins/hotkeys.js"></script>
+    <script src="AzureMediaPlayer/plugins/videojs.watermark.js"></script>
+    <link href="AzureMediaPlayer/plugins/videojs.watermark.css" rel="stylesheet" type="text/css">
 
-    <!-- Set the location of the flash SWF -->
+    <!-- Set the location of the fallback techs -->
     <script>
-        vjs.options.osmfss.swf = 'assets/StrobeMediaPlayback.2.0.swf';
-        vjs.options.osmfss.plugin = 'assets/MSAdaptiveStreamingPlugin-v1.0.13-osmf2.0.swf';
-        vjs.options.flash.swf = 'AzureMediaPlayer/video-js.swf';
+        amp.options.flashSS.swf = 'AzureMediaPlayer/techs/StrobeMediaPlayback.2.0.swf';
+        amp.options.flashSS.plugin = 'AzureMediaPlayer/techs/MSAdaptiveStreamingPlugin-v1.0.13-osmf2.0.swf';
+        amp.options.silverlightSS.xap = 'AzureMediaPlayer/techs/SmoothStreamingPlayer.xap';
+        amp.options.flash.swf = 'AzureMediaPlayer/techs/video-js.swf';
     </script>
 </head>
 <body onload="loadImage()">
@@ -46,6 +48,7 @@
             </div><!--/.navbar-collapse -->
         </div>
     </div>
+    
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron player-page">
         <center>
@@ -60,6 +63,17 @@
                     <p style="font-size: 0.85em;">Copy the text below and add it to your web page (make sure you update player before copying the code)</p>
                     <textarea class="form-control" rows="3"></textarea>
                 </div>
+                <div class="share-url-box well" style="display:none;">
+                    <button type="button" class="close" aria-hidden="true">&times;</button>
+                    <p style="font-size: 0.85em;">Copy the text and share as a link</p>
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+                <div>
+                    <a id="share-url" class="pull-left btn btn-xs btn-warning">
+                        <span class="glyphicon glyphicon-globe"></span>&nbsp;get share url
+                    </a>
+                </div>
+
                 <div>
                     <a id="embed-url" class="pull-right btn btn-xs btn-warning">
                         <span class="glyphicon glyphicon-cloud-download"></span>&nbsp;get embed code
@@ -72,8 +86,8 @@
             <div class="col-md-8 col-md-push-4">
                 <section>
                     <div id="video">
-                        <video id="azuremediaplayer" class="video-js vjs-default-skin vjs-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster="">
-                            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
+                        <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster="">
+                            <p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
                         </video>
 
                     </div>
@@ -91,43 +105,51 @@
                                 <div class="col-md-2">Samples:</div>
                                 <div class="col-md-10">
                                     <select class="form-control" id="selectSource" style="width: 100%">
-                                        <option value=" " disabled selected>
+                                        <option value=" " disabled selected format="auto" protection="none" token="none">
                                             Select a sample
                                         </option>
-                                        <option value="http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest">
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest" format="auto" protection="none" token="none">
                                             Azure Media Services Overview
                                         </option>
-                                        <option value="http://samplescdn.origin.mediaservices.windows.net/1aaaf152-c6ad-42df-8399-3e7111680284/BigBuckBunny_Trailer_WAMEH264AdaptiveBitrateMP4Set1080p.ism/manifest">
-                                            Big Buck Bunny Trailer (H264 Adaptive Bitrate MP4 Set 1080p Preset)
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/1aaaf152-c6ad-42df-8399-3e7111680284/BigBuckBunny_Trailer_WAMEH264AdaptiveBitrateMP4Set1080p.ism/manifest" format="auto" protection="none" token="none">
+                                            On Demand [Big Buck Bunny Trailer]
                                         </option>
-
-                                        <option value="http://samplescdn.origin.mediaservices.windows.net/e534d9e8-d2dd-4861-a23d-4c530e059a5d/ElephantsDream_WAMEH264Broadband720p.ism/manifest">
-                                            Elephants Dream (H264 Broadband 720p Preset)
+                                        <option value="http://b028.wpc.azureedge.net/80B028/Samples/a38e6323-95e9-4f1f-9b38-75eba91704e4/5f2ce531-d508-49fb-8152-647eba422aec.ism/manifest" format="auto" protection="none" token="none">
+                                            Live (Smooth Ingest) - 24x7
                                         </option>
-                                        <option value="http://samplescdn.origin.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/Sintel_WAMEH264AdaptiveBitrateMP4SetSD4x3iOSCellularOnly.ism/manifest">
-                                            Sintel - with Subtitles (H264 Adaptive Bitrate MP4 Set SD4x3 iOS Cellular Only Preset)
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/231d6dce-ae66-4ee8-8a63-f259675875e0/Sintel_AES_WAMEH264AdaptiveBitrateMP4Set1080p.ism/manifest" format="auto" protection="aes" token="none">
+                                            AES (no token) - On Demand [Sintel]
                                         </option>
-                                        <option value="http://samplescdn.origin.mediaservices.windows.net/c02faa73-b49c-4304-a1f2-7a4a4858754b/sintel_trailer-1080p.mp4">
-                                            Sintel Trailer (MP4)
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/c1275bed-9977-40ca-bb27-91bc783c040b/sintel_trailer-1080p.ism/manifest" format="auto" protection="aes" token="Bearer%3Durn%253amicrosoft%253aazure%253amediaservices%253acontentkeyidentifier%3D8ca714da-5404-4617-9fc2-3ea58d88667f%26Audience%3Durn%253atest%26ExpiresOn%3D2281559228%26Issuer%3Dhttp%253a%252f%252ftestacs.com%252f%26HMACSHA256%3DpimqYZll8uFqSYYFX6AOxAbHH6epEgsn1Y%252f%252bJnOdCLc%253d">
+                                            AES (token) - On Demand [Sintel Trailer]
                                         </option>
-                                        <option value="http://samplescdn.origin.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TearsOfSteel_WAMEH264SmoothStreaming720p.ism/manifest">
-                                            Tears Of Steel - with Subtitles (H264 Smooth Streaming 720p Preset)
+                                        <option value="http://b028.wpc.azureedge.net/80B028/Samples/0e8848ca-1db7-41a3-8867-fe911144c045/d34d8807-5597-47a1-8408-52ec5fc99027.ism/manifest" format="auto" protection="aes" token="none">
+                                            AES (no token) - Live (Smooth Ingest)
                                         </option>
-                                        <option value="http://samplescdn.origin.mediaservices.windows.net/cdc285bd-4f9b-422b-9f9f-c1cabcce04d2/BigBuckBunny.ism/manifest">
-                                            Dynamic AES Encrypted (Token) Content
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/777ac0bb-ecb8-4782-96e7-8cf1638c2d7f/TearsofSteel_StaticPlayReady_WAMEH264SmoothStreaming1080p.ism/manifest" format="auto" protection="playready" token="none">
+                                            PlayReady (static/no token) - On Demand [Tears of Steel]
                                         </option>
-                                        <option value="http://b028.wpc.azureedge.net/80B028/Samples/a38e6323-95e9-4f1f-9b38-75eba91704e4/5f2ce531-d508-49fb-8152-647eba422aec.ism/manifest">
-                                            Live (Smooth Ingest)- 24x7
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/f3b5ab7a-00bf-4bda-8ec4-023f575118dd/azure.ism/manifest" format="auto" protection="playready" token="none">
+                                            PlayReady (dynamic/no token) - On Demand [Azure]
                                         </option>
-                                        <option value="http://samplescdn.origin.mediaservices.windows.net/777ac0bb-ecb8-4782-96e7-8cf1638c2d7f/TearsofSteel_StaticPlayReady_WAMEH264SmoothStreaming1080p.ism/manifest">
-                                            PlayReady (static) Encrypted Content
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/c05a4a7a-9bc8-4225-ace7-e75517ec6a48/ElephantDream.ism/manifest" format="auto" protection="playready" token="Bearer%3Durn%253amicrosoft%253aazure%253amediaservices%253acontentkeyidentifier%3D186e3698-5157-4c11-8115-5325301dd85e%26Audience%3Durn%253atest%26ExpiresOn%3D1452806060%26Issuer%3Dhttp%253a%252f%252ftestacs.com%252f%26HMACSHA256%3DIOe54iF9u4EU5L5PQZL3JHwYs1PY97HyEyWK8Cwx8nE%253d%0A">
+                                            PlayReady (dynamic/token) - On Demand [Elephant's Dream]
                                         </option>
-                                        <!--<option value="http://samplescdn.origin.mediaservices.windows.net/f3b5ab7a-00bf-4bda-8ec4-023f575118dd/azure.ism/manifest">
-                                            PlayReady (dynamic) Encrypted Content
-                                        </option>-->
-                                        <!--<option value="http://nimbuspmblu.origin.mediaservices.windows.net:80/2f4df059-e489-4295-a081-7830eb036fbc/29dd8dea-b795-4137-aee0-2f4be8414cef.ism/manifest(format=mpd-time-csf,filtername=1c6aaaf3-d1b2-40e5-ad77-e32aeacdf0c5)?startTime=7671109272&endTime=9297492092">
-                                            Amber SubClip Generated Link
-                                        </option>-->
+                                        <option value="http://b028.wpc.azureedge.net/80B028/Samples/859b335f-eebc-4ff1-ac03-98e9b614e2c1/0cc164eb-193e-48cb-bc6b-041cc28307e4.ism/manifest" format="auto" protection="playready" token="none">
+                                            PlayReady (dynamic/no token) - Live (Smooth Ingest)
+                                        </option>
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TearsOfSteel_WAMEH264SmoothStreaming720p.ism/manifest" format="auto" protection="none" token="none">
+                                            Subtitles (WebVTT) - On Demand [Tears of Steel]
+                                        </option>
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/Sintel_WAMEH264AdaptiveBitrateMP4SetSD4x3iOSCellularOnly.ism/manifest" format="auto" protection="none" token="none">
+                                            Subtitles (WebVTT) - On Demand [Sintel]
+                                        </option>
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/6e91ed4b-16a1-4fba-aeda-36b611435b33/ElephantDream.ism/manifest(filtername=ThirdFilter)" format="auto" protection="none" token="none">
+                                            Dynamic Manifest - On Demand [Elephant's Dream]
+                                        </option>
+                                        <option value="http://samplescdn.origin.mediaservices.windows.net/c02faa73-b49c-4304-a1f2-7a4a4858754b/sintel_trailer-1080p.mp4" format="mp4" protection="none" token="none">
+                                            Progressive MP4 [Sintel Trailer]
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -140,7 +162,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 col-md-offset-2">
-                                    <span id="urlHelp" class="help-block" style="font-size: 0.85em; padding-left: 0.5em;">The URL should end in <i>*/manifest</i> or <i>*.mp4</i></span>
+                                    <span id="urlHelp" class="help-block" style="font-size: 0.85em; padding-left: 0.5em;">The URL should end in <i>*.ism/manifest</i> or <i>*.mp4</i></span>
                                 </div>
                                 <div class="col-md-4">
                                     <span class="help-block" style="float: right; font-size: 0.85em;padding-right:0.5em"><input type="checkbox" name="advanced" value="advanced">Advanced Options</span>
@@ -160,6 +182,7 @@
                                         <option value="dash">DASH</option>
                                         <option value="smooth">Smooth</option>
                                         <option value="hls">HLS</option>
+                                        <!--<option value="mp4">Progressive MP4</option>-->
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
@@ -175,7 +198,7 @@
                                         <option value="auto" selected>Auto Select</option>
                                         <option value="js">JavaScript</option>
                                         <option value="flash">Flash</option>
-                                        <!--<option value="silverlight">Silverlight</option>-->
+                                        <option value="silverlight">Silverlight</option>
                                         <option value="html5">Native HTML5</option>
                                     </select>
                                 </div>
@@ -187,12 +210,12 @@
                                     <select id="selectContentProtection" style="width: 100%" class="form-control">
                                         <option value="none" selected>None</option>
                                         <option value="aes">AES</option>
-                                        <!--<option value="playready">PlayReady</option>-->
+                                        <option value="playready">PlayReady</option>
                                         <!--<option value="widevine">Widevine</option>-->
                                     </select>
                                 </div>
                                 <div id="protectionOther" class="col-md-4">
-                                    <input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="aesToken" value="Token">
+                                    <input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="token" value="Token">
                                 </div>
                             </div>
                             <br /><br />
@@ -211,11 +234,35 @@
                 <p><!-- If you like the player, you can click the get embed url button and get the embed code to use on your website.  -->Also, you can copy the URL from the browser's navigation pane and share this page.</p>
                 <p>Don't have an Azure Media Services account, no worries: <a href="http://azure.microsoft.com/en-us/pricing/free-trial/" class="btn btn-warning">start your free trial</a></p>
                 <h3>Chosen Player Options</h3>
-                <ul class="nav nav-pills nav-stacked">
+                <!--<ul class="nav nav-pills nav-stacked">
                     <li>Source Format: <span id="sourceFormat"></span></li>
                     <li>Tech: <span id="tech"></span></li>
+                    <li>Protection: <span id="protection"></span></li>
+                    <li>Token: <span id="currentToken"></span></li>
                     <li><span id="source"></span></li>
-                </ul>
+                </ul>-->
+                <table style="width:100%">
+                    <!--<tr>
+                        <td>Source URL:</td>
+                        <td><div id="sourceURL" title="Source URL"><p>test</p></div></td>
+                    </tr>-->
+                    <tr>
+                        <td>Source Format:</td>
+                        <td><span id="sourceFormat"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Tech:</td>
+                        <td><span id="tech"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Protection:</td>
+                        <td><span id="protection"></span></td>
+                    </tr>
+                    <!--<tr>
+                        <td>Token</td>
+                        <td><span id="currentToken"></span></td>
+                    </tr>-->
+                </table> 
             </div>
 
         </div>

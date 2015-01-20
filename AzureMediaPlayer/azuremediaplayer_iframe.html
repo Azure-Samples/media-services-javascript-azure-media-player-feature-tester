@@ -7,31 +7,34 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../js/vendor/jquery-1.11.0.min.js"></script>
-    <link href="video-js.min.css" rel="stylesheet" type="text/css">
 
-    <script src="video.combined.min.141126.js"></script>
+    <!-- Azure Media Player -->
+    <link href="skins/amp-default/azuremediaplayer.min.css" rel="stylesheet" type="text/css">
+    <script src="azuremediaplayer.min.150112.js"></script>
+    <!-- Set the location of the fallback techs -->
     <script>
-        vjs.options.osmfss.swf = 'StrobeMediaPlayback.2.0.swf';
-        vjs.options.osmfss.plugin = 'MSAdaptiveStreamingPlugin-v1.0.13-osmf2.0.swf';
-        vjs.options.flash.swf = 'video-js.swf';
+        amp.options.flashSS.swf = 'techs/StrobeMediaPlayback.2.0.swf';
+        amp.options.flashSS.plugin = 'techs/MSAdaptiveStreamingPlugin-v1.0.13-osmf2.0.swf';
+        amp.options.silverlightSS.xap = 'techs/SmoothStreamingPlayer.xap';
+        amp.options.flash.swf = 'techs/video-js.swf';
     </script>
     <!--Load Plugins-->
-    <script src="Plugins/hotkeys.js"></script>
+    <script src="plugins/hotkeys.js"></script>
     <script src="Plugins/videojs.watermark.js"></script>
     <link href="Plugins/videojs.watermark.css" rel="stylesheet" type="text/css">
 
 </head>
-<body onload="loadImage()">
+<body onload="loadImage()" style="margin:0px">
     <div id="videoWrapper1" class="alt" align="center">
         <div id="videoWrapper">
-            <video id="azuremediaplayer" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" width="100%" height="100%" poster="">
-                <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
+            <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" controls preload="auto" width="100%" height="100%" poster="">
+                <p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
             </video>
         </div>
         <script>
             document.getElementById("videoWrapper").style.width = $(window).width() + "px";
             document.getElementById("videoWrapper").style.height = $(window).height() + "px";
-
+            
             $(window).resize(function () {
                 document.getElementById("videoWrapper").style.width = $(window).width() + "px";
                 document.getElementById("videoWrapper").style.height = $(window).height() + "px";
