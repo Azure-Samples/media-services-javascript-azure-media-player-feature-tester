@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Azure Media Player</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Azure Media Player Scripts-->
+    <link href="../skins/amp-default/azuremediaplayer.min.css" rel="stylesheet" type="text/css">
+    <script src="../azuremediaplayer.min.150112.js"></script>
+
+    <!-- Set the location of the fallback techs -->
+    <script>
+        amp.options.flashSS.swf = '../techs/StrobeMediaPlayback.2.0.swf';
+        amp.options.flashSS.plugin = '../techs/MSAdaptiveStreamingPlugin-v1.0.13-osmf2.0.swf';
+        amp.options.silverlightSS.xap = '../techs/SmoothStreamingPlayer.xap';
+    </script>
+</head>
+<body>
+    <h1>Sample: PlayReady (no token)</h1>
+    <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered"> </video>
+    <script>
+        var myOptions = {
+            techOrder: ["azureHtml5JS", "flashSS", "silverlightSS", "html5"],
+            "nativeControlsForTouch": false,
+            autoplay: true,
+            preload: "auto",
+            controls: true,
+            width: "640",
+            height: "400",
+            poster: ""
+        };
+        var myPlayer = amp("azuremediaplayer", myOptions);
+        myPlayer.src([{ src: "http://samplescdn.origin.mediaservices.windows.net/f3b5ab7a-00bf-4bda-8ec4-023f575118dd/azure.ism/manifest", type: "application/vnd.ms-sstr+xml", protectionInfo: [{ type: "PlayReady" }] }, ]);
+    </script>
+
+</body>
+</html>
