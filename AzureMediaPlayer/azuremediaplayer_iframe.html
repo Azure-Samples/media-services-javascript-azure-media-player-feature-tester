@@ -9,14 +9,14 @@
     <script src="../js/vendor/jquery-1.11.0.min.js"></script>
 
     <!-- Azure Media Player -->
-    <link href="skins/amp-default/azuremediaplayer.min.css" rel="stylesheet" type="text/css">
-    <script src="azuremediaplayer.min.150119.js"></script>
+    <link href="//D28C.wpc.azureedge.net/80D28C/azuremediaplayer/libs/amp/0.1.0/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet" type="text/css">
+    <script src="//D28C.wpc.azureedge.net/80D28C/azuremediaplayer/libs/amp/0.1.0/azuremediaplayer.min.js"></script>
+
     <!-- Set the location of the fallback techs -->
     <script>
-        amp.options.flashSS.swf = 'techs/StrobeMediaPlayback.2.0.swf';
-        amp.options.flashSS.plugin = 'techs/MSAdaptiveStreamingPlugin-v1.0.13-osmf2.0.swf';
-        amp.options.silverlightSS.xap = 'techs/SmoothStreamingPlayer.xap';
-        amp.options.flash.swf = 'techs/video-js.swf';
+        amp.options.flashSS.swf = "//D28C.wpc.azureedge.net/80D28C/azuremediaplayer/libs/amp/0.1.0/techs/StrobeMediaPlayback.2.0.swf"
+        amp.options.flashSS.plugin = "//D28C.wpc.azureedge.net/80D28C/azuremediaplayer/libs/amp/0.1.0/techs/MSAdaptiveStreamingPlugin-osmf2.0.swf"
+        amp.options.silverlightSS.xap = "//D28C.wpc.azureedge.net/80D28C/azuremediaplayer/libs/amp/0.1.0/techs/SmoothStreamingPlayer.xap"
     </script>
     <!--Load Plugins-->
     <script src="plugins/hotkeys.js"></script>
@@ -24,7 +24,7 @@
     <link href="Plugins/videojs.watermark.css" rel="stylesheet" type="text/css">
 
 </head>
-<body onload="loadImage()" style="margin:0px">
+<body onload="loadPlugins()" style="margin:0px">
     <div id="videoWrapper1" class="alt" align="center">
         <div id="videoWrapper">
             <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" controls preload="auto" width="100%" height="100%" poster="">
@@ -41,26 +41,8 @@
             });
         </script>
 
-        <script src="main-amp.150119.js"></script>
+        <script src="main-amp.150130.js"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
-        <script>
-            function loadImage() {
-                myPlayer.watermark({
-                    file: '../img/playerbrand.png',
-                    xpos: 0,
-                    ypos: 0,
-                    xrepeat: 0,
-                    opacity: 0
-                });
-
-                myPlayer.hotkeys({
-                    volumeStep: 0.1,
-                    seekStep: 5,
-                    enableMute: true,
-                    enableFullscreen: true
-                });
-            }
-        </script>
 
         <script>
             (function (i, s, o, g, r, a, m) {

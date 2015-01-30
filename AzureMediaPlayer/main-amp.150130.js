@@ -1,3 +1,4 @@
+var myPlayer;
 var config = {
     url: "http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest",
     advanced: "false",
@@ -7,7 +8,6 @@ var config = {
     token: "",
 
 };
-var myPlayer;
 
 // put function into jQuery namespace
 jQuery.redirect = function (url, params) {
@@ -285,6 +285,10 @@ var appendSourceUrl = function (url) {
             { src: "http://samplescdn.origin.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-fr.vtt", srclang: "fr", kind: "subtitles", label: "French" },
             { src: "http://samplescdn.origin.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-it.vtt", srclang: "it", kind: "subtitles", label: "Italian" }
         ];
+    } else if (url.trim().toLowerCase().match("http://nimbuspm.origin.mediaservices.windows.net/292380fd-2df2-4829-b6bd-693d9b2a1c37/Microsoft's HoloLens Live Demonstration.ism/manifest".toLowerCase())) {
+        myOptions.tracks = [
+            { src: "http://nimbuspm.origin.mediaservices.windows.net/292380fd-2df2-4829-b6bd-693d9b2a1c37/pp4_blog_demo.vtt", srclang: "en", kind: "subtitles", label: "English" }
+        ];
     }
 
     if (!myPlayer) {
@@ -441,13 +445,13 @@ var displayCopyrightInfo = function () {
     //this function updates the copyright info if applicable
 
     if (config.url.match(/sintel/i)) {
-        $("#copyrightInfo").append('Sintel video - &copy; copyright Blender Foundation | <a href="http://durian.blender.org" target="_blank">durian.blender.org</a>');
+        document.getElementById('copyrightInfo').innerHTML = 'Sintel video - &copy; copyright Blender Foundation | <a href="http://durian.blender.org" target="_blank">durian.blender.org</a>';
     } else if (config.url.match(/big/i) && config.url.match(/buck/i) && config.url.match(/bunny/i)) {
-        $("#copyrightInfo").append('Big Buck Bunny video - &copy; copyright 2008, Blender Foundation | <a href="http://www.bigbuckbunny.org" target="_blank">bigbuckbunny.org</a>');
+        document.getElementById('copyrightInfo').innerHTML = 'Big Buck Bunny video - &copy; copyright 2008, Blender Foundation | <a href="http://www.bigbuckbunny.org" target="_blank">bigbuckbunny.org</a>';
     } else if (config.url.match(/elephant/i) && config.url.match(/dream/i)) {
-        $("#copyrightInfo").append('Elephant\'s Dream video - &copy; copyright 2006, Blender Foundation / Netherlands Media Art Institute | <a href="http://www.elephantsdream.org" target="_blank">elephantsdream.org</a>');
+        document.getElementById('copyrightInfo').innerHTML = 'Elephant\'s Dream video - &copy; copyright 2006, Blender Foundation / Netherlands Media Art Institute | <a href="http://www.elephantsdream.org" target="_blank">elephantsdream.org</a>';
     } else if (config.url.match(/tears/i) && config.url.match(/steel/i)) {
-        $("#copyrightInfo").append('Tears of Steel video - &copy; Blender Foundation | <a href="http://www.mango.blender.org" target="_blank">mango.blender.org</a>');
+        document.getElementById('copyrightInfo').innerHTML = 'Tears of Steel video - &copy; Blender Foundation | <a href="http://www.mango.blender.org" target="_blank">mango.blender.org</a>';
     }
 }
 
@@ -613,6 +617,23 @@ var updateShareUrl = function () {
     $('.share-url-box textarea').val("http://aka.ms/azuremediaplayer" + updateParamsInAddressURL());
 }
 
+var loadPlugins = function () {
+    myPlayer.watermark({
+        file: 'img/playerbrand.png',
+        xpos: 0,
+        ypos: 0,
+        xrepeat: 0,
+        opacity: 0
+    });
+
+    myPlayer.hotkeys({
+        volumeStep: 0.1,
+        seekStep: 5,
+        enableMute: true,
+        enableFullscreen: true
+    });
+}
+
 $(document).ready(function () {
     initialize();
     appendSourceUrl(config.url);
@@ -630,6 +651,7 @@ $(document).ready(function () {
 
         //Channel change method
         //myPlayer.dispose();
+        //myPlayer = null;
         //document.getElementById("video").innerHTML = '<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster=""><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>';
         ////$('#video').append('<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster=""><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>');
         //appendSourceUrl(config.url);
@@ -638,6 +660,7 @@ $(document).ready(function () {
         //updateEmbedCode();
         //displayConfig();
         //displayCopyrightInfo();
+        //loadPlugins();
     });
 
     //Updated source from the selectable samples

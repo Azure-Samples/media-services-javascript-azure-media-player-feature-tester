@@ -14,8 +14,8 @@
     <script src="js/vendor/jquery-1.11.0.min.js"></script>
     
     <!-- Azure Media Player -->
-    <link href="AzureMediaPlayer/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet" type="text/css">
-    <script src="AzureMediaPlayer/azuremediaplayer.min.150119.js"></script>
+    <link href="//D28C.wpc.azureedge.net/80D28C/azuremediaplayer/libs/amp/0.1.0/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet" type="text/css">
+    <script src="//D28C.wpc.azureedge.net/80D28C/azuremediaplayer/libs/amp/0.1.0/azuremediaplayer.min.js"></script>
 
     <!--Load Plugins-->
     <script src="AzureMediaPlayer/plugins/hotkeys.js"></script>
@@ -24,13 +24,12 @@
 
     <!-- Set the location of the fallback techs -->
     <script>
-        amp.options.flashSS.swf = 'AzureMediaPlayer/techs/StrobeMediaPlayback.2.0.swf';
-        amp.options.flashSS.plugin = 'AzureMediaPlayer/techs/MSAdaptiveStreamingPlugin-v1.0.13-osmf2.0.swf';
-        amp.options.silverlightSS.xap = 'AzureMediaPlayer/techs/SmoothStreamingPlayer.xap';
-        amp.options.flash.swf = 'AzureMediaPlayer/techs/video-js.swf';
+        amp.options.flashSS.swf = "//D28C.wpc.azureedge.net/80D28C/azuremediaplayer/libs/amp/0.1.0/techs/StrobeMediaPlayback.2.0.swf"
+        amp.options.flashSS.plugin = "//D28C.wpc.azureedge.net/80D28C/azuremediaplayer/libs/amp/0.1.0/techs/MSAdaptiveStreamingPlugin-osmf2.0.swf"
+        amp.options.silverlightSS.xap = "//D28C.wpc.azureedge.net/80D28C/azuremediaplayer/libs/amp/0.1.0/techs/SmoothStreamingPlayer.xap"
     </script>
 </head>
-<body onload="loadImage()">
+<body onload="loadPlugins()">
     <!-- Add your site or application content here -->
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="z-index:10000">
         <div class="container">
@@ -88,7 +87,6 @@
                         <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster="">
                             <p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
                         </video>
-
                     </div>
                 </section>
                 <div id="copyrightInfo" class="muted"></div>
@@ -148,6 +146,9 @@
                                         </option>
                                         <option value="http://samplescdn.origin.mediaservices.windows.net/c02faa73-b49c-4304-a1f2-7a4a4858754b/sintel_trailer-1080p.mp4" format="mp4" protection="none" token="none">
                                             Progressive MP4 [Sintel Trailer]
+                                        </option>
+                                        <option value="http://nimbuspm.origin.mediaservices.windows.net/292380fd-2df2-4829-b6bd-693d9b2a1c37/Microsoft's HoloLens Live Demonstration.ism/manifest" format="auto" protection="none" token="none">
+                                            Indexer Demo [Microsoft HoloLens Demo]
                                         </option>
                                     </select>
                                 </div>
@@ -269,25 +270,7 @@
     <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>-->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/plugins.js"></script>
-    <script src="AzureMediaPlayer/main-amp.150119.js"></script>
-    <script>
-        function loadImage() {
-            myPlayer.watermark({
-                file: 'img/playerbrand.png',
-                xpos: 0,
-                ypos: 0,
-                xrepeat: 0,
-                opacity: 0
-            });
-
-            myPlayer.hotkeys({
-                volumeStep: 0.1,
-                seekStep: 5,
-                enableMute: true,
-                enableFullscreen: true
-            });
-        }
-    </script>
+    <script src="AzureMediaPlayer/main-amp.150130.js"></script>
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script>
