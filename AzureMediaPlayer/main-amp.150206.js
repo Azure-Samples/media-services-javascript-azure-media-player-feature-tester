@@ -451,15 +451,16 @@ var displayConfig = function () {
 
 var displayCopyrightInfo = function () {
     //this function updates the copyright info if applicable
-
-    if (config.url.match(/sintel/i)) {
-        document.getElementById('copyrightInfo').innerHTML = 'Sintel video - &copy; copyright Blender Foundation | <a href="http://durian.blender.org" target="_blank">durian.blender.org</a>';
-    } else if (config.url.match(/big/i) && config.url.match(/buck/i) && config.url.match(/bunny/i)) {
-        document.getElementById('copyrightInfo').innerHTML = 'Big Buck Bunny video - &copy; copyright 2008, Blender Foundation | <a href="http://www.bigbuckbunny.org" target="_blank">bigbuckbunny.org</a>';
-    } else if (config.url.match(/elephant/i) && config.url.match(/dream/i)) {
-        document.getElementById('copyrightInfo').innerHTML = 'Elephant\'s Dream video - &copy; copyright 2006, Blender Foundation / Netherlands Media Art Institute | <a href="http://www.elephantsdream.org" target="_blank">elephantsdream.org</a>';
-    } else if (config.url.match(/tears/i) && config.url.match(/steel/i)) {
-        document.getElementById('copyrightInfo').innerHTML = 'Tears of Steel video - &copy; Blender Foundation | <a href="http://www.mango.blender.org" target="_blank">mango.blender.org</a>';
+    if (document.getElementById('copyrightInfo')) {
+        if (config.url.match(/sintel/i)) {
+            document.getElementById('copyrightInfo').innerHTML = 'Sintel video - &copy; copyright Blender Foundation | <a href="http://durian.blender.org" target="_blank">durian.blender.org</a>';
+        } else if (config.url.match(/big/i) && config.url.match(/buck/i) && config.url.match(/bunny/i)) {
+            document.getElementById('copyrightInfo').innerHTML = 'Big Buck Bunny video - &copy; copyright 2008, Blender Foundation | <a href="http://www.bigbuckbunny.org" target="_blank">bigbuckbunny.org</a>';
+        } else if (config.url.match(/elephant/i) && config.url.match(/dream/i)) {
+            document.getElementById('copyrightInfo').innerHTML = 'Elephant\'s Dream video - &copy; copyright 2006, Blender Foundation / Netherlands Media Art Institute | <a href="http://www.elephantsdream.org" target="_blank">elephantsdream.org</a>';
+        } else if (config.url.match(/tears/i) && config.url.match(/steel/i)) {
+            document.getElementById('copyrightInfo').innerHTML = 'Tears of Steel video - &copy; Blender Foundation | <a href="http://www.mango.blender.org" target="_blank">mango.blender.org</a>';
+        }
     }
 }
 
