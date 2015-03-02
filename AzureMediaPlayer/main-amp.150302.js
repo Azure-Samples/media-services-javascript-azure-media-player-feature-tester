@@ -1,6 +1,6 @@
 var myPlayer;
 var config = {
-    url: "http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest",
+    url: "//ams-samplescdn.streaming.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest",
     advanced: "false",
     format: "auto",
     tech: "auto",
@@ -92,96 +92,98 @@ var initialize = function () {
     //Add more here
     console.log("Configuration chosen is: URL - " + config.url);
 
-    //setup modal dialog
-    $(".config-body #adaptive-url").val(config.url);
+    if ($("#assetConfig")) {
+        //setup modal dialog
+        $(".config-body #adaptive-url").val(config.url);
 
-    //Show advanced options
-    if (config.advanced == "true") {
-        $("input[name='advanced'][value='advanced']").prop('checked', true);
-        $("#advancedOptions").show();
-        $("#urlHelp").hide();
-    } else {
-        $("#advancedOptions").hide();
-        $("#urlHelp").show();
-    }
+        //Show advanced options
+        if (config.advanced == "true") {
+            $("input[name='advanced'][value='advanced']").prop('checked', true);
+            $("#advancedOptions").show();
+            $("#urlHelp").hide();
+        } else {
+            $("#advancedOptions").hide();
+            $("#urlHelp").show();
+        }
 
-    //Setup UI for Advanced: Format
-    $("#formatOtherVal").hide();
-    switch (config.format) {
-        case "auto":
-            $("#selectFormat").val("auto");
-            break;
-        case "dash":
-            $("#selectFormat").val("dash");
-            break;
-        case "smooth":
-            $("#selectFormat").val("smooth");
-            break;
-        case "hls":
-            $("#selectFormat").val("hls");
-            break;
-        case "mp4":
-            $("#selectFormat").val("mp4");
-            break;
-        default:
-            $("#selectFormat").val("other");
-            $("#formatOtherVal").show();
-            $("#formatOtherVal").val(config.format);
-            break;
-    }
+        //Setup UI for Advanced: Format
+        $("#formatOtherVal").hide();
+        switch (config.format) {
+            case "auto":
+                $("#selectFormat").val("auto");
+                break;
+            case "dash":
+                $("#selectFormat").val("dash");
+                break;
+            case "smooth":
+                $("#selectFormat").val("smooth");
+                break;
+            case "hls":
+                $("#selectFormat").val("hls");
+                break;
+            case "mp4":
+                $("#selectFormat").val("mp4");
+                break;
+            default:
+                $("#selectFormat").val("other");
+                $("#formatOtherVal").show();
+                $("#formatOtherVal").val(config.format);
+                break;
+        }
 
-    //Setup UI for Advanced: Tech
-    switch (config.tech) {
-        case "auto":
-            $("#selectTech").val("auto");
-            break;
-        case "js":
-            $("#selectTech").val("js");
-            break;
-        case "flash":
-            $("#selectTech").val("flash");
-            break;
-        case "silverlight":
-            $("#selectTech").val("silverlight");
-            break;
-        case "html5":
-            $("#selectTech").val("html5");
-            break;
-        default:
-            $("#selectTech").val("auto");
-            break;
-    }
+        //Setup UI for Advanced: Tech
+        switch (config.tech) {
+            case "auto":
+                $("#selectTech").val("auto");
+                break;
+            case "js":
+                $("#selectTech").val("js");
+                break;
+            case "flash":
+                $("#selectTech").val("flash");
+                break;
+            case "silverlight":
+                $("#selectTech").val("silverlight");
+                break;
+            case "html5":
+                $("#selectTech").val("html5");
+                break;
+            default:
+                $("#selectTech").val("auto");
+                break;
+        }
 
-    //Setup UI for Advanced: Protection
-    $("#token").hide();
-    switch (config.protection) {
-        case "none":
-            $("#selectContentProtection").val("none");
-            break;
-        case "aes":
-            $("#selectContentProtection").val("aes");
-            $("#token").show();
-            if (config.token != "") {
-                $("#token").val(decodeURIComponent(config.token.replace(/\+/g, " ")));
-            }
-            break;
-        case "playready":
-            $("#selectContentProtection").val("playready");
-            $("#token").show();
-            if (config.token != "") {
-                $("#token").val(decodeURIComponent(config.token.replace(/\+/g, " ")));
-            }
-            break;
-        case "widevine":
-            $("#selectContentProtection").val("widevine");
-            $("#token").show();
-            if (config.token != "") {
-                $("#token").val(decodeURIComponent(config.token.replace(/\+/g, " ")));
-            }
-            break;
-        default:
-            $("#selectContentProtection").val("none");
-            break;
+        //Setup UI for Advanced: Protection
+        $("#token").hide();
+        switch (config.protection) {
+            case "none":
+                $("#selectContentProtection").val("none");
+                break;
+            case "aes":
+                $("#selectContentProtection").val("aes");
+                $("#token").show();
+                if (config.token != "") {
+                    $("#token").val(decodeURIComponent(config.token.replace(/\+/g, " ")));
+                }
+                break;
+            case "playready":
+                $("#selectContentProtection").val("playready");
+                $("#token").show();
+                if (config.token != "") {
+                    $("#token").val(decodeURIComponent(config.token.replace(/\+/g, " ")));
+                }
+                break;
+            case "widevine":
+                $("#selectContentProtection").val("widevine");
+                $("#token").show();
+                if (config.token != "") {
+                    $("#token").val(decodeURIComponent(config.token.replace(/\+/g, " ")));
+                }
+                break;
+            default:
+                $("#selectContentProtection").val("none");
+                break;
+        }
     }
 };
 
@@ -278,22 +280,22 @@ var appendSourceUrl = function (url) {
         }
     }
 
-    if (url.trim().toLowerCase().match('http://samplescdn.origin.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/Sintel_WAMEH264AdaptiveBitrateMP4SetSD4x3iOSCellularOnly.ism/manifest'.toLowerCase())) {
+    if (url.trim().toLowerCase().match('ams-samplescdn.streaming.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/Sintel_WAMEH264AdaptiveBitrateMP4SetSD4x3iOSCellularOnly.ism/manifest'.toLowerCase())) {
         myOptions.tracks = [
-            { src: "http://samplescdn.origin.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/sintel-en-us.vtt", srclang: "en", kind: "subtitles", label: "English" },
-            { src: "http://samplescdn.origin.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/sintel-fr.vtt", srclang: "fr", kind: "subtitles", label: "French" },
-            { src: "http://samplescdn.origin.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/sintel-it.vtt", srclang: "it", kind: "subtitles", label: "Italian" }
+            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/sintel-en-us.vtt", srclang: "en", kind: "subtitles", label: "english" },
+            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/sintel-fr.vtt", srclang: "fr", kind: "subtitles", label: "fran&#231ais" },
+            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/sintel-it.vtt", srclang: "it", kind: "subtitles", label: "italiano" }
         ];
-    } else if (url.trim().toLowerCase().match('http://samplescdn.origin.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TearsOfSteel_WAMEH264SmoothStreaming720p.ism/manifest'.toLowerCase())) {
+    } else if (url.trim().toLowerCase().match('ams-samplescdn.streaming.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TearsOfSteel_WAMEH264SmoothStreaming720p.ism/manifest'.toLowerCase())) {
         myOptions.tracks = [
-            { src: "http://samplescdn.origin.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-en.vtt", srclang: "en", kind: "subtitles", label: "English" },
-            { src: "http://samplescdn.origin.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-es.vtt", srclang: "es", kind: "subtitles", label: "Spanish" },
-            { src: "http://samplescdn.origin.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-fr.vtt", srclang: "fr", kind: "subtitles", label: "French" },
-            { src: "http://samplescdn.origin.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-it.vtt", srclang: "it", kind: "subtitles", label: "Italian" }
+            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-en.vtt", srclang: "en", kind: "subtitles", label: "english" },
+            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-es.vtt", srclang: "es", kind: "subtitles", label: "espa&#241ol" },
+            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-fr.vtt", srclang: "fr", kind: "subtitles", label: "fran&#231ais" },
+            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-it.vtt", srclang: "it", kind: "subtitles", label: "italiano" }
         ];
     } else if (url.trim().toLowerCase().match("http://nimbuspm.origin.mediaservices.windows.net/292380fd-2df2-4829-b6bd-693d9b2a1c37/Microsoft's HoloLens Live Demonstration.ism/manifest".toLowerCase())) {
         myOptions.tracks = [
-            { src: "http://nimbuspm.origin.mediaservices.windows.net/292380fd-2df2-4829-b6bd-693d9b2a1c37/pp4_blog_demo.vtt", srclang: "en", kind: "subtitles", label: "English" }
+            { src: "http://nimbuspm.origin.mediaservices.windows.net/292380fd-2df2-4829-b6bd-693d9b2a1c37/pp4_blog_demo.vtt", srclang: "en", kind: "subtitles", label: "english" }
         ];
     }
 
@@ -389,55 +391,61 @@ var displayConfig = function () {
     //$("#sourceURL").text("<button onclick='alert(\"" + myPlayer.currentSrc() + "\");'>URL</button>");
     //$("#sourceURL").text(myPlayer.currentSrc());
 
-    switch (myPlayer.currentType()) {
-        case "video/mp4":
-            $("#sourceFormat").text("MP4");
-            break;
-        case "application/vnd.ms-sstr+xml":
-            $("#sourceFormat").text("Smooth");
-            break;
-        case "application/dash+xml":
-            $("#sourceFormat").text("DASH");
-            break;
-        case "application/vnd.apple.mpegurl":
-            $("#sourceFormat").text("HLS");
-            break;
-        default:
-            $("#sourceFormat").text(myPlayer.currentType());
+    if ($("#sourceFormat")) {
+        switch (myPlayer.currentType()) {
+            case "video/mp4":
+                $("#sourceFormat").text("MP4");
+                break;
+            case "application/vnd.ms-sstr+xml":
+                $("#sourceFormat").text("Smooth");
+                break;
+            case "application/dash+xml":
+                $("#sourceFormat").text("DASH");
+                break;
+            case "application/vnd.apple.mpegurl":
+                $("#sourceFormat").text("HLS");
+                break;
+            default:
+                $("#sourceFormat").text(myPlayer.currentType());
+        }
     }
 
-    switch (myPlayer.techName) {
-        case "AzureHtml5JS":
-            $("#tech").text("JavaScript");
-            break;
-        case "FlashSS":
-            $("#tech").text("Flash");
-            break;
-        case "SilverlightSS":
-            $("#tech").text("Silverlight");
-            break;
-        case "Flash":
-            $("#tech").text("Flash");
-            break;
-        case "Html5":
-            $("#tech").text("HTML5");
-            break;
-        default:
-            $("#tech").text(myPlayer.techName);
+    if ($("#tech")) {
+        switch (myPlayer.techName) {
+            case "AzureHtml5JS":
+                $("#tech").text("JavaScript");
+                break;
+            case "FlashSS":
+                $("#tech").text("Flash");
+                break;
+            case "SilverlightSS":
+                $("#tech").text("Silverlight");
+                break;
+            case "Flash":
+                $("#tech").text("Flash");
+                break;
+            case "Html5":
+                $("#tech").text("HTML5");
+                break;
+            default:
+                $("#tech").text(myPlayer.techName);
+        }
     }
 
-    switch (config.protection) {
-        case "aes":
-            $("#protection").text("AES-128 bit");
-            break;
-        case "playready":
-            $("#protection").text("PlayReady");
-            break;
-        case "widevine":
-            $("#protection").text("Widevine");
-            break;
-        default:
-            $("#protection").text("None/Unknown");
+    if ($("#protection")) {
+        switch (config.protection) {
+            case "aes":
+                $("#protection").text("AES-128 bit");
+                break;
+            case "playready":
+                $("#protection").text("PlayReady");
+                break;
+            case "widevine":
+                $("#protection").text("Widevine");
+                break;
+            default:
+                $("#protection").text("None/Unknown");
+        }
     }
 
     //if (config.token != "") {
@@ -619,7 +627,7 @@ var updateParamsInAddressURL = function () {
 }
 
 var updateEmbedCode = function () {
-    $('.embed-code-box textarea').val('<iframe src="http://amsplayer.azurewebsites.net/AzureMediaPlayer/azuremediaplayer_iframe.html' + updateParamsInAddressURL() + '" name="azuremediaplayer" scrolling="no" frameborder="no" align="center" height="280px" width="500px" allowfullscreen></iframe>');
+    $('.embed-code-box textarea').val('<iframe src="//aka.ms/azuremediaplayeriframe' + updateParamsInAddressURL() + '&autoplay=false" name="azuremediaplayer" scrolling="no" frameborder="no" align="center" height="280px" width="500px" allowfullscreen></iframe>');
 }
 
 var updateShareUrl = function () {
