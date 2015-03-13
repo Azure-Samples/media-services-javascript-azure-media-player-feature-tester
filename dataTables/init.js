@@ -2,41 +2,44 @@
 function format(d) {
     // `d` is the original data object for the row
     var expandedData = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
-    if (d.videoCodec != "") {
-        expandedData += '<tr>' + '<td>Video Codec:</td>' + '<td>' + d.videoCodec + '</td>' + '</tr>';
+    if (d.videocodec != "") {
+        expandedData += '<tr>' + '<td>Video Codec:</td>' + '<td>' + d.videocodec + '</td>' + '</tr>';
     }
-    if (d.audioCodec != "") {
-        expandedData += '<tr>' + '<td>Audio Codec:</td>' + '<td>' + d.audioCodec + '</td>' + '</tr>';
+    if (d.audiocodec != "") {
+        expandedData += '<tr>' + '<td>Audio Codec:</td>' + '<td>' + d.audiocodec + '</td>' + '</tr>';
     }
     if (d.timescale != "") {
         expandedData += '<tr>' + '<td>Time Scale:</td>' + '<td>' + d.timescale + '</td>' + '</tr>';
     }
-    if (d.qualityLevels != "") {
-        expandedData += '<tr>' + '<td>Quality Levels:</td>' + '<td>' + d.qualityLevels + '</td>' + '</tr>';
+    if (d.qualitylevels != "") {
+        expandedData += '<tr>' + '<td>Quality Levels:</td>' + '<td>' + d.qualitylevels + '</td>' + '</tr>';
     }
-    if (d.audioTracks != "") {
-        expandedData += '<tr>' + '<td>No. of Audio Streams:</td>' + '<td>' + d.audioTracks + '</td>' + '</tr>';
+    if (d.audiotracks != "") {
+        expandedData += '<tr>' + '<td>No. of Audio Streams:</td>' + '<td>' + d.audiotracks + '</td>' + '</tr>';
     }
-    if (d.subTracks != "") {
-        expandedData += '<tr>' + '<td>No. of Subtitle Tracks:</td>' + '<td>' + d.subTracks + '</td>' + '</tr>';
-    }
+    /*if (d.subtracks != "") {
+        expandedData += '<tr>' + '<td>No. of Subtitle Tracks:</td>' + '<td>' + d.subtracks + '</td>' + '</tr>';
+    }*/
     if (d.encoder != "") {
         expandedData += '<tr>' + '<td>Encoder:</td>' + '<td>' + d.encoder + '</td>' + '</tr>';
     }
     if (d.profile != "") {
         expandedData += '<tr>' + '<td>Encoding Profile:</td>' + '<td>' + d.profile + '</td>' + '</tr>';
     }
-    if (d.encodingPreset != "") {
-        expandedData += '<tr>' + '<td>Encoding Preset:</td>' + '<td>' + d.encodingPreset + '</td>' + '</tr>';
+    if (d.encodingpreset != "") {
+        expandedData += '<tr>' + '<td>Encoding Preset:</td>' + '<td>' + d.encodingpreset + '</td>' + '</tr>';
     }
     if (d.cbrvbr != "") {
         expandedData += '<tr>' + '<td>CBR or VBR:</td>' + '<td>' + d.cbrvbr + '</td>' + '</tr>';
     }
-    if (d.contentProtection.toLowerCase() != "none") {
-        expandedData += '<tr>' + '<td>Content Protection:</td>' + '<td>' + d.contentProtection + '</td>' + '</tr>';
+    if (d.contentprotection.toLowerCase() != "none") {
+        expandedData += '<tr>' + '<td>Content Protection:</td>' + '<td>' + d.contentprotection + '</td>' + '</tr>';
     }
     if (d.token != "") {
         expandedData += '<tr>' + '<td>Token:</td>' + '<td>' + d.token + '</td>' + '</tr>';
+    }
+    if (d.other != "") {
+        expandedData += '<tr>' + '<td>Other Information:</td>' + '<td>' + d.other + '</td>' + '</tr>';
     }
     if (d.notes != "") {
         expandedData += '<tr>' + '<td>Notes:</td>' + '<td>' + d.notes + '</td>' + '</tr>';
@@ -50,7 +53,7 @@ function format(d) {
 
 $(document).ready(function () {
         var table = $('#example').DataTable( {
-        "ajax": "dataTables/data/amsStreams.txt",
+        "ajax": "dataTables/data/amsSamples.txt",
         paging: false,
         jQueryUI: true,
         //responsive: true,
@@ -58,7 +61,7 @@ $(document).ready(function () {
         //    details: false
         //},
 
-        "order": [1, 'asc'],
+        "order": [2, 'asc'],
 
         "columns": [
             {
@@ -67,18 +70,19 @@ $(document).ready(function () {
                 "data": null,
                 "defaultContent": ''
             },
+            { "data": "stream" },
             { "data": "content" },
             { "data": "type" },
             { "data": "advanced" },
-            { "visible": false, "data": "videoCodec" },
-            { "visible": false, "data": "audioCodec" },
+            { "visible": false, "data": "videocodec" },
+            { "visible": false, "data": "audiocodec" },
             { "data": "length" },
             //{ "data": "duration" },
             { "visible": false, "data": "timescale" },
             //{ "data": "qualityLevels" },
             {
                 "orderable": false,
-                "data": "maxResolution"
+                "data": "maxresolution"
             },
             //{ "data": "maxHeight" },
             //{ "data": "maxWidth" },
@@ -89,7 +93,7 @@ $(document).ready(function () {
             { "visible": false, "data": "profile" },
             {
                 "visible": false,
-                "data": "encodingPreset",
+                "data": "encodingpreset",
                 "render": function (preset, type, full, meta) {
                     if (preset=="") {
                         return "N/A";
@@ -99,7 +103,7 @@ $(document).ready(function () {
                 }
             },
             { "visible": false, "data": "cbrvbr" },
-            { "data": "contentProtection" },
+            { "data": "contentprotection" },
             { "visible": false, "data": "token" },
             //{ "data": "other" },
             
@@ -110,6 +114,8 @@ $(document).ready(function () {
                         return "<a href=" + url.trim() + ">MP4</a>";
                     } else if (url.trim().toLowerCase().match('manifest$')) {
                         return "<a href=" + url.trim() + ">Smooth</a>, <a href=" + url.trim() + "(format=mpd-time-csf)" + ">DASH</a>, <a href=" + url.trim() + "(format=m3u8-aapl)" + ">HLSv4</a>, <a href=" + url.trim() + "(format=m3u8-aapl-v3)" + ">HLSv3</a>";
+                    } else if(url.trim().toLowerCase().match('#$')){
+                        return "<a href=" + url.trim().slice(0, -1) + ")>Smooth</a>, <a href=" + url.trim().slice(0, -1) + ",format=mpd-time-csf)" + ">DASH</a>, <a href=" + url.trim().slice(0, -1) + ",format=m3u8-aapl)" + ">HLSv4</a>, <a href=" + url.trim().slice(0, -1) + ",format=m3u8-aapl-v3)" + ">HLSv3</a>";
                     } else {
                         return url;
                     }
