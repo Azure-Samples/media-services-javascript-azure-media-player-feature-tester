@@ -413,11 +413,11 @@
     "profile":"High",
     "encodingpreset":"H264 Adaptive Bitrate MP4 Set 1080p",
     "cbrvbr":"CBR",
-    "contentprotection":"AES ",
-    "token":"Bearer=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cm46bWljcm9zb2Z0OmF6dXJlOm1lZGlhc2VydmljZXM6Y29udGVudGtleWlkZW50aWZpZXIiOiI5ZGRhMGJjYy01NmZiLTQxNDMtOWQzMi0zYWI5Y2M2ZWE4MGIiLCJpc3MiOiJodHRwOi8vdGVzdGFjcy5jb20vIiwiYXVkIjoidXJuOnRlc3QiLCJleHAiOjQ1ODE4Nzc1MjN9.J9Y6_jL4ZXzpM5kbxdp-gU830uIj5cRGnKpRDZp6sbY",
+    "contentprotection":"AES",
+    "token":"Bearer=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cm46bWljcm9zb2Z0OmF6dXJlOm1lZGlhc2VydmljZXM6Y29udGVudGtleWlkZW50aWZpZXIiOiI5ZGRhMGJjYy01NmZiLTQxNDMtOWQzMi0zYWI5Y2M2ZWE4MGIiLCJpc3MiOiJodHRwOi8vdGVzdGFjcy5jb20vIiwiYXVkIjoidXJuOnRlc3QiLCJleHAiOjE3MTA4MDczODl9.lJXm5hmkp5ArRIAHqVJGefW2bcTzd91iZphoKDwa6w8",
     "other":"JWT with symmetric key",
     "notes":"AES with token",
-    "url":"http://amssamples.streaming.mediaservices.windows.net/594ff5ec-910c-4952-bc39-802ed2299037/TearsOfSteelTeaser.ism/manifest",
+    "url":"http://amssamples.streaming.mediaservices.windows.net/830584f8-f0c8-4e41-968b-6538b9380aa5/TearsOfSteelTeaser.ism/manifest",
     "copyright":"Tears of Steel video - &copy; Blender Foundation | mango.blender.org"
     },
     {
