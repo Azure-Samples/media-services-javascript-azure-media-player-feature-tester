@@ -635,14 +635,6 @@ var updateShareUrl = function () {
 }
 
 var loadPlugins = function () {
-    myPlayer.watermark({
-        file: 'img/playerbrand.png',
-        xpos: 0,
-        ypos: 0,
-        xrepeat: 0,
-        opacity: 0
-    });
-
     myPlayer.hotkeys({
         volumeStep: 0.1,
         seekStep: 5,
