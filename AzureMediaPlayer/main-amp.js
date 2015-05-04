@@ -303,9 +303,9 @@ var appendSourceUrl = function (url) {
             { src: "//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-fr.vtt", srclang: "fr", kind: "subtitles", label: "fran&#231ais" },
             { src: "//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-it.vtt", srclang: "it", kind: "subtitles", label: "italiano" }
         ];
-    } else if (url.trim().toLowerCase().match("http://nimbuspm.origin.mediaservices.windows.net/292380fd-2df2-4829-b6bd-693d9b2a1c37/Microsoft's HoloLens Live Demonstration.ism/manifest".toLowerCase())) {
+    } else if (url.trim().toLowerCase().match("nimbuspm.origin.mediaservices.windows.net/aed33834-ec2d-4788-88b5-a4505b3d032c/Microsoft's".toLowerCase())) {
         myTrackList = [
-            { src: "http://nimbuspm.origin.mediaservices.windows.net/292380fd-2df2-4829-b6bd-693d9b2a1c37/pp4_blog_demo.vtt", srclang: "en", kind: "subtitles", label: "english" }
+            { src: "http://nimbuspm.origin.mediaservices.windows.net/aed33834-ec2d-4788-88b5-a4505b3d032c/pp4_blog_demo.vtt", srclang: "en", kind: "subtitles", label: "english" }
         ];
     }
 
