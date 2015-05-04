@@ -12,39 +12,53 @@
     <link rel="stylesheet" href="css/main.css">
     <script src="js/vendor/modernizr-2.7.1.min.js"></script>
     <script src="js/vendor/jquery-1.11.0.min.js"></script>
-    
+
     <!-- Azure Media Player -->
     <link href="//amp.azure.net/libs/amp/latest/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
     <script src="//amp.azure.net/libs/amp/latest/azuremediaplayer.min.js"></script>
-    
+
     <!--Load Plugins-->
     <script src="AzureMediaPlayer/plugins/hotkeys.js"></script>
-    
+
     <!-- Set the location of the fallback techs -->
     <script>
         amp.options.flashSS.swf = "//amp.azure.net/libs/amp/latest/techs/StrobeMediaPlayback.2.0.swf"
         amp.options.flashSS.plugin = "//amp.azure.net/libs/amp/latest/techs/MSAdaptiveStreamingPlugin-osmf2.0.swf"
         amp.options.silverlightSS.xap = "//amp.azure.net/libs/amp/latest/techs/SmoothStreamingPlayer.xap"
     </script>
+
 </head>
 <body onload="loadPlugins()">
     <!-- Add your site or application content here -->
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="z-index:10000">
         <div class="container">
-            <div class="navbar-header">
+            <div class="navbar-header col-lg-12 col-md-12 col-sm-12">
                 <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>-->
-                <a class="navbar-brand" href="http://azure.microsoft.com/en-us/services/media-services/" style="color:white"><img style="vertical-align:text-top" src="img/logo4.png" alt="Microsoft Azure Media Services"></a>
+                <a class="navbar-brand" href="http://aka.ms/ampinfo">
+                    <img src="img/ams.png" width="27" height="30" style="display:inline">
+                    <span>Azure Media Player</span>
+                </a>
+                <style>
+                  @media all and (max-width: 350px) {
+                      .msftlogo {
+                          display: none;
+                      }
+                  }
+                </style>
+                <svg class="msftlogo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" width="105" height="25" style="position:relative;float:right;margin-top:12.5px">
+                    <image xlink:href="data:img/png;base64,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" width="105" height="25" style="float:right"></image>
+                </svg>
             </div>
             <div class="navbar-collapse collapse">
             </div><!--/.navbar-collapse -->
         </div>
     </div>
-    
+
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron player-page">
         <center>
@@ -104,47 +118,47 @@
                                         <option value=" " disabled selected format="auto" protection="none" token="none">
                                             Select a sample
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest" format="auto" protection="none" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest" format="auto" protection="none" token="none">
                                             Azure Media Services Overview
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/1aaaf152-c6ad-42df-8399-3e7111680284/BigBuckBunny_Trailer_WAMEH264AdaptiveBitrateMP4Set1080p.ism/manifest" format="auto" protection="none" token="none">
-                                            On Demand [Big Buck Bunny Trailer]
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/69fbaeba-8e92-4740-aedc-ce09ae945073/AzurePromo.ism/manifest" format="auto" protection="none" token="none">
+                                            On Demand [Azure Promo]
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/a38e6323-95e9-4f1f-9b38-75eba91704e4/5f2ce531-d508-49fb-8152-647eba422aec.ism/manifest" format="auto" protection="none" token="none">
+                                        <option value="//b028.wpc.azureedge.net/80B028/Samples/a38e6323-95e9-4f1f-9b38-75eba91704e4/5f2ce531-d508-49fb-8152-647eba422aec.ism/Manifest" format="auto" protection="none" token="none">
                                             Live (Smooth Ingest) - 24x7
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/231d6dce-ae66-4ee8-8a63-f259675875e0/Sintel_AES_WAMEH264AdaptiveBitrateMP4Set1080p.ism/manifest" format="auto" protection="aes" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/49b57c87-f5f3-48b3-ba22-c55cfdffa9cb/Sintel.ism/manifest" format="auto" protection="aes" token="none">
                                             AES (no token) - On Demand [Sintel]
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/c1275bed-9977-40ca-bb27-91bc783c040b/sintel_trailer-1080p.ism/manifest" format="auto" protection="aes" token="Bearer%3Durn%253amicrosoft%253aazure%253amediaservices%253acontentkeyidentifier%3D8ca714da-5404-4617-9fc2-3ea58d88667f%26Audience%3Durn%253atest%26ExpiresOn%3D2281559228%26Issuer%3Dhttp%253a%252f%252ftestacs.com%252f%26HMACSHA256%3DpimqYZll8uFqSYYFX6AOxAbHH6epEgsn1Y%252f%252bJnOdCLc%253d">
-                                            AES (token) - On Demand [Sintel Trailer]
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/9ead18f1-29f8-453c-8721-4becc00ff611/BigBuckBunnyTrailer.ism/manifest" format="auto" protection="aes" token="Bearer%3Durn%253amicrosoft%253aazure%253amediaservices%253acontentkeyidentifier%3D5f5076de-4322-42f7-a533-6265f686d5b9%26Audience%3Durn%253atest%26ExpiresOn%3D4581880130%26Issuer%3Dhttp%253a%252f%252ftestacs.com%252f%26HMACSHA256%3D%252bx77Qo0CeBzP4aCntfe2sVkbKeKguOUNAebHQb53sLc%253d">
+                                            AES (SWT token) - On Demand [Big Buck Bunny Trailer]
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/0e8848ca-1db7-41a3-8867-fe911144c045/d34d8807-5597-47a1-8408-52ec5fc99027.ism/manifest" format="auto" protection="aes" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/830584f8-f0c8-4e41-968b-6538b9380aa5/TearsOfSteelTeaser.ism/manifest" format="auto" protection="aes" token="Bearer%3DeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cm46bWljcm9zb2Z0OmF6dXJlOm1lZGlhc2VydmljZXM6Y29udGVudGtleWlkZW50aWZpZXIiOiI5ZGRhMGJjYy01NmZiLTQxNDMtOWQzMi0zYWI5Y2M2ZWE4MGIiLCJpc3MiOiJodHRwOi8vdGVzdGFjcy5jb20vIiwiYXVkIjoidXJuOnRlc3QiLCJleHAiOjE3MTA4MDczODl9.lJXm5hmkp5ArRIAHqVJGefW2bcTzd91iZphoKDwa6w8">
+                                            AES (JWT token) - On Demand [Tears of Steel Teaser]
+                                        </option>
+                                        <option value="//b028.wpc.azureedge.net/80B028/Samples/0e8848ca-1db7-41a3-8867-fe911144c045/d34d8807-5597-47a1-8408-52ec5fc99027.ism/Manifest" format="auto" protection="aes" token="none">
                                             AES (no token) - Live (Smooth Ingest)
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/777ac0bb-ecb8-4782-96e7-8cf1638c2d7f/TearsofSteel_StaticPlayReady_WAMEH264SmoothStreaming1080p.ism/manifest" format="auto" protection="playready" token="none">
-                                            PlayReady (static/no token) - On Demand [Tears of Steel]
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/de1470b3-7b3c-4902-ab53-d19b37ef3bd7/TearsOfSteelTeaser.ism/manifest" format="auto" protection="playready" token="none">
+                                            PlayReady (static/no token) - On Demand [Tears of Steel Teaser]
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/f3b5ab7a-00bf-4bda-8ec4-023f575118dd/azure.ism/manifest" format="auto" protection="playready" token="none">
-                                            PlayReady (dynamic/no token) - On Demand [Azure]
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/bf657309-71d9-4436-b94b-8ac0d2ca222b/SintelTrailer.ism/manifest" format="auto" protection="playready" token="none">
+                                            PlayReady (dynamic/no token) - On Demand [Sintel Trailer]
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/c05a4a7a-9bc8-4225-ace7-e75517ec6a48/ElephantDream.ism/manifest" format="auto" protection="playready" token="Bearer%3Durn%253amicrosoft%253aazure%253amediaservices%253acontentkeyidentifier%3D186e3698-5157-4c11-8115-5325301dd85e%26Audience%3Durn%253atest%26ExpiresOn%3D1452806060%26Issuer%3Dhttp%253a%252f%252ftestacs.com%252f%26HMACSHA256%3DIOe54iF9u4EU5L5PQZL3JHwYs1PY97HyEyWK8Cwx8nE%253d%0A">
-                                            PlayReady (dynamic/token) - On Demand [Elephant's Dream]
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/8b661219-cef3-4413-9471-a0b02794cc4c/BigBuckBunny.ism/manifest" format="auto" protection="playready" token="Bearer%3Durn%253amicrosoft%253aazure%253amediaservices%253acontentkeyidentifier%3Dea388c3e-a0ec-4117-8564-ae40b31ca416%26Audience%3Durn%253atest%26ExpiresOn%3D4581880646%26Issuer%3Dhttp%253a%252f%252ftestacs.com%252f%26HMACSHA256%3DBk8lBOgQvNyfL5ztAqmud3y652FBTkVPmkG2CQuIup4%253d">
+                                            PlayReady (dynamic/SWT token) - On Demand [Big Buck Bunny]
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/859b335f-eebc-4ff1-ac03-98e9b614e2c1/0cc164eb-193e-48cb-bc6b-041cc28307e4.ism/manifest" format="auto" protection="playready" token="none">
+                                        <option value="//b028.wpc.azureedge.net/80B028/Samples/859b335f-eebc-4ff1-ac03-98e9b614e2c1/0cc164eb-193e-48cb-bc6b-041cc28307e4.ism/Manifest" format="auto" protection="playready" token="none">
                                             PlayReady (dynamic/no token) - Live (Smooth Ingest)
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TearsOfSteel_WAMEH264SmoothStreaming720p.ism/manifest" format="auto" protection="none" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TearsOfSteel.ism/manifest" format="auto" protection="none" token="none">
                                             Subtitles (WebVTT) - On Demand [Tears of Steel]
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/Sintel_WAMEH264AdaptiveBitrateMP4SetSD4x3iOSCellularOnly.ism/manifest" format="auto" protection="none" token="none">
-                                            Subtitles (WebVTT) - On Demand [Sintel]
-                                        </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/6e91ed4b-16a1-4fba-aeda-36b611435b33/ElephantDream.ism/manifest(filtername=ThirdFilter)" format="auto" protection="none" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/b6822ec8-5c2b-4ae0-a851-fd46a78294e9/ElephantsDream.ism/manifest(filtername=FirstFilter)" format="auto" protection="none" token="none">
                                             Dynamic Manifest - On Demand [Elephant's Dream]
                                         </option>
-                                        <option value="//ams-samplescdn.streaming.mediaservices.windows.net/c02faa73-b49c-4304-a1f2-7a4a4858754b/sintel_trailer-1080p.mp4" format="mp4" protection="none" token="none">
-                                            Progressive MP4 [Sintel Trailer]
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/2e91931e-0d29-482b-a42b-9aadc93eb825/AzurePromo.mp4" format="mp4" protection="none" token="none">
+                                            Progressive MP4 [Azure Promo]
                                         </option>
                                         <option value="http://nimbuspm.origin.mediaservices.windows.net/292380fd-2df2-4829-b6bd-693d9b2a1c37/Microsoft's HoloLens Live Demonstration.ism/manifest" format="auto" protection="none" token="none">
                                             Indexer Demo [Microsoft HoloLens Demo]
@@ -156,7 +170,7 @@
                             <div class="row">
                                 <div class="col-md-2">URL:</div>
                                 <div class="col-md-10">
-                                    <span><input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="adaptive-url" value="http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest"></span>
+                                    <span><input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="adaptive-url" value="//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest"></span>
                                 </div>
                             </div>
                             <div class="row">
@@ -186,7 +200,7 @@
                                     </select>
                                 </div>
                                 <div id="formatOther" class="col-md-4">
-                                    <input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="formatOtherVal" value="MIME_Type">
+                                    <input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="formatOtherVal" placeholder="MIME_Type">
                                 </div>
                             </div>
                             <br />
@@ -214,7 +228,7 @@
                                     </select>
                                 </div>
                                 <div id="protectionOther" class="col-md-4">
-                                    <input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="token" value="Token">
+                                    <input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="token" placeholder="Token">
                                 </div>
                             </div>
                             <br /><br />
@@ -254,22 +268,26 @@
                         <td>Token</td>
                         <td><span id="currentToken"></span></td>
                     </tr>-->
-                </table> 
+                </table>
             </div>
-
         </div>
-
-        <footer>
-            <p class="pull-right"><a href="http://www.microsoft.com/privacystatement/en-us/OnlineServices/Default.aspx" target="_blank">Privacy Statement</a> // <a href="http://azure.microsoft.com/en-us/support/legal/website-terms-of-use/" target="_blank">Terms of Use</a></p>
-            <p class="pull-right"></p>
-            <p>© Microsoft Corporation 2015</p>
-        </footer>
     </div> <!-- /container -->
+    <footer style="position:relative; bottom:0; width:100%; background-color:black; vertical-align:middle">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="pull-right" style="color:white"><a href="http://www.microsoft.com/privacystatement/en-us/OnlineServices/Default.aspx" target="_blank">Privacy Statement</a> // <a href="http://azure.microsoft.com/en-us/support/legal/website-terms-of-use/" target="_blank">Terms of Use</a></p>
+                    <p class="pull-right"></p>
+                    <p style="color:white">© Microsoft Corporation 2015</p>
+                </div>
+            </div>
+        </div>
+    </footer>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>-->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/plugins.js"></script>
-    <script src="AzureMediaPlayer/main-amp.150415a.js"></script>
+    <script src="AzureMediaPlayer/main-amp.js"></script>
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script>
@@ -278,11 +296,18 @@
                 (i[r].q = i[r].q || []).push(arguments)
             }, i[r].l = 1 * new Date(); a = s.createElement(o),
             m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga2');
+        ga2('create', 'UA-53885406-1', 'auto');
+        ga2('send', 'pageview');
+        //
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
         })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-        ga('create', 'UA-53885406-1', 'auto');
+        ga('create', 'UA-59948509-1', 'auto');
         ga('send', 'pageview');
-
     </script>
 </body>
 </html>

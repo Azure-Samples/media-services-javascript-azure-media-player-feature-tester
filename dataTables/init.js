@@ -44,11 +44,39 @@ function format(d) {
     if (d.notes != "") {
         expandedData += '<tr>' + '<td>Notes:</td>' + '<td>' + d.notes + '</td>' + '</tr>';
     }
+    expandedData += '<tr>' + '<td>Play:</td>' + '<td>' + '<a target="_blank" href="//aka.ms/azuremediaplayer?' + getAMPUrl(d) + '"' + '>Click to Play</a>' + '</td>' + '</tr>';
     //if (d. != "") {
     //    expandedData += '<tr>' + '<td>:</td>' + '<td>' + d. + '</td>' + '</tr>';
     //}
 
     return expandedData;
+}
+
+function getAMPUrl(d) {
+    var AMPUrl = "";
+    
+    //Manifest URL
+    AMPUrl += "url=";
+    if (d.url.trim().match('#$')) {
+        AMPUrl += encodeURIComponent(d.url.slice(0, -1) +")");
+    }else{
+        AMPUrl += encodeURIComponent(d.url);
+    }
+
+    if(d.contentprotection.toLowerCase().trim()=="aes"){
+        AMPUrl += "&protection=aes";
+    } else if (d.contentprotection.toLowerCase().trim()== "playready") {
+        AMPUrl += "&protection=playready";
+    } else if (d.contentprotection.toLowerCase().trim()== "widevine") {
+        AMPUrl += "&protection=widevine";
+    }
+
+    if (d.token.trim() != "") {
+        AMPUrl += "&token=" + encodeURIComponent(d.token)
+    }
+
+    return AMPUrl;
+    
 }
 
 $(document).ready(function () {
@@ -68,7 +96,8 @@ $(document).ready(function () {
                 "class": 'details-control',
                 "orderable": false,
                 "data": null,
-                "defaultContent": ''
+                "defaultContent": '',
+                "width": "4px"
             },
             { "data": "stream" },
             { "data": "content" },

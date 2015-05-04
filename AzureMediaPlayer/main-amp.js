@@ -1,6 +1,6 @@
 var myPlayer;
 var config = {
-    url: "//ams-samplescdn.streaming.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest",
+    url: "//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest",
     advanced: "false",
     format: "auto",
     tech: "auto",
@@ -296,12 +296,12 @@ var appendSourceUrl = function (url) {
             { src: "//ams-samplescdn.streaming.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/sintel-fr.vtt", srclang: "fr", kind: "subtitles", label: "fran&#231ais" },
             { src: "//ams-samplescdn.streaming.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/sintel-it.vtt", srclang: "it", kind: "subtitles", label: "italiano" }
         ];
-    } else if (url.trim().toLowerCase().match('ams-samplescdn.streaming.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TearsOfSteel_WAMEH264SmoothStreaming720p.ism/manifest'.toLowerCase())) {
+    } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TearsOfSteel.ism/manifest'.toLowerCase())) {
         myTrackList = [
-            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-en.vtt", srclang: "en", kind: "subtitles", label: "english" },
-            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-es.vtt", srclang: "es", kind: "subtitles", label: "espa&#241ol" },
-            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-fr.vtt", srclang: "fr", kind: "subtitles", label: "fran&#231ais" },
-            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/11196e3d-2f40-4835-9a4d-fc52751b0323/TOS-it.vtt", srclang: "it", kind: "subtitles", label: "italiano" }
+            { src: "//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-en.vtt", srclang: "en", kind: "subtitles", label: "english" },
+            { src: "//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-es.vtt", srclang: "es", kind: "subtitles", label: "espa&#241ol" },
+            { src: "//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-fr.vtt", srclang: "fr", kind: "subtitles", label: "fran&#231ais" },
+            { src: "//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-it.vtt", srclang: "it", kind: "subtitles", label: "italiano" }
         ];
     } else if (url.trim().toLowerCase().match("http://nimbuspm.origin.mediaservices.windows.net/292380fd-2df2-4829-b6bd-693d9b2a1c37/Microsoft's HoloLens Live Demonstration.ism/manifest".toLowerCase())) {
         myTrackList = [

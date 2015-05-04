@@ -1,135 +1,157 @@
 ﻿<!DOCTYPE html>
 <html class="no-js" lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>Azure Media Services Sample Streams</title>
-		<meta name="description" content="">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Azure Media Services Sample Streams</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<!-- Latest compiled and minified Bootstrap CSS -->
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/normalize.css">
-		<link rel="stylesheet" href="css/main.css">
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="dataTables/media/css/jquery.dataTables.css">
     <script src="js/vendor/modernizr-2.7.1.min.js"></script>
-	</head>
-	<body>
-        <!-- Add your site or application content here -->
-        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#"><img src="./img/logo.png" alt="Windows Azure"></a>
-                </div>
-                <div class="navbar-collapse collapse">
-                </div><!--/.navbar-collapse -->
+</head>
+<body>
+    <!-- Add your site or application content here -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="z-index:10000">
+        <div class="container">
+            <div class="navbar-header col-lg-12 col-md-12 col-sm-12">
+                <a class="navbar-brand" href="http://aka.ms/ampinfo">
+                    <img src="img/ams.png" width="27" height="30" style="display:inline">
+                    <span>Azure Media Player</span>
+                </a>
+                <style>
+                  @media all and (max-width: 350px) {
+                      .msftlogo {
+                          display: none;
+                      }
+                  }
+                </style>
+                <svg class="msftlogo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" width="105" height="25" style="position:relative;float:right;margin-top:12.5px">
+                    <image xlink:href="data:img/png;base64,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" width="105" height="25" style="float:right"></image>
+                </svg>
             </div>
+            <div class="navbar-collapse collapse">
+            </div><!--/.navbar-collapse -->
         </div>
-        <!-- Main jumbotron for a primary marketing message or call to action -->
-       
-        <div class="jumbotron player-page">
-            <center>
-                <h3>Azure Media Services Sample Streams</h3>
-            </center>
-        </div>
+    </div>
+    <!-- Main jumbotron for a primary marketing message or call to action -->
 
-        <div width="95%" style="margin:20px">
-            <table id="example" class="display" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Stream</th>
-                        <th>Content</th>
-                        <th>Type</th>
-                        <th>Adv.</th>
-                        <th>Video Codec</th>
-                        <th>Audio Codec</th>
-                        <th>(mm:ss)</th>
-                        <!--<th>Duration</th>-->
-                        <th>Timescale</th>
-                        <!--<th>Quality Levels</th>-->
-                        <th>Max Resolution</th>
-                        <!--<th>Max Height</th>-->
-                        <!--<th>Max Width</th>-->
-                        <!--<th># Audio Tracks</th>-->
-                        <!--<th># Subtitle Tracks</th>-->
-                        <!--<th>Audio Channels</th>-->
-                        <th>Encoder</th>
-                        <th>Encoding Profile</th>
-                        <th>Encoding Preset</th>
-                        <th>CBR/VBR</th>
-                        <th>Content Protection</th>
-                        <th>Token</th>
-                        <!--<th>Other</th>-->
-                        <th>URL</th>
-                        <!--<th>Play</th>-->
-                        <th>Copyright</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
+    <div class="jumbotron player-page">
+        <center>
+            <h3>Azure Media Services Sample Streams</h3>
+        </center>
+    </div>
 
-                <tfoot>
-                    <tr>
-                        <th></th>
-                        <th>Stream</th>
-                        <th>Content</th>
-                        <th>Type</th>
-                        <th>Adv.</th>
-                        <th>Video Codec</th>
-                        <th>Audio Codec</th>
-                        <th>(mm:ss)</th>
-                        <!--<th>Duration</th>-->
-                        <th>Timescale</th>
-                        <!--<th>Quality Levels</th>-->
-                        <th>Max Resolution</th>
-                        <!--<th>Max Height</th>-->
-                        <!--<th>Max Width</th>-->
-                        <!--<th># Audio Tracks</th>-->
-                        <!--<th># Subtitle Tracks</th>-->
-                        <!--<th>Audio Channels</th>-->
-                        <th>Encoder</th>
-                        <th>Encoding Profile</th>
-                        <th>Encoding Preset</th>
-                        <th>CBR/VBR</th>
-                        <th>Content Protection</th>
-                        <th>Token</th>
-                        <!--<th>Other</th>-->
-                        <th>URL</th>
-                        <!--<th>Play</th>-->
-                        <th>Copyright</th>
-                        <th>Notes</th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+    <div width="95%" style="margin:20px">
+        <table id="example" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Stream</th>
+                    <th>Content</th>
+                    <th>Type</th>
+                    <th>Adv.</th>
+                    <th>Video Codec</th>
+                    <th>Audio Codec</th>
+                    <th>(mm:ss)</th>
+                    <!--<th>Duration</th>-->
+                    <th>Timescale</th>
+                    <!--<th>Quality Levels</th>-->
+                    <th>Max Resolution</th>
+                    <!--<th>Max Height</th>-->
+                    <!--<th>Max Width</th>-->
+                    <!--<th># Audio Tracks</th>-->
+                    <!--<th># Subtitle Tracks</th>-->
+                    <!--<th>Audio Channels</th>-->
+                    <th>Encoder</th>
+                    <th>Encoding Profile</th>
+                    <th>Encoding Preset</th>
+                    <th>CBR/VBR</th>
+                    <th>Content Protection</th>
+                    <th>Token</th>
+                    <!--<th>Other</th>-->
+                    <th>URL</th>
+                    <!--<th>Play</th>-->
+                    <th>Copyright</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
 
-        <div>
-		<footer>
-				<p class="pull-right"><a href="http://azure.microsoft.com/en-us/support/legal/website-terms-of-use/" target="_blank">Terms of Use</a></p>
-				<p>© Microsoft Corporation 2015</p>
-			</footer>
-		</div> <!-- /container -->
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th>Stream</th>
+                    <th>Content</th>
+                    <th>Type</th>
+                    <th>Adv.</th>
+                    <th>Video Codec</th>
+                    <th>Audio Codec</th>
+                    <th>(mm:ss)</th>
+                    <!--<th>Duration</th>-->
+                    <th>Timescale</th>
+                    <!--<th>Quality Levels</th>-->
+                    <th>Max Resolution</th>
+                    <!--<th>Max Height</th>-->
+                    <!--<th>Max Width</th>-->
+                    <!--<th># Audio Tracks</th>-->
+                    <!--<th># Subtitle Tracks</th>-->
+                    <!--<th>Audio Channels</th>-->
+                    <th>Encoder</th>
+                    <th>Encoding Profile</th>
+                    <th>Encoding Preset</th>
+                    <th>CBR/VBR</th>
+                    <th>Content Protection</th>
+                    <th>Token</th>
+                    <!--<th>Other</th>-->
+                    <th>URL</th>
+                    <!--<th>Play</th>-->
+                    <th>Copyright</th>
+                    <th>Notes</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
-		<script src="js/bootstrap.min.js"></script>
-        <script src="dataTables/media/js/jquery.dataTables.min.js"></script>
-        <script src="dataTables/init.js"></script>
-        <script>
-		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-		  ga('create', 'UA-53885406-1', 'auto');
-		  ga('send', 'pageview');
-
-		</script>
-	</body>
+    <div>
+        <footer style="position:relative; bottom:0; width:100%; background-color:black; vertical-align:middle">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p class="pull-right" style="color:white"><a href="http://www.microsoft.com/privacystatement/en-us/OnlineServices/Default.aspx" target="_blank">Privacy Statement</a> // <a href="http://azure.microsoft.com/en-us/support/legal/website-terms-of-use/" target="_blank">Terms of Use</a></p>
+                        <p class="pull-right"></p>
+                        <p style="color:white">© Microsoft Corporation 2015</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div> <!-- /container -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="dataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="dataTables/init.js"></script>
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga2');
+        ga2('create', 'UA-53885406-1', 'auto');
+        ga2('send', 'pageview');
+        //
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-59948509-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+</body>
 </html>
