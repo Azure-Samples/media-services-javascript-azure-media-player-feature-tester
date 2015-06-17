@@ -266,8 +266,14 @@ var appendSourceUrl = function (url) {
                 "preRollInSec": 4,
                 "windowSizeHeuristics": true
             }
+        },
+        plugins: {
+            EventHubQoS: {
+                "appName": "AMP Demo Page",
+                "heartBeatIntervalMs": 10000,
+                "disableGeoLocation": false
+            }
         }
-
     };
 
     if (config.tech == "js") {
