@@ -271,7 +271,7 @@ var appendSourceUrl = function (url) {
             EventHubQoS: {
                 "appName": "AMP Demo Page",
                 "heartBeatIntervalMs": 10000,
-                "disableGeoLocation": false
+                "disableGeoLocation": true
             }
         }
     };
