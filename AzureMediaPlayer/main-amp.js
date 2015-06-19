@@ -570,7 +570,13 @@ var updateConfig = function () {
 
 var updateParamsInAddressURL = function () {
     var urlParams = "";
-    urlParams += "?url=" + encodeURIComponent(config.url).replace(/'/g, "%27").replace(/"/g, "%22");
+    var manifestURL = config.url.trim().toLowerCase();
+    if (manifestURL.match("^http://") || manifestURL.match("^https://")||manifestURL.match("^//")) {
+        manifestURL = config.url.trim();
+    } else {
+        manifestURL = "//" + config.url.trim();
+    }
+    urlParams += "?url=" + encodeURIComponent(manifestURL).replace(/'/g, "%27").replace(/"/g, "%22");
     if (config.advanced == "true") {
         switch (config.format) {
             case "auto":
