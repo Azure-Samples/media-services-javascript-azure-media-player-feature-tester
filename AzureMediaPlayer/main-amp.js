@@ -285,13 +285,7 @@ var appendSourceUrl = function (url) {
     } else if (config.tech == "html5") {
         myOptions.techOrder = ["html5"];
     } else {
-        if (currentBrowser() == "Safari") {
-            myOptions.techOrder = ["flashSS", "silverlightSS", "html5"];
-        } else if (protectionType == "PlayReady" && currentBrowser() == "Chrome") {
-            myOptions.techOrder = ["silverlightSS"];
-        } else {
-            myOptions.techOrder = ["azureHtml5JS", "flashSS", "silverlightSS", "html5", "flash"];
-        }
+        myOptions.techOrder = ["azureHtml5JS", "flashSS", "silverlightSS", "html5", "flash"];
     }
 
     var myTrackList;
@@ -326,7 +320,7 @@ var appendSourceUrl = function (url) {
     myPlayer.src(mySourceList, myTrackList);
 };
 
-var currentBrowser = function () {
+/*var currentBrowser = function () {
     //this function determines what browser is currently being used
     var nVer = navigator.appVersion;
     var nAgt = navigator.userAgent;
@@ -396,10 +390,10 @@ var currentBrowser = function () {
      +'Major version = '+majorVersion+'<br>'
      +'navigator.appName = '+navigator.appName+'<br>'
      +'navigator.userAgent = '+navigator.userAgent+'<br>'
-    )*/
+    ) //add "* /"
     return browserName;
 
-}
+}*/
 
 var displayConfig = function () {
     //This function updates the "Chosen Player Options" display to the user
