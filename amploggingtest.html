@@ -1,0 +1,290 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Azure Media Player</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--*****START OF Azure Media Player Scripts*****-->
+    <!--Note: DO NOT USE the "latest" folder in production. Replace "latest" with a version number like "1.0.0"-->
+    <!--EX:<script src="//amp.azure.net/libs/amp/1.0.0/azuremediaplayer.min.js"></script>-->
+    <!--Azure Media Player versions can be queried from //amp.azure.net/libs/amp/latest/docs/changelog.html-->
+    <script src="//amp.azure.net/libs/amp/latest/azuremediaplayer.min.js"></script>
+    <link href="//amp.azure.net/libs/amp/latest/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
+    <!-- Set the location of the fallback techs -->
+    <script>
+        amp.options.flashSS.swf = "//amp.azure.net/libs/amp/latest/techs/StrobeMediaPlayback.2.0.swf"
+        amp.options.flashSS.plugin = "//amp.azure.net/libs/amp/latest/techs/MSAdaptiveStreamingPlugin-osmf2.0.swf"
+        amp.options.silverlightSS.xap = "//amp.azure.net/libs/amp/latest/techs/SmoothStreamingPlayer.xap"
+    </script>
+    <!--*****END OF Azure Media Player Scripts*****-->
+    <script src="http://amp.azure.net/signup/js/vendor/jquery-1.11.0.min.js"></script>
+
+</head>
+<body style="margin:0px">
+    <h1>Azure Media Player Test</h1>
+    <input type="text" id="srcUrl" style="width:640px" value="http://amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest" />
+    <br />
+    <!--<label><input type="checkbox" id="chkDisableUrlRewriter" /> Disable Url Rewritter</label>-->
+    <select id="streamingProtocol">
+        <option value="0">Auto Select Streaming Protocol</option>
+        <option value="1">DASH</option>
+        <option value="2">SMOOTH</option>
+        <option value="3">HLS V3</option>
+        <option value="4">HLS V4</option>
+    </select>
+    <select id="playbackTech">
+        <option value="0">Auto Select Tech</option>
+        <option value="1">Azure Html5 JS</option>
+        <option value="2">Flash</option>
+        <option value="3">Silverlight</option>
+        <option value="4">Native HTML5 (type 1)</option>
+    </select>
+    <br />
+    <button onclick="setSource()">Set Source</button>
+    <br />
+    <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" tabindex="0">
+        <p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
+    </video>
+    <textarea id="techLog" style="width:640px" rows="10"></textarea>
+    <br />
+    <textarea id="txtLog" style="width:640px" rows="10"></textarea>
+    <br />
+    <button onclick="email()">Email Verbose Log</button>
+    <div id="success" style="display:none;color:red"></div>
+    <script>
+        AzureHtml5JS.Log.setConsoleOutputByLevel(AzureHtml5JS.Log.Level.verbose);
+
+        var queryString = function () {
+            // This function is anonymous, is executed immediately and
+            // the return value is assigned to QueryString!
+            var query_string = {};
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split(/=(.*)/);
+                // If first entry with this name
+                if (typeof query_string[pair[0]] === "undefined") {
+                    query_string[pair[0]] = pair[1];
+                    // If second entry with this name
+                } else if (typeof query_string[pair[0]] === "string") {
+                    var arr = [query_string[pair[0]], pair[1]];
+                    query_string[pair[0]] = arr;
+                    // If third or later entry with this name
+                } else {
+                    query_string[pair[0]].push(pair[1]);
+                }
+            }
+            return query_string;
+        }();
+
+        if (queryString.url) {
+            document.getElementById("srcUrl").value = decodeURIComponent(queryString.url).replace(/\+/g, " ");
+        }
+
+
+        var myOptions = {
+            "nativeControlsForTouch": false,
+            traceConfig: {
+                TraceTargets: [{ target: 'memory' }],
+                maxLogLevel: 3
+            },
+            autoplay: false,
+            controls: true,
+            width: "640",
+            height: "400",
+            poster: ""
+        };
+
+        var myPlayer = amp("azuremediaplayer", myOptions, function () {
+            //'this' refers to the player instance in the ready function
+        });
+        //Register for events after intialization not in Ready function to ensure all event are captured
+        myPlayer.addEventListener(amp.eventName.volumechange, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.ended, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.timeupdate, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.durationchange, _ampEventHandler);
+
+        myPlayer.addEventListener(amp.eventName.pause, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.play, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.playing, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.seeking, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.seeked, _ampEventHandler);
+
+        myPlayer.addEventListener(amp.eventName.loadstart, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.loadeddata, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.loadedmetadata, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.fullscreenchange, _ampEventHandler);
+
+        myPlayer.addEventListener(amp.eventName.waiting, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.canplaythrough, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.error, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.downloadbitratechanged, _ampEventHandler);
+        myPlayer.addEventListener(amp.eventName.playbackbitratechanged, _ampEventHandler);
+
+        myPlayer.src([{ src: "http://amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest", type: "application/vnd.ms-sstr+xml" }, ]);
+        updateconfig();
+
+        function updateconfig() {
+            document.getElementById("techLog").innerText = "user-agent: " + navigator.userAgent + "\n\n" + "tech:       " + myPlayer.currentTechName() + "\n\n" + "mime:       " + myPlayer.currentType() + "\n\n" + "source:     " + myPlayer.currentSrc();
+        }
+
+
+        var setSource = function () {
+            myPlayer.autoplay(true);
+            myOptions.autoplay = true;
+
+            var tech = document.getElementById("playbackTech");
+            var techVal = tech.options[tech.selectedIndex].value;
+
+            if (techVal == "1") {
+                myOptions.techOrder = ["azureHtml5JS"];
+            } else if (techVal == "2") {
+                myOptions.techOrder = ["flashSS"];
+            } else if (techVal == "3") {
+                myOptions.techOrder = ["silverlightSS"];
+            } else if (techVal == "4") {
+                myOptions.techOrder = ["html5"];
+            } else {
+                myOptions.techOrder = ["azureHtml5JS", "flashSS", "silverlightSS", "html5", "flash"];
+            }
+
+            var protocol = document.getElementById("streamingProtocol");
+            var protocolVal = protocol.options[protocol.selectedIndex].value;
+            var protocolArray = ["DASH", "SMOOTH", "HLS-V3", "HLS-V4"];
+
+            if (protocolVal == "1") {
+                protocolArray = ["DASH"];
+            } else if (protocolVal == "2") {
+                protocolArray = ["SMOOTH"];
+            } else if (protocolVal == "3") {
+                protocolArray = ["HLS-V3"];
+            } else if (protocolVal == "4") {
+                protocolArray = ["HLS-V4"];
+            } else {
+                protocolArray = ["DASH", "SMOOTH", "HLS-V3", "HLS-V4"];
+            }
+
+            var sourceURL = document.getElementById("srcUrl").value;
+
+            myPlayer.options(myOptions);
+            myPlayer.src([{ src: sourceURL, type: "application/vnd.ms-sstr+xml", streamingFormats: protocolArray }, ]);
+            updateconfig();
+        }
+
+        function _ampEventHandler(evt) {
+            var txtLog = document.getElementById("txtLog");
+            var logStr;
+
+            if (amp.eventName.timeupdate !== evt.type) {
+                logStr = evt.type;
+            } else {
+                return;
+            }
+
+            if (amp.eventName.error === evt.type) {
+                logStr += " " + errorInfo(myPlayer.error());
+            } else if (amp.eventName.playbackbitratechanged === evt.type) {
+                logStr += " " + myPlayer.currentPlaybackBitrate();
+            } else if (amp.eventName.downloadbitratechanged === evt.type) {
+                logStr += " " + myPlayer.currentDownloadBitrate();
+            }
+
+            if (logStr) {
+                var d = new Date();
+                txtLog.innerHTML += d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ":" + d.getMilliseconds() + "||" + "amp: " + logStr + ", currentTime: " + myPlayer.currentTime() + "\n";
+            }
+
+        }
+
+        function errorInfo(err) {
+
+            var errMsg = highlevelError(err.code);
+
+            errMsg += " code: " + err.code.toString(16);
+
+            if (err.message) {
+                errMsg += " msg: " + err.message;
+            }
+
+            return errMsg;
+        }
+
+        function highlevelError(errorCode) {
+            var errorDesc;
+            var uiCodeMask = 0xff00000;
+            var uiCode = (errorCode & uiCodeMask) >> 20;
+            switch (uiCode) {
+                case 0:
+                    errorDesc = "MEDIA_ERR_CUSTOM"
+                    break;
+                case 1:
+                    errorDesc = "MEDIA_ERR_ABORTED";
+                    break;
+                case 2:
+                    errorDesc = "MEDIA_ERR_NETWORK";
+                    break;
+                case 3:
+                    errorDesc = "MEDIA_ERR_DECODE";
+                    break;
+                case 4:
+                    errorDesc = "MEDIA_ERR_SRC_NOT_SUPPORTED";
+                    break;
+                case 5:
+                    errorDesc = "MEDIA_ERR_ENCRYPTED";
+                    break;
+                case 6:
+                    errorDesc = "SRC_PLAYER_MISMATCH";
+                    break;
+                default:
+                    errorDesc = "MEDIA_ERR_UNKNOWN";
+            }
+
+            return errorDesc;
+        }
+
+        var email = function () {
+            var textToWrite = myPlayer.getMemoryLog(false);
+            var fileName = "AmpTrace" + Date.now().toString();
+
+            $.ajax({
+                type: 'POST',
+                url: 'https://mandrillapp.com/api/1.0/messages/send.json',
+                data: {
+                    'key': 'G5HmPfV6pJ25VaB1_Be_fw',
+                    'message': {
+                        'from_email': 'ampinfo@microsoft.com',
+                        'to': [
+                            {
+                                'email': 'ampinfo@microsoft.com',
+                                'name': 'AMP Info',
+                                'type': 'to'
+                            }
+                        ],
+                        'autotext': 'true',
+                        'subject': 'AMP Test - Verbose Log',
+                        'html': 'See attachment for Verbose Log' + '<br><br>' + 'Config: ' + $("#techLog").html().replace(/\n/g, '<br/>') + '<br><br>' + 'Log: ' + $("#txtLog").html().replace(/\n/g, '<br/>'),
+                        "attachments": [
+                            {
+                                "type": "text/plain",
+                                "name": fileName,
+                                "content": btoa(textToWrite)
+                            }
+                        ],
+                    }
+                }
+            });
+            document.getElementById("success").innerHTML = "Log sent at " + Date();
+            $("#success").show();
+        }
+
+
+    </script>
+    <footer>
+        <br />
+        <p>© Microsoft Corporation 2015</p>
+    </footer>
+</body>
+</html>
