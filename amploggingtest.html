@@ -97,15 +97,23 @@
             height: "400",
             poster: ""
         };
-
+        
         var myPlayer = amp("azuremediaplayer", myOptions, function () {
             //'this' refers to the player instance in the ready function
         });
+        var videoTag;
+        
+        if($("#azuremediaplayer_html5_api")){
+            videoTag = document.getElementById("azuremediaplayer_html5_api");
+        } else {
+            videoTag = document.getElementById("azuremediaplayer");
+        }
+        
         //Register for events after intialization not in Ready function to ensure all event are captured
         myPlayer.addEventListener(amp.eventName.volumechange, _ampEventHandler);
         myPlayer.addEventListener(amp.eventName.ended, _ampEventHandler);
-        myPlayer.addEventListener(amp.eventName.timeupdate, _ampEventHandler);
-        myPlayer.addEventListener(amp.eventName.durationchange, _ampEventHandler);
+        //myPlayer.addEventListener(amp.eventName.timeupdate, _ampEventHandler);
+        //myPlayer.addEventListener(amp.eventName.durationchange, _ampEventHandler);
 
         myPlayer.addEventListener(amp.eventName.pause, _ampEventHandler);
         myPlayer.addEventListener(amp.eventName.play, _ampEventHandler);
@@ -123,6 +131,29 @@
         myPlayer.addEventListener(amp.eventName.error, _ampEventHandler);
         myPlayer.addEventListener(amp.eventName.downloadbitratechanged, _ampEventHandler);
         myPlayer.addEventListener(amp.eventName.playbackbitratechanged, _ampEventHandler);
+
+        //videoTag.addEventListener("loadstart", _videoEventHandler, false);
+        //videoTag.addEventListener("progress", _videoEventHandler, false);
+        videoTag.addEventListener("suspend", _videoEventHandler, false);
+        videoTag.addEventListener("abort", _videoEventHandler, false);
+        videoTag.addEventListener("error", _videoEventHandler, false);
+        videoTag.addEventListener("emptied", _videoEventHandler, false);
+        videoTag.addEventListener("stalled", _videoEventHandler, false);
+        //videoTag.addEventListener("play", _videoEventHandler, false);
+       // videoTag.addEventListener("pause", _videoEventHandler, false);
+        videoTag.addEventListener("loadedmetadata", _videoEventHandler, false);
+        //videoTag.addEventListener("loadeddata", _videoEventHandler, false);
+        videoTag.addEventListener("waiting", _videoEventHandler, false);
+        videoTag.addEventListener("playing", _videoEventHandler, false);
+        videoTag.addEventListener("canplay", _videoEventHandler, false);
+        //videoTag.addEventListener("canplaythrough", _videoEventHandler, false);
+        //videoTag.addEventListener("seeking", _videoEventHandler, false);
+        //videoTag.addEventListener("seeked", _videoEventHandler, false);
+        //videoTag.addEventListener("timeupdate", _videoEventHandler, false);
+        videoTag.addEventListener("ended", _videoEventHandler, false);
+        videoTag.addEventListener("ratechange", _videoEventHandler, false);
+        //videoTag.addEventListener("durationchange", _videoEventHandler, false);
+        //videoTag.addEventListener("volumechange", _videoEventHandler, false);
 
         myPlayer.src([{ src: "http://amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest", type: "application/vnd.ms-sstr+xml" }, ]);
         updateconfig();
@@ -172,6 +203,15 @@
             myPlayer.options(myOptions);
             myPlayer.src([{ src: sourceURL, type: "application/vnd.ms-sstr+xml", streamingFormats: protocolArray }, ]);
             updateconfig();
+        }
+
+        function _videoEventHandler(event) {
+            var txtLog = document.getElementById("txtLog");
+
+            if ("progress" !== event.type && "timeupdate" !== event.type) {
+                var d = new Date();
+                txtLog.innerHTML += d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ":" + d.getMilliseconds() + "||" + " videoTag: " + event.type + "\n";
+            }
         }
 
         function _ampEventHandler(evt) {
