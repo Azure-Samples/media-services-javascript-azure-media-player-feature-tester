@@ -3,20 +3,19 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Azure Media Player embed page</title>
+    <title>Azure Media Player</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../js/vendor/jquery-1.11.0.min.js"></script>
 
     <!-- Azure Media Player -->
-    <link href="//amp.azure.net/libs/amp/1.1.1/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
-    <script src="//amp.azure.net/libs/amp/1.1.1/azuremediaplayer.min.js"></script>
-
+    <script src="//amp.azure.net/libs/amp/1.2.0/azuremediaplayer.min.js"></script>
+    <link href="//amp.azure.net/libs/amp/1.2.0/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
     <!-- Set the location of the fallback techs -->
     <script>
-        amp.options.flashSS.swf = "//amp.azure.net/libs/amp/1.1.1/techs/StrobeMediaPlayback.2.0.swf"
-        amp.options.flashSS.plugin = "//amp.azure.net/libs/amp/1.1.1/techs/MSAdaptiveStreamingPlugin-osmf2.0.swf"
-        amp.options.silverlightSS.xap = "//amp.azure.net/libs/amp/1.1.1/techs/SmoothStreamingPlayer.xap"
+        amp.options.flashSS.swf = "//amp.azure.net/libs/amp/1.2.0/techs/StrobeMediaPlayback.2.0.swf"
+        amp.options.flashSS.plugin = "//amp.azure.net/libs/amp/1.2.0/techs/MSAdaptiveStreamingPlugin-osmf2.0.swf"
+        amp.options.silverlightSS.xap = "//amp.azure.net/libs/amp/1.2.0/techs/SmoothStreamingPlayer.xap"
     </script>
 
     <!--Load Plugins-->
@@ -25,53 +24,37 @@
 
 </head>
 <body onload="loadPlugins()" style="margin:0px">
-        <div id="videoWrapper" class="alt" align="center" style="margin:0px;padding:0px">
-            <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" controls preload="auto" width="100%" height="100%" poster="" style="margin:0px;padding:0px">
-                <p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
-            </video>
-        </div>
-        <script>
-            //document.getElementById("videoWrapper").style.width = $(window).width() + "px";
-            document.getElementById("videoWrapper").style.height = $(window).height() + "px";
-            document.getElementById("videoWrapper").style.margin = "0px";
 
-            $(window).resize(function () {
-                //document.getElementById("videoWrapper").style.width = $(window).width() + "px";
-                document.getElementById("videoWrapper").style.height = $(window).height() + "px";
-                document.getElementById("videoWrapper").style.margin = "0px";
-            });
-        </script>
-    <!--<script>
-    window.onload = function () {
-        document.getElementById("azuremediaplayer").style.height = window.innerHeight + "px";
-        window.addEventListener('resize', function (event) {
+    <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" controls preload="auto" width="100%" height="100%" poster="" style="margin:0px;padding:0px">
+        <p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
+    </video>
+    <script>
+        window.onload = function () {
             document.getElementById("azuremediaplayer").style.height = window.innerHeight + "px";
-        });
-    }
-    </script>-->
-
-
-
-        <script src="main-amp.js"></script>
-        
-        <script>
-            (function (i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date(); a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga2');
-            ga2('create', 'UA-53885406-1', 'auto');
-            ga2('send', 'pageview');
-            //
-            (function (i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date(); a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-            ga('create', 'UA-59948509-1', 'auto');
-            ga('send', 'pageview');
-        </script>
+            window.addEventListener('resize', function (event) {
+                document.getElementById("azuremediaplayer").style.height = window.innerHeight + "px";
+            });
+        }
+    </script>
+    <script src="main-amp.js"></script>
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga2');
+        ga2('create', 'UA-53885406-1', 'auto');
+        ga2('send', 'pageview');
+        //
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-59948509-1', 'auto');
+        ga('send', 'pageview');
+    </script>
 </body>
 </html>
