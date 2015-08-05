@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Azure Media Player embed page</title>
+
+</head>
+<body>
+    <iframe id="myFrame" src="//amsplayer.azurewebsites.net/azuremediaplayer/azuremediaplayer_iframe.html?url=%2F%2Famssamples.streaming.mediaservices.windows.net%2F91492735-c523-432b-ba01-faba6c2206a2%2FAzureMediaServicesPromo.ism%2Fmanifest&autoplay=false" name="azuremediaplayer" scrolling="no" frameborder="no" align="center" height="280px" width="500px" allowfullscreen></iframe>
+    <button onclick="PlayVideo()">Click Me!</button>
+    <script>
+        var player = null;
+        var PlayVideo = function () {
+            //player = document.getElementById('targetFrame').contentWindow.alert();
+            document.getElementById('myFrame').contentWindow.myPlayer.play();
+        }
+    </script>
+</body>
+</html>
