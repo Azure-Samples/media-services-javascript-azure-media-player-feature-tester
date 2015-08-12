@@ -7,8 +7,25 @@ var config = {
     protection: "none",
     token: "",
     autoplay: "false",
-
+    version: "latest",
+    audiolabel: ""
 };
+
+/*function loadjscssfile(filename, filetype) {
+    if (filetype == "js") { //if filename is a external JavaScript file
+        var fileref = document.createElement('script')
+        fileref.setAttribute("type", "text/javascript")
+        fileref.setAttribute("src", filename)
+    }
+    else if (filetype == "css") { //if filename is an external CSS file
+        var fileref = document.createElement("link")
+        fileref.setAttribute("rel", "stylesheet")
+        fileref.setAttribute("type", "text/css")
+        fileref.setAttribute("href", filename)
+    }
+    if (typeof fileref != "undefined")
+        document.getElementsByTagName("head")[0].appendChild(fileref)
+}*/
 
 // put function into jQuery namespace
 jQuery.redirect = function (url, params) {
@@ -87,6 +104,14 @@ var initialize = function () {
         if (queryString.autoplay != "false") {
             config.autoplay = "true";
         }
+    }
+    if (queryString.version) {
+        if (queryString.version != "latest") {
+            config.version = queryString.version;
+        }
+    }
+    if (queryString.audiolabel) {
+        config.audiolabel = queryString.audiolabel;
     }
 
     //Add more here
@@ -267,12 +292,27 @@ var appendSourceUrl = function (url) {
                 "windowSizeHeuristics": true
             }
         },
+        skinConfig: {
+            audioTracksMenu :{
+                "enabled": true,
+                "useManifestForLabel": false
+            }
+        },
         plugins: {
             EventHubQoS: {
                 "appName": "AMP Demo Page",
                 "heartBeatIntervalMs": 10000,
                 "disableGeoLocation": true
-            }
+            },
+            hotkeys: {
+                "volumeStep": 0.1,
+                "seekStep": 5,
+                "enableMute": true,
+                "enableFullscreen": true,
+                "enableNumbers": true,
+                "enableJogStyle": false
+            },
+            progressTips: {}
         }
     };
 
@@ -286,6 +326,31 @@ var appendSourceUrl = function (url) {
         myOptions.techOrder = ["html5"];
     } else {
         myOptions.techOrder = ["azureHtml5JS", "flashSS", "silverlightSS", "html5", "flash"];
+    }
+
+    //Multi-Audio
+    /*switch (config.audioLabel) {
+        case "none":
+            break;
+        case "manifest":
+            break;
+        case "auto":
+            break;
+        default:
+            break;
+    }*/
+    if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/f1ee994f-fcb8-455f-a15d-07f6f2081a60/SintelMultiAudio.ism/manifest'.toLowerCase())) {
+        myOptions.skinConfig.audioTracksMenu.enabled = true;
+        myOptions.skinConfig.audioTracksMenu.useManifestForLabel = true;
+    } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/3efdfbaa-f8f4-43ac-9ab8-013ff4a34f7f/ElephantsDream_MultiAudio.ism/manifest'.toLowerCase())) {
+        myOptions.skinConfig.audioTracksMenu.enabled = true;
+        myOptions.skinConfig.audioTracksMenu.useManifestForLabel = false;
+    } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net'.toLowerCase())) {
+        myOptions.skinConfig.audioTracksMenu.enabled = false;
+        myOptions.skinConfig.audioTracksMenu.useManifestForLabel = false;
+    } else {
+        myOptions.skinConfig.audioTracksMenu.enabled = true;
+        myOptions.skinConfig.audioTracksMenu.useManifestForLabel = false;
     }
 
     var myTrackList;
@@ -320,81 +385,6 @@ var appendSourceUrl = function (url) {
     myPlayer.src(mySourceList, myTrackList);
 };
 
-/*var currentBrowser = function () {
-    //this function determines what browser is currently being used
-    var nVer = navigator.appVersion;
-    var nAgt = navigator.userAgent;
-    var browserName = navigator.appName;
-    var fullVersion = '' + parseFloat(navigator.appVersion);
-    var majorVersion = parseInt(navigator.appVersion, 10);
-    var nameOffset, verOffset, ix;
-
-    // In Opera 15+, the true version is after "OPR/" 
-    if ((verOffset = nAgt.indexOf("OPR/")) != -1) {
-        browserName = "Opera";
-        fullVersion = nAgt.substring(verOffset + 4);
-    }
-        // In older Opera, the true version is after "Opera" or after "Version"
-    else if ((verOffset = nAgt.indexOf("Opera")) != -1) {
-        browserName = "Opera";
-        fullVersion = nAgt.substring(verOffset + 6);
-        if ((verOffset = nAgt.indexOf("Version")) != -1)
-            fullVersion = nAgt.substring(verOffset + 8);
-    }
-        // In MSIE, the true version is after "MSIE" in userAgent
-    else if ((verOffset = nAgt.indexOf("Trident")) != -1) {
-        browserName = "Microsoft Internet Explorer";
-        fullVersion = nAgt.substring(verOffset + 5);
-    }
-        // In Chrome, the true version is after "Chrome" 
-    else if ((verOffset = nAgt.indexOf("Chrome")) != -1) {
-        browserName = "Chrome";
-        fullVersion = nAgt.substring(verOffset + 7);
-    }
-        // In Safari, the true version is after "Safari" or after "Version" 
-    else if ((verOffset = nAgt.indexOf("Safari")) != -1) {
-        browserName = "Safari";
-        fullVersion = nAgt.substring(verOffset + 7);
-        if ((verOffset = nAgt.indexOf("Version")) != -1)
-            fullVersion = nAgt.substring(verOffset + 8);
-    }
-        // In Firefox, the true version is after "Firefox" 
-    else if ((verOffset = nAgt.indexOf("Firefox")) != -1) {
-        browserName = "Firefox";
-        fullVersion = nAgt.substring(verOffset + 8);
-    }
-        // In most other browsers, "name/version" is at the end of userAgent 
-    else if ((nameOffset = nAgt.lastIndexOf(' ') + 1) <
-              (verOffset = nAgt.lastIndexOf('/'))) {
-        browserName = nAgt.substring(nameOffset, verOffset);
-        fullVersion = nAgt.substring(verOffset + 1);
-        if (browserName.toLowerCase() == browserName.toUpperCase()) {
-            browserName = navigator.appName;
-        }
-    }
-    // trim the fullVersion string at semicolon/space if present
-    if ((ix = fullVersion.indexOf(";")) != -1)
-        fullVersion = fullVersion.substring(0, ix);
-    if ((ix = fullVersion.indexOf(" ")) != -1)
-        fullVersion = fullVersion.substring(0, ix);
-
-    majorVersion = parseInt('' + fullVersion, 10);
-    if (isNaN(majorVersion)) {
-        fullVersion = '' + parseFloat(navigator.appVersion);
-        majorVersion = parseInt(navigator.appVersion, 10);
-    }
-
-    /*document.write(''
-     +'Browser name  = '+browserName+'<br>'
-     +'Full version  = '+fullVersion+'<br>'
-     +'Major version = '+majorVersion+'<br>'
-     +'navigator.appName = '+navigator.appName+'<br>'
-     +'navigator.userAgent = '+navigator.userAgent+'<br>'
-    ) //add "* /"
-    return browserName;
-
-}*/
-
 var displayConfig = function () {
     //This function updates the "Chosen Player Options" display to the user
 
@@ -423,7 +413,7 @@ var displayConfig = function () {
     if ($("#tech")) {
         switch (myPlayer.techName) {
             case "AzureHtml5JS":
-                $("#tech").text("JavaScript");
+                $("#tech").text("JavaScript + HTML5 (MSE)");
                 break;
             case "FlashSS":
                 $("#tech").text("Flash");
@@ -435,7 +425,7 @@ var displayConfig = function () {
                 $("#tech").text("Flash");
                 break;
             case "Html5":
-                $("#tech").text("HTML5");
+                $("#tech").text("Native HTML5 (Type 1)");
                 break;
             default:
                 $("#tech").text(myPlayer.techName);
@@ -478,6 +468,8 @@ var displayCopyrightInfo = function () {
             document.getElementById('copyrightInfo').innerHTML = 'Elephant\'s Dream video - &copy; copyright 2006, Blender Foundation / Netherlands Media Art Institute | <a href="http://www.elephantsdream.org" target="_blank">elephantsdream.org</a>';
         } else if (config.url.match(/tears/i) && config.url.match(/steel/i)) {
             document.getElementById('copyrightInfo').innerHTML = 'Tears of Steel video - &copy; Blender Foundation | <a href="http://www.mango.blender.org" target="_blank">mango.blender.org</a>';
+        } else if (config.url.match(/caminandes/i) && config.url.match(/llama/i)) {
+            document.getElementById('copyrightInfo').innerHTML = 'Caminandes video - &copy; copyright 2013, Blender Foundation | <a href="http://caminandes.com" target="_blank">caminandes.com</a>';
         }
     }
 }
@@ -650,17 +642,14 @@ var updateShareUrl = function () {
     $('.share-url-box textarea').val("http://aka.ms/azuremediaplayer" + updateParamsInAddressURL());
 }
 
-var loadPlugins = function () {
-    myPlayer.hotkeys({
-        volumeStep: 0.1,
-        seekStep: 5,
-        enableMute: true,
-        enableFullscreen: true
-    });
-}
-
 $(document).ready(function () {
     initialize();
+    //loadjscssfile("//amp.azure.net/libs/amp/" + config.version + "/skins/amp-default/azuremediaplayer.min.css", "css");
+    //loadjscssfile("//amp.azure.net/libs/amp/" + config.version + "/azuremediaplayer.min.js", "js");
+    //amp.options.flashSS.swf = "//amp.azure.net/libs/amp/" + config.version + "/techs/StrobeMediaPlayback.2.0.swf";
+    //amp.options.flashSS.plugin = "//amp.azure.net/libs/amp/" + config.version + "/techs/MSAdaptiveStreamingPlugin-osmf2.0.swf";
+    //amp.options.silverlightSS.xap = "//amp.azure.net/libs/amp/" + config.version + "/techs/SmoothStreamingPlayer.xap";
+
     appendSourceUrl(config.url);
 
     setTimeout(function () {
@@ -674,7 +663,7 @@ $(document).ready(function () {
         //Page Reload Method
         window.location.search = updateParamsInAddressURL();
 
-        //Channel change method
+        //----------Channel change method---------------------
         //myPlayer.dispose();
         //myPlayer = null;
         //document.getElementById("video").innerHTML = '<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster=""><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>';

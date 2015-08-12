@@ -14,21 +14,17 @@
     <script src="js/vendor/jquery-1.11.0.min.js"></script>
 
     <!-- Azure Media Player -->
-    <link href="//amp.azure.net/libs/amp/1.2.0/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
-    <script src="//amp.azure.net/libs/amp/1.2.0/azuremediaplayer.min.js"></script>
-    <!-- Set the location of the fallback techs -->
-    <script>
-        amp.options.flashSS.swf = "//amp.azure.net/libs/amp/1.2.0/techs/StrobeMediaPlayback.2.0.swf"
-        amp.options.flashSS.plugin = "//amp.azure.net/libs/amp/1.2.0/techs/MSAdaptiveStreamingPlugin-osmf2.0.swf"
-        amp.options.silverlightSS.xap = "//amp.azure.net/libs/amp/1.2.0/techs/SmoothStreamingPlayer.xap"
-    </script>
+    <link href="//amp.azure.net/libs/amp/1.3.0/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
+    <script src="//amp.azure.net/libs/amp/1.3.0/azuremediaplayer.min.js"></script>
 
     <!--Load Plugins-->
+    <script src="AzureMediaPlayer/plugins/progressTimeTip.js"></script>
     <script src="AzureMediaPlayer/plugins/hotkeys.js"></script>
     <script src="AzureMediaPlayer/plugins/EventHubQoS.js"></script>
 
+
 </head>
-<body onload="loadPlugins()">
+<body>
     <!-- Add your site or application content here -->
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="z-index:10000">
         <div class="container">
@@ -96,9 +92,9 @@
         <div class="row">
             <div class="col-md-8 col-md-push-4">
                 <section>
-                    <div id="video">
-                        <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster="" tabindex=0>
-                            <p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
+                    <div id="video" style="height:500px">
+                        <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="100%" poster="" tabindex=0>
+                        <p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
                         </video>
                     </div>
                 </section>
@@ -115,52 +111,61 @@
                                 <div class="col-md-2">Samples:</div>
                                 <div class="col-md-10">
                                     <select class="form-control" id="selectSource" style="width: 100%">
-                                        <option value=" " disabled selected format="auto" protection="none" token="none">
+                                        <option value=" " disabled selected format="auto" protection="none" token="none" audioLabel="none">
                                             Select a sample
                                         </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest" format="auto" protection="none" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest" format="auto" protection="none" token="none" audiolabel="none">
                                             Azure Media Services Overview
                                         </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/69fbaeba-8e92-4740-aedc-ce09ae945073/AzurePromo.ism/manifest" format="auto" protection="none" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/69fbaeba-8e92-4740-aedc-ce09ae945073/AzurePromo.ism/manifest" format="auto" protection="none" token="none" audiolabel="none">
                                             On Demand [Azure Promo]
                                         </option>
-                                        <option value="//b028.wpc.azureedge.net/80B028/Samples/a38e6323-95e9-4f1f-9b38-75eba91704e4/5f2ce531-d508-49fb-8152-647eba422aec.ism/Manifest" format="auto" protection="none" token="none">
+                                        <option value="//b028.wpc.azureedge.net/80B028/Samples/a38e6323-95e9-4f1f-9b38-75eba91704e4/5f2ce531-d508-49fb-8152-647eba422aec.ism/Manifest" format="auto" protection="none" token="none" audiolabel="none">
                                             Live (Smooth Ingest) - 24x7
                                         </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/49b57c87-f5f3-48b3-ba22-c55cfdffa9cb/Sintel.ism/manifest" format="auto" protection="aes" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/49b57c87-f5f3-48b3-ba22-c55cfdffa9cb/Sintel.ism/manifest" format="auto" protection="aes" token="none" audiolabel="none">
                                             AES (no token) - On Demand [Sintel]
                                         </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/9ead18f1-29f8-453c-8721-4becc00ff611/BigBuckBunnyTrailer.ism/manifest" format="auto" protection="aes" token="Bearer%3Durn%253amicrosoft%253aazure%253amediaservices%253acontentkeyidentifier%3D5f5076de-4322-42f7-a533-6265f686d5b9%26Audience%3Durn%253atest%26ExpiresOn%3D4581880130%26Issuer%3Dhttp%253a%252f%252ftestacs.com%252f%26HMACSHA256%3D%252bx77Qo0CeBzP4aCntfe2sVkbKeKguOUNAebHQb53sLc%253d">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/9ead18f1-29f8-453c-8721-4becc00ff611/BigBuckBunnyTrailer.ism/manifest" format="auto" protection="aes" token="Bearer%3Durn%253amicrosoft%253aazure%253amediaservices%253acontentkeyidentifier%3D5f5076de-4322-42f7-a533-6265f686d5b9%26Audience%3Durn%253atest%26ExpiresOn%3D4581880130%26Issuer%3Dhttp%253a%252f%252ftestacs.com%252f%26HMACSHA256%3D%252bx77Qo0CeBzP4aCntfe2sVkbKeKguOUNAebHQb53sLc%253d" audiolabel="none">
                                             AES (SWT token) - On Demand [Big Buck Bunny Trailer]
                                         </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/830584f8-f0c8-4e41-968b-6538b9380aa5/TearsOfSteelTeaser.ism/manifest" format="auto" protection="aes" token="Bearer%3DeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cm46bWljcm9zb2Z0OmF6dXJlOm1lZGlhc2VydmljZXM6Y29udGVudGtleWlkZW50aWZpZXIiOiI5ZGRhMGJjYy01NmZiLTQxNDMtOWQzMi0zYWI5Y2M2ZWE4MGIiLCJpc3MiOiJodHRwOi8vdGVzdGFjcy5jb20vIiwiYXVkIjoidXJuOnRlc3QiLCJleHAiOjE3MTA4MDczODl9.lJXm5hmkp5ArRIAHqVJGefW2bcTzd91iZphoKDwa6w8">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/830584f8-f0c8-4e41-968b-6538b9380aa5/TearsOfSteelTeaser.ism/manifest" format="auto" protection="aes" token="Bearer%3DeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cm46bWljcm9zb2Z0OmF6dXJlOm1lZGlhc2VydmljZXM6Y29udGVudGtleWlkZW50aWZpZXIiOiI5ZGRhMGJjYy01NmZiLTQxNDMtOWQzMi0zYWI5Y2M2ZWE4MGIiLCJpc3MiOiJodHRwOi8vdGVzdGFjcy5jb20vIiwiYXVkIjoidXJuOnRlc3QiLCJleHAiOjE3MTA4MDczODl9.lJXm5hmkp5ArRIAHqVJGefW2bcTzd91iZphoKDwa6w8" audiolabel="none">
                                             AES (JWT token) - On Demand [Tears of Steel Teaser]
                                         </option>
-                                        <option value="//b028.wpc.azureedge.net/80B028/Samples/0e8848ca-1db7-41a3-8867-fe911144c045/d34d8807-5597-47a1-8408-52ec5fc99027.ism/Manifest" format="auto" protection="aes" token="none">
+                                        <option value="//b028.wpc.azureedge.net/80B028/Samples/0e8848ca-1db7-41a3-8867-fe911144c045/d34d8807-5597-47a1-8408-52ec5fc99027.ism/Manifest" format="auto" protection="aes" token="none" audiolabel="none">
                                             AES (no token) - Live (Smooth Ingest)
                                         </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/de1470b3-7b3c-4902-ab53-d19b37ef3bd7/TearsOfSteelTeaser.ism/manifest" format="auto" protection="playready" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/de1470b3-7b3c-4902-ab53-d19b37ef3bd7/TearsOfSteelTeaser.ism/manifest" format="auto" protection="playready" token="none" audiolabel="none">
                                             PlayReady (static/no token) - On Demand [Tears of Steel Teaser]
                                         </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/bf657309-71d9-4436-b94b-8ac0d2ca222b/SintelTrailer.ism/manifest" format="auto" protection="playready" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/bf657309-71d9-4436-b94b-8ac0d2ca222b/SintelTrailer.ism/manifest" format="auto" protection="playready" token="none" audiolabel="none">
                                             PlayReady (dynamic/no token) - On Demand [Sintel Trailer]
                                         </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/8b661219-cef3-4413-9471-a0b02794cc4c/BigBuckBunny.ism/manifest" format="auto" protection="playready" token="Bearer%3Durn%253amicrosoft%253aazure%253amediaservices%253acontentkeyidentifier%3Dea388c3e-a0ec-4117-8564-ae40b31ca416%26Audience%3Durn%253atest%26ExpiresOn%3D4581880646%26Issuer%3Dhttp%253a%252f%252ftestacs.com%252f%26HMACSHA256%3DBk8lBOgQvNyfL5ztAqmud3y652FBTkVPmkG2CQuIup4%253d">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/8b661219-cef3-4413-9471-a0b02794cc4c/BigBuckBunny.ism/manifest" format="auto" protection="playready" token="Bearer%3Durn%253amicrosoft%253aazure%253amediaservices%253acontentkeyidentifier%3Dea388c3e-a0ec-4117-8564-ae40b31ca416%26Audience%3Durn%253atest%26ExpiresOn%3D4581880646%26Issuer%3Dhttp%253a%252f%252ftestacs.com%252f%26HMACSHA256%3DBk8lBOgQvNyfL5ztAqmud3y652FBTkVPmkG2CQuIup4%253d" audiolabel="none">
                                             PlayReady (dynamic/SWT token) - On Demand [Big Buck Bunny]
                                         </option>
-                                        <option value="//b028.wpc.azureedge.net/80B028/Samples/859b335f-eebc-4ff1-ac03-98e9b614e2c1/0cc164eb-193e-48cb-bc6b-041cc28307e4.ism/Manifest" format="auto" protection="playready" token="none">
+                                        <option value="//b028.wpc.azureedge.net/80B028/Samples/859b335f-eebc-4ff1-ac03-98e9b614e2c1/0cc164eb-193e-48cb-bc6b-041cc28307e4.ism/Manifest" format="auto" protection="playready" token="none" audiolabel="none">
                                             PlayReady (dynamic/no token) - Live (Smooth Ingest)
                                         </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TearsOfSteel.ism/manifest" format="auto" protection="none" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TearsOfSteel.ism/manifest" format="auto" protection="none" token="none" audiolabel="none">
                                             Subtitles (WebVTT) - On Demand [Tears of Steel]
                                         </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/b6822ec8-5c2b-4ae0-a851-fd46a78294e9/ElephantsDream.ism/manifest(filtername=FirstFilter)" format="auto" protection="none" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/b6822ec8-5c2b-4ae0-a851-fd46a78294e9/ElephantsDream.ism/manifest(filtername=FirstFilter)" format="auto" protection="none" token="none" audiolabel="none">
                                             Dynamic Manifest - On Demand [Elephant's Dream]
                                         </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/2e91931e-0d29-482b-a42b-9aadc93eb825/AzurePromo.mp4" format="mp4" protection="none" token="none">
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/3efdfbaa-f8f4-43ac-9ab8-013ff4a34f7f/ElephantsDream_MultiAudio.ism/manifest" format="auto" protection="none" token="none" audiolabel="auto">
+                                            Multi-Audio - On Demand [Elephant's Dream]
+                                        </option>
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/f1ee994f-fcb8-455f-a15d-07f6f2081a60/SintelMultiAudio.ism/manifest" format="auto" protection="none" token="none" audiolabel="manifest">
+                                            Multi-Audio - On Demand [Sintel]
+                                        </option>
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/634cd01c-6822-4630-8444-8dd6279f94c6/CaminandesLlamaDrama4K.ism/manifest" format="auto" protection="none" token="none" audiolabel="none">
+                                            4K - On Demand [Llama Drama]
+                                        </option>
+                                        <option value="//amssamples.streaming.mediaservices.windows.net/2e91931e-0d29-482b-a42b-9aadc93eb825/AzurePromo.mp4" format="mp4" protection="none" token="none" audiolabel="none">
                                             Progressive MP4 [Azure Promo]
                                         </option>
-                                        <option value="//nimbuspm.origin.mediaservices.windows.net/aed33834-ec2d-4788-88b5-a4505b3d032c/Microsoft's HoloLens Live Demonstration.ism/manifest" format="auto" protection="none" token="none">
+                                        <option value="//nimbuspm.origin.mediaservices.windows.net/aed33834-ec2d-4788-88b5-a4505b3d032c/Microsoft's HoloLens Live Demonstration.ism/manifest" format="auto" protection="none" token="none" audiolabel="none">
                                             Indexer Demo [Microsoft HoloLens Demo]
                                         </option>
                                     </select>
@@ -175,7 +180,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 col-md-offset-2">
-                                    <span id="urlHelp" class="help-block" style="font-size: 0.85em; padding-left: 0.5em;">The URL should end in <i>*.ism/manifest</i> or <i>*.mp4</i></span>
+                                    <span id="urlHelp" class="help-block" style="font-size: 0.85em; padding-left: 0.5em;">The URL should contain <i>*.ism/manifest</i> or <i>*.mp4</i></span>
                                 </div>
                                 <div class="col-md-4">
                                     <span class="help-block" style="float: right; font-size: 0.85em;padding-right:0.5em"><input type="checkbox" name="advanced" value="advanced">Advanced Options</span>
@@ -209,10 +214,10 @@
                                 <div class="col-md-6">
                                     <select id="selectTech" style="width: 100%" class="form-control">
                                         <option value="auto" selected>Auto Select</option>
-                                        <option value="js">JavaScript</option>
+                                        <option value="js">JavaScript + HTML5 (MSE)</option>
                                         <option value="flash">Flash</option>
                                         <option value="silverlight">Silverlight</option>
-                                        <option value="html5">Native HTML5</option>
+                                        <option value="html5">Native HTML5 (Type 1)</option>
                                     </select>
                                 </div>
                             </div>
@@ -238,13 +243,14 @@
                 </div>
             </div>
             <div class="col-md-4 col-md-pull-8 well">
-                <h3>What is this?</h3>
-                <p>We have this page for you to try out the playback options with Azure Media Services.</p>
+                <h3>Getting Started</h3>
+                <p>Check out the Azure Media Player <a href="//aka.ms/ampdocs">documentation</a> to get learn more.</p>
+                <p>This demo page allows you to try out some of the features of Azure Media Player.</p>
                 <ol>
                     <li>Select a sample or input a video URL from your <a href="http://manage.windowsazure.com">Azure Media Services account</a></li>
                     <li>Update Player</li>
                 </ol>
-                <p><!-- If you like the player, you can click the get embed url button and get the embed code to use on your website.  -->Also, you can copy the URL from the browser's navigation pane and share this page.</p>
+                <p><!-- If you like the player, you can click the get embed url button and get the embed code to use on your website.  -->Also, you can copy the URL from the "get share url" tab<!--browser's navigation pane--> and share this page.</p>
                 <p>Don't have an Azure Media Services account, no worries: <a href="http://azure.microsoft.com/en-us/pricing/free-trial/" class="btn btn-warning">start your free trial</a></p>
                 <h3>Chosen Player Options</h3>
                 <table style="width:100%">
@@ -287,6 +293,23 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/plugins.js"></script>
     <script src="AzureMediaPlayer/main-amp.js"></script>
+
+    <script>
+        window.onload = function () {
+            if (window.innerWidth < 750) {
+                document.getElementById("video").style.height = window.innerWidth*9/16 + "px";
+            } else {
+                document.getElementById("video").style.height = "500px";
+            }
+        window.addEventListener('resize', function (event) {
+            if (window.innerWidth < 750) {
+                document.getElementById("video").style.height = window.innerWidth*9/16 + "px";
+            } else {
+                document.getElementById("video").style.height = "500px";
+            }
+        });
+    }
+    </script>
 
     <script>
         (function (i, s, o, g, r, a, m) {
