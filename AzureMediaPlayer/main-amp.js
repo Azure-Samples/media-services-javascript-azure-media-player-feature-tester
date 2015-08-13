@@ -342,7 +342,7 @@ var appendSourceUrl = function (url) {
     if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/f1ee994f-fcb8-455f-a15d-07f6f2081a60/SintelMultiAudio.ism/manifest'.toLowerCase())) {
         myOptions.skinConfig.audioTracksMenu.enabled = true;
         myOptions.skinConfig.audioTracksMenu.useManifestForLabel = true;
-    } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/3efdfbaa-f8f4-43ac-9ab8-013ff4a34f7f/ElephantsDream_MultiAudio.ism/manifest'.toLowerCase())) {
+    } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/3efdfbaa-f8f4-43ac-9ab8-013ff4a34f7f/ElephantsDreamMultiAudio.ism/manifest'.toLowerCase())) {
         myOptions.skinConfig.audioTracksMenu.enabled = true;
         myOptions.skinConfig.audioTracksMenu.useManifestForLabel = false;
     } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net'.toLowerCase())) {
