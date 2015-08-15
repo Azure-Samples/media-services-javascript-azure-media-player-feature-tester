@@ -58,7 +58,8 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron player-page">
         <center>
-            <h3>Reach the most popular devices anywhere with the best possible format for the device!</h3>
+            <!--<h3>Reach the most popular devices anywhere with the best possible format for the device!</h3>-->
+            <h3>Reach popular devices anywhere with the best format for the device!</h3>
         </center>
     </div>
     <div class="container">
@@ -92,10 +93,26 @@
         <div class="row">
             <div class="col-md-8 col-md-push-4">
                 <section>
-                    <div id="video">
-                        <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="100%" poster="" tabindex=0>
-                        <p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
-                        </video>
+                    <div id="videoContainer">
+                        <script>
+                            var videoWidth = 500;
+                            if ($(window).width() < 750) {
+                                videoWidth = $(window).width() * 11 / 16;
+                            }
+                            document.getElementById("videoContainer").style.height = videoWidth + "px";
+                            $("#videoContainer").append('<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="100%" poster="" tabindex=0><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>');
+                            $(document).ready(function () {
+                                window.addEventListener('resize', function (event) {
+                                    if (window.innerWidth < 750) {
+                                        document.getElementById("videoContainer").style.height = $(window).width() * 11 / 16 + "px";
+                                    } else {
+                                        document.getElementById("videoContainer").style.height = "500px";
+                                    }
+                                });
+                            });
+                        </script>
+
+                        <!--<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="100%" poster="" tabindex=0></video>-->
                     </div>
                 </section>
                 <div id="copyrightInfo" class="muted"></div>
@@ -111,7 +128,7 @@
                                 <div class="col-md-2">Samples:</div>
                                 <div class="col-md-10">
                                     <select class="form-control" id="selectSource" style="width: 100%">
-                                        <option value=" " disabled selected format="auto" protection="none" token="none" audioLabel="none">
+                                        <option value=" " disabled selected format="auto" protection="none" token="none" audiolabel="none">
                                             Select a sample
                                         </option>
                                         <option value="//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest" format="auto" protection="none" token="none" audiolabel="none">
@@ -293,25 +310,6 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/plugins.js"></script>
     <script src="AzureMediaPlayer/main-amp.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            if (window.innerWidth < 750) {
-                document.getElementById("video").style.height = $(window).width() * 10 / 16 + "px";
-                //document.getElementById("video").style.height = $(window).height()/2 + "px";
-            } else {
-                document.getElementById("video").style.height = "500px";
-            }
-            window.addEventListener('resize', function (event) {
-                if (window.innerWidth < 750) {
-                    document.getElementById("video").style.height = $(window).width() * 10 / 16 + "px";
-                    //document.getElementById("video").style.height = $(window).height()/2 + "px";
-                } else {
-                    document.getElementById("video").style.height = "500px";
-                }
-            });
-        });
-    </script>
 
     <script>
         (function (i, s, o, g, r, a, m) {
