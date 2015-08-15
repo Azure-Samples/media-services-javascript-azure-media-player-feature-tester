@@ -284,6 +284,8 @@ var appendSourceUrl = function (url) {
     var myOptions = {
         //sources: mySourceList,
         "nativeControlsForTouch": false,
+        "autoplay": true,
+        "controls": true,
         "loop": false,
         heuristicProfile: "High Quality",
         customPlayerSettings: {
