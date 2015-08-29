@@ -314,20 +314,24 @@ var appendSourceUrl = function (url) {
                 "enableNumbers": true,
                 "enableJogStyle": false
             },
-            progressTips: {}
+            progressTips: {},
+            ga: {
+                'eventsToTrack': ['loaded', 'percentsPlayed', 'start', 'end', 'seek', 'play', 'pause', 'resize', 'volumeChange', 'error', 'fullscreen'],
+                'debug': true
+            }
         }
     };
 
     if (config.tech == "js") {
         myOptions.techOrder = ["azureHtml5JS"];
     } else if (config.tech == "flash") {
-        myOptions.techOrder = ["flashSS", "flash"];
+        myOptions.techOrder = ["flashSS"];
     } else if (config.tech == "silverlight") {
         myOptions.techOrder = ["silverlightSS"];
     } else if (config.tech == "html5") {
         myOptions.techOrder = ["html5"];
     } else {
-        myOptions.techOrder = ["azureHtml5JS", "flashSS", "silverlightSS", "html5", "flash"];
+        myOptions.techOrder = ["azureHtml5JS", "flashSS", "silverlightSS", "html5"];
     }
 
     //Multi-Audio
