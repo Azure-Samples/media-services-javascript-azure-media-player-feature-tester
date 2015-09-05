@@ -286,7 +286,6 @@ var appendSourceUrl = function (url) {
         "nativeControlsForTouch": false,
         "autoplay": true,
         "controls": true,
-        "loop": false,
         heuristicProfile: "High Quality",
         customPlayerSettings: {
             "customHeuristicSettings": {
@@ -316,7 +315,7 @@ var appendSourceUrl = function (url) {
             },
             progressTips: {},
             ga: {
-                'eventsToTrack': ['loaded', 'percentsPlayed', 'start', 'end', 'seek', 'play', 'pause', 'resize', 'volumeChange', 'error', 'fullscreen'],
+                'eventsToTrack': ['playerConfig', 'loaded', 'playTime', 'percentsPlayed', 'start', 'end', 'play', 'pause', 'error', 'buffering', 'fullscreen', 'bitrate'],
                 'debug': true
             }
         }
