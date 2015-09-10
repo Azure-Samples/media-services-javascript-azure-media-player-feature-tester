@@ -205,6 +205,13 @@ var initialize = function () {
                     $("#token").val(decodeURIComponent(config.token.replace(/\+/g, " ")));
                 }
                 break;
+            case "drm":
+                $("#selectContentProtection").val("drm");
+                $("#token").show();
+                if (config.token != "") {
+                    $("#token").val(decodeURIComponent(config.token.replace(/\+/g, " ")));
+                }
+                break;
             default:
                 $("#selectContentProtection").val("none");
                 break;
@@ -267,18 +274,22 @@ var appendSourceUrl = function (url) {
     } else if (config.protection == "widevine") {
         isProtected = true;
         protectionType = "Widevine";
+    } else if (config.protection == "drm") {
+        isProtected = true;
+        protectionType = "DRM";
     }
+
 
     if (isProtected == false) {
         var mySourceList = [{ src: url.trim(), type: mimeType, disableUrlRewriter: boolDisableURLRewrite }, ];
+    } else if (protectionType == "DRM") {
+        if (config.token !== "") {
+            var mySourceList = [{ src: url.trim(), type: mimeType, disableUrlRewriter: boolDisableURLRewrite, protectionInfo: [{ type: "PlayReady", authenticationToken: decodeURIComponent(config.token.replace(/\+/g, " ")) }, { type: "Widevine", authenticationToken: decodeURIComponent(config.token.replace(/\+/g, " ")) }] }, ];
+        } else {
+            var mySourceList = [{ src: url.trim(), type: mimeType, disableUrlRewriter: boolDisableURLRewrite, protectionInfo: [{ type: "PlayReady" }, { type: "Widevine" }] }, ];
+        }
     } else {
         var mySourceList = [{ src: url.trim(), type: mimeType, disableUrlRewriter: boolDisableURLRewrite, protectionInfo: [{ type: protectionType, authenticationToken: decodeURIComponent(config.token.replace(/\+/g, " ")) }] }, ];
-        //alert("Source=" + url.trim() 
-        //    +"\ntype=" + mimeType
-        //    +"\ndisableUrlRewriter=" + boolDisableURLRewrite
-        //    +"\nprotectionInfo=" + protectionType
-        //    + "\nToken=" + decodeURIComponent(config.token.replace(/\+/g, " "))
-        //    );
     }
 
     var myOptions = {
@@ -448,6 +459,9 @@ var displayConfig = function () {
             case "widevine":
                 $("#protection").text("Widevine");
                 break;
+            case "drm":
+                $("#protection").text("DRM Common Encryption");
+                break;
             default:
                 $("#protection").text("None/Unknown");
         }
@@ -553,6 +567,12 @@ var updateConfig = function () {
                     config.token = encodeURIComponent($("#token").val()).replace(/'/g, "%27").replace(/"/g, "%22");
                 }
                 break;
+            case "drm":
+                config.protection = "drm";
+                if ($("#token").val() != "Token" && $("#token").val().trim() != "") {
+                    config.token = encodeURIComponent($("#token").val()).replace(/'/g, "%27").replace(/"/g, "%22");
+                }
+                break;
             default:
                 break;
         }
@@ -632,6 +652,12 @@ var updateParamsInAddressURL = function () {
                     urlParams += "&token=" + config.token;
                 }
                 break;
+            case "drm":
+                urlParams += "&protection=drm";
+                if (config.token) {
+                    urlParams += "&token=" + config.token;
+                }
+                break;
             default:
                 break;
         }
@@ -691,7 +717,7 @@ $(document).ready(function () {
         $("#selectTech").val("auto");
         $("#selectContentProtection").val("none");
         $("#token").hide();
-        $("#token").val("Token");
+        $("#token").val("");
 
         switch (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("protection")) {
             case "aes":
@@ -709,6 +735,26 @@ $(document).ready(function () {
                 $("#advancedOptions").show();
                 $("#urlHelp").hide();
                 $("#selectContentProtection").val("playready");
+                $("#token").show();
+                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token") != "none") {
+                    $("#token").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token")).replace(/\+/g, " "));
+                }
+                break;
+            case "widevine":
+                $("input[name='advanced'][value='advanced']").prop('checked', true);
+                $("#advancedOptions").show();
+                $("#urlHelp").hide();
+                $("#selectContentProtection").val("widevine");
+                $("#token").show();
+                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token") != "none") {
+                    $("#token").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token")).replace(/\+/g, " "));
+                }
+                break;
+            case "drm":
+                $("input[name='advanced'][value='advanced']").prop('checked', true);
+                $("#advancedOptions").show();
+                $("#urlHelp").hide();
+                $("#selectContentProtection").val("drm");
                 $("#token").show();
                 if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token") != "none") {
                     $("#token").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token")).replace(/\+/g, " "));
