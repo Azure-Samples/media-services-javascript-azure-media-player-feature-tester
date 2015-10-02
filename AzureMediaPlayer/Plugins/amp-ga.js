@@ -1,6 +1,5 @@
 ﻿/*
-* Google Analytics plugin for Azure Media Player - Sample Code - Copyright (c) 2015 - Licensed MIT
-* Attribution: "AMP-Analytics" - Copyright (c) 2015 Juan Pablo - Licensed MIT
+* Google Analytics plugin for Azure Media Player - Microsoft Sample Code - Copyright (c) 2015 - Licensed MIT
 * Attribution: "videojs-ga - v0.4.2" - Copyright (c) 2015 Michael Bensoussan - Licensed MIT
 */
 
@@ -39,7 +38,8 @@
         //loadTime is in milliseconds
         var load = {
             loadTime: 0,
-            loadTimeStart: 0,
+            //incase loadedmetadata doesn't fire
+            loadTimeStart: new Date().getTime(),
             firstPlay: false,
             videoElementUsed: false,
             unloaddatasent: false,
@@ -47,12 +47,16 @@
                 this.loadTime = Math.abs(new Date().getTime() - this.loadTimeStart);
             },
             send: function () {
-                sendEventBeacon('Video', 'start', true, this.loadTime);
+                //removing outliers @100s for load
+                if (this.loadtime < 100000) {
+                    sendEventBeacon('Video', 'start', true, this.loadTime);
+                }
             },
             reset: function () {
                 this.loadTime = 0;
                 this.loadTimeStart = new Date().getTime();
                 this.firstPlay = false;
+                eventLabel = options.eventLabel || dataSetupOptions.eventLabel;
             }
         }
 
@@ -92,6 +96,21 @@
                     this.downloadedChunks += 1;
                     this.sumBitrate += player.currentDownloadBitrate();
                     if (this.videoBuffer) {
+                        if (player.currentDownloadBitrate() >= 8000000) {
+                            sendEventBeacon("DownloadBitrateMbps", "8+", false, player.currentDownloadBitrate());
+                        } else if (player.currentDownloadBitrate() >= 5000000) {
+                            sendEventBeacon("DownloadBitrateMbps", "5-8", false, player.currentDownloadBitrate());
+                        } else if (player.currentDownloadBitrate() >= 3000000) {
+                            sendEventBeacon("DownloadBitrateMbps", "3-5", false, player.currentDownloadBitrate());
+                        } else if (player.currentDownloadBitrate() >= 2000000) {
+                            sendEventBeacon("DownloadBitrateMbps", "2-3", false, player.currentDownloadBitrate());
+                        } else if (player.currentDownloadBitrate() >= 1000000) {
+                            sendEventBeacon("DownloadBitrateMbps", "1-2", false, player.currentDownloadBitrate());
+                        } else if (player.currentDownloadBitrate() >= 500000) {
+                            sendEventBeacon("DownloadBitrateMbps", "0.5-1", false, player.currentDownloadBitrate());
+                        } else if (player.currentDownloadBitrate() >= 0) {
+                            sendEventBeacon("DownloadBitrateMbps", "0-0.5", false, player.currentDownloadBitrate());
+                        }
                         sendEventBeacon("DownloadBitrate", player.currentDownloadBitrate(), false, player.currentDownloadBitrate());
                         this.sumPerceivedBandwidth += this.videoBuffer.perceivedBandwidth;
                         this.sumMeasuredBandwidth += this.videoBuffer.downloadCompleted.measuredBandwidth;
@@ -114,7 +133,6 @@
                 this.sumMeasuredBandwidth = 0;
                 this.downloadedChunks = 0;
             }
-
         }
 
         //Timer for playTime tracking
@@ -162,6 +180,9 @@
                     sourceManifest = sourceManifest.split(/.ism\/manifest/i)[0] + ".ism/manifest"
                 }
                 eventLabel = sourceManifest;
+                if (options.debug) {
+                    console.log("eventLabel set as: " + eventLabel);
+                }
             }
 
             //sending loadedmetadata event
@@ -186,20 +207,21 @@
             }
             //used to track if the video element is reused to appropriately send playTime data
             load.videoElementUsed = true;
-
         };
 
         var timeupdate = function () {
             var currentTime = Math.round(player.currentTime());
-            //Must find out better way to track live
+            //Currently not tracking percentage watched information for Live 
             if (!this.isLive()) {
                 var duration = Math.round(player.duration());
                 var currentTimePercent = Math.round(currentTime / duration * 100);
-                if (currentTimePercent % percentsPlayedInterval == 0) {
+                if (currentTimePercent % percentsPlayedInterval == 0 && currentTimePercent <= 100) {
                     if (__indexOf.call(percentsAlreadyTracked, currentTimePercent) < 0) {
                         if (currentTimePercent !== 0) {
                             percentPlayed += percentsPlayedInterval;
-                            sendEventBeacon('PercentsPlayed', percentPlayed, true);
+                            if (percentPlayed <= 100) {
+                                sendEventBeacon('PercentsPlayed', percentPlayed, true);
+                            }
                         }
                         percentsAlreadyTracked.push(currentTimePercent);
                     }
@@ -337,7 +359,9 @@
         }
 
         function sendEventBeacon(category, action, nonInteraction, value) {
+            //check if Universal API for Google Analytics is initialized on the page
             if (window.ga || window.ga2) {
+                //send event data to a the first google analytics account
                 if (window.ga) {
                     ga('send', 'event', {
                         'eventCategory': category,
@@ -346,7 +370,11 @@
                         'eventValue': value,
                         'nonInteraction': nonInteraction
                     });
+                    if (options.debug) {
+                        console.log("sent to ga...'send', 'event', {'eventCategory': " + category + ", 'eventAction': " + action + ", 'eventLabel': " + eventLabel + ",'eventValue': " + value + ", 'nonInteraction': " + nonInteraction);
+                    }
                 }
+                //send to a second google analytics account if present
                 if (window.ga2) {
                     ga2('send', 'event', {
                         'eventCategory': category,
@@ -355,9 +383,16 @@
                         'eventValue': value,
                         'nonInteraction': nonInteraction
                     });
+                    if (options.debug) {
+                        console.log("sent to ga2...'send', 'event', {'eventCategory': " + category + ", 'eventAction': " + action + ", 'eventLabel': " + eventLabel + ",'eventValue': " + value + ", 'nonInteraction': " + nonInteraction);
+                    }
                 }
             } else if (window._gaq) {
-                _gaq.push(['_trackEvent', eventCategory, action, eventLabel, value, nonInteraction]);
+                //if old google analytics apis are present
+                _gaq.push(['_trackEvent', category, action, eventLabel, value, nonInteraction]);
+                if (options.debug) {
+                    console.log("sent to gaq...'_trackEvent', " + category + ", " + action + ", " + eventLabel + ", " + value + ", " + nonInteraction);
+                }
             } else if (options.debug) {
                 console.log("Google Analytics not detected");
             }
@@ -371,24 +406,28 @@
                         'exDescription': code,
                         'exFatal': fatal,
                         'appName': 'AMP',
-                        'appVersion': ampVersion
+                        'appVersion': player.getAmpVersion()
                     });
+                    if (options.debug) {
+                        console.log("sent to ga...'send', 'exception', {'exDescription': " + code + ", 'exFatal': " + fatal + ", 'appName': 'AMP','appVersion': " + player.getAmpVersion());
+                    }
                 }
                 if (window.ga2) {
                     ga2('send', 'exception', {
                         'exDescription': code,
                         'exFatal': fatal,
                         'appName': 'AMP',
-                        'appVersion': ampVersion
+                        'appVersion': player.getAmpVersion()
                     });
+                    if (options.debug) {
+                        console.log("sent to ga2...'send', 'exception', {'exDescription': " + code + ", 'exFatal': " + fatal + ", 'appName': 'AMP','appVersion': " + player.getAmpVersion());
+                    }
                 }
 
             } else if (options.debug) {
                 console.log("Google Analytics not detected");
             }
         };
-
-
 
         //add event listeners for tracking
         player.addEventListener("loadedmetadata", loaded);
@@ -439,4 +478,3 @@
     });
 
 }).call(this);
-
