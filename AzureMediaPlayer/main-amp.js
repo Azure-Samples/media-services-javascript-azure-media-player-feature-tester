@@ -327,7 +327,7 @@ var appendSourceUrl = function (url) {
             progressTips: {},
             ga: {
                 'eventsToTrack': ['playerConfig', 'loaded', 'playTime', 'percentsPlayed', 'start', 'end', 'play', 'pause', 'error', 'buffering', 'fullscreen', 'bitrate'],
-                'debug': true
+                'debug': false
             }
         }
     };
