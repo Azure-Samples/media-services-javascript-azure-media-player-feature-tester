@@ -6,7 +6,7 @@ var config = {
     tech: "auto",
     protection: "none",
     token: "",
-    autoplay: "false",
+    autoplay: "true",
     version: "latest",
     audiolabel: ""
 };
@@ -101,8 +101,8 @@ var initialize = function () {
         config.token = queryString.token;
     }
     if (queryString.autoplay) {
-        if (queryString.autoplay != "false") {
-            config.autoplay = "true";
+        if (queryString.autoplay == "false") {
+            config.autoplay = "false";
         }
     }
     if (queryString.version) {
@@ -295,7 +295,7 @@ var appendSourceUrl = function (url) {
     var myOptions = {
         //sources: mySourceList,
         "nativeControlsForTouch": false,
-        "autoplay": true,
+        "autoplay": false,
         "controls": true,
         heuristicProfile: "High Quality",
         customPlayerSettings: {
