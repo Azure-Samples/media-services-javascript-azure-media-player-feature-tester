@@ -50,6 +50,8 @@
                 //removing outliers @100s for load
                 if (this.loadtime < 100000) {
                     sendEventBeacon('Video', 'start', true, this.loadTime);
+                } else {
+                    sendEventBeacon('Video', 'start', false);
                 }
             },
             reset: function () {
