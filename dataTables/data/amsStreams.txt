@@ -1401,7 +1401,7 @@
     "token":"",
     "other":"",
     "notes":"Live Stream",
-    "url":"http://b028.wpc.azureedge.net/80B028/SampleStream/49be9c8c-0317-470f-94a2-7472732dc844/2cfaa74d-196a-4125-9c22-b84cbe4e9df9.ism/manifest",
+    "url":"http://b028.wpc.azureedge.net/80B028/SampleStream/7e8a624b-c88e-42f4-abe8-3fbc540f2fd8/b722b983-af65-4bb3-950a-18dded2b7c9b.ism/Manifest",
     "copyright":""
   }
 ]

@@ -221,7 +221,7 @@
     "token":"",
     "other":"15 Mins Archive, Smooth Ingest",
     "notes":"Live Stream",
-    "url":"http://b028.wpc.azureedge.net/80B028/SampleStream/0c8c389f-3fa5-4eb2-9f47-c059198c38de/b722b983-af65-4bb3-950a-18dded2b7c9b.ism/Manifest",
+    "url":"http://b028.wpc.azureedge.net/80B028/SampleStream/7e8a624b-c88e-42f4-abe8-3fbc540f2fd8/b722b983-af65-4bb3-950a-18dded2b7c9b.ism/Manifest",
     "copyright":""
     },
     {
