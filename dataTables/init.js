@@ -65,10 +65,14 @@ function getAMPUrl(d) {
 
     if(d.contentprotection.toLowerCase().trim()=="aes"){
         AMPUrl += "&protection=aes";
-    } else if (d.contentprotection.toLowerCase().trim()== "playready") {
-        AMPUrl += "&protection=playready";
-    } else if (d.contentprotection.toLowerCase().trim()== "widevine") {
-        AMPUrl += "&protection=widevine";
+    } else {
+        if (d.contentprotection.toLowerCase().trim().match("playready") && d.contentprotection.toLowerCase().trim().match("widevine")) {
+            AMPUrl += "&protection=drm";
+        }else if (d.contentprotection.toLowerCase().trim().match("playready")) {
+            AMPUrl += "&protection=playready";
+        }else if (d.contentprotection.toLowerCase().trim().match("widevine")) {
+            AMPUrl += "&protection=widevine";
+        }
     }
 
     if (d.token.trim() != "") {
