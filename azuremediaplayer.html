@@ -7,6 +7,17 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <script type="text/javascript">
+        var appInsights = window.appInsights || function (config) {
+            function r(config) { t[config] = function () { var i = arguments; t.queue.push(function () { t[config].apply(t, i) }) } } var t = { config: config }, u = document, e = window, o = "script", s = u.createElement(o), i, f; for (s.src = config.url || "//az416426.vo.msecnd.net/scripts/a/ai.0.js", u.getElementsByTagName(o)[0].parentNode.appendChild(s), t.cookie = u.cookie, t.queue = [], i = ["Event", "Exception", "Metric", "PageView", "Trace"]; i.length;) r("track" + i.pop()); return r("setAuthenticatedUserContext"), r("clearAuthenticatedUserContext"), config.disableExceptionTracking || (i = "onerror", r("_" + i), f = e[i], e[i] = function (config, r, u, e, o) { var s = f && f(config, r, u, e, o); return s !== !0 && t["_" + i](config, r, u, e, o), s }), t
+        }({
+            instrumentationKey: "ed62fb0b-f685-4ee7-bb8e-aafa6e750bb6"
+        });
+
+        window.appInsights = appInsights;
+        appInsights.trackPageView();
+    </script>
+
     <!-- Twitter card metadata-->
     <meta name="twitter:card" content="player">
     <meta name="twitter:site" content="http://azure.com/media">
@@ -20,7 +31,6 @@
     <meta name="twitter:player:stream" content="https://amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest(format=m3u8-aapl)">
     <meta name="twitter:player:stream:content_type" content="video/mp4">
     <!-- Twitter card metadata (END)-->
-
     <!-- Latest compiled and minified Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/normalize.css">
@@ -28,14 +38,15 @@
     <script src="js/vendor/modernizr-2.7.1.min.js"></script>
     <script src="js/vendor/jquery-1.11.0.min.js"></script>
 
+    <!--Diagnostics Display-->
+    <script src="js/vendor/dygraphs/dygraph-combined.js"></script>
+    <script src="js/vendor/dygraphs/synchronizer.js"></script>
+
     <!-- Azure Media Player -->
-    <link href="//amp.azure.net/libs/amp/1.5.0/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
-    <script src="//amp.azure.net/libs/amp/1.5.0/azuremediaplayer.min.js"></script>
-    
+    <link href="//amp.azure.net/libs/amp/1.6.1/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
+    <script src="//amp.azure.net/libs/amp/1.6.1/azuremediaplayer.min.js"></script>
+
     <!--Load Plugins-->
-    <script src="AzureMediaPlayer/plugins/progressTimeTip.js"></script>
-    <script src="AzureMediaPlayer/plugins/hotkeys.js"></script>
-    <script src="AzureMediaPlayer/plugins/EventHubQoS.js"></script>
     <script src="AzureMediaPlayer/plugins/amp-ga.js"></script>
 
 </head>
@@ -43,15 +54,16 @@
     <!-- Add your site or application content here -->
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="z-index:10000">
         <div class="container">
-            <div class="navbar-header col-lg-12 col-md-12 col-sm-12">
+            <div class="navbar-header col-sm-12">
                 <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>-->
-                <a class="navbar-brand" href="http://aka.ms/ampinfo">
-                    <img src="img/ams.png" width="27" height="30" style="display:inline">
+                <a class="navbar-brand" href="http://aka.ms/ampinfo" target="_blank">
+                    <!--<img src="img/ams.png" width="27" height="30" style="display:inline">-->
+                    <img width="27" height="30" title="" alt="" style="display:inline" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAApCAMAAACFghBKAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAB6VBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AAACMv10hAAAAoXRSTlMASdBSKqXCLw5//aEhV+P0ew00s+lbEpLJTl3n+J9lPuiiOcoaC3qOEBeWwwlz8cYBi0ekyAITiczfRpS888+nWQO1M0LX4KN09V/84rKgLDxca6oy0W32ChHcsCfUQNNefWqrdpivMNthuh2Vgcs/ImOHhmbynLYGbtg7cM5xD7/vFM3hxzcpdZogvhs4VE8VSBnaVnKIqbftI/7SaJPrZNytRAYAAAABYktHRACIBR1IAAAACXBIWXMAAAsSAAALEgHS3X78AAACTklEQVQ4y32U918TQRDFhyhigICSCAoGYqIISAjqKSogwWDBgiAWiA0VBEsQa7BgiRB7r4Bt/1NvZvYue7lL3g/5vHn7vc3e7O4BZKnAJVxLIL+WFgrUsqI8zHJ3sZAqKc0FecpERuUrVjoxFV5hlW+VjamsEnatXmOFqmsoXuuvrUPV+gPMrVNeIxjizL3ejDbUl3O2sYGDxiauXUHL9KWbOA7U60VzuIWrSGv2WjfL5YW2wFZptW3G4HYTa5NjO0DOu1NCu9o7Ond3Rbu5koN7QHYpRmnPXvn0vjBvBldeSTVRGFZ6tZ+SAyrV24zRQd0dMjE/YYfRHmGqD4OjtND+iIENYHgM3SBTxzE4QU0DOCmpU0N6OIwuDi799zRCZ2jorO7OnWdsBOML6OCi99IIdcFtUgCj5At5i8e8Y5lOX1YoGNd0P+FwvgIqBXClU5Q5UFet1DWf8DlQ1y1UQveTmcGe0RtTZG4qVHAS/S3yUwW3+0E/gMV3sBq6a1IJ7gQ9fU+/VhoksZ7G+j66BwBFGkO0IQ/RJbn3j2juGbyv8Ni4Qk8we6rs9jOiUs+FmJ0z7mMaoxeWk/OSX+WVeSJCrynQJPWG07eMvevD5vZ2eEB5b/1Ey7MaHzauWN37Dx+l/yQnboPP8l/ilbY+S+jLVyzSg1RMjGdB3+RE07IemKH6e6PCpH9Q9jOmZIl5jFraowutqIVoFzE11dbpU/KbsziLWuSiyr5W2/crUgFO8vxSGN9vyCX3vAGVNEBupf4Qk/cbjYolxd9/2eF/zeOQ+fvcwlgAAAAASUVORK5CYII=" />
                     <span>Azure Media Player</span>
                 </a>
                 <style>
@@ -75,39 +87,12 @@
         <center>
             <!--<h3>Reach the most popular devices anywhere with the best possible format for the device!</h3>-->
             <!--<h3>Reach popular devices anywhere with the best format for the device!</h3>-->
-            <h3>Your content. Multiple devices. One player.</h3>
+            <h3 style="margin-top: 15px; margin-bottom: 0px;">Your content. Multiple devices. One player.</h3>
         </center>
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-4">
-                <div class="embed-code-box well" style="display:none;">
-                    <button type="button" class="close" aria-hidden="true">&times;</button>
-                    <p style="font-size: 0.85em;">Copy the text below and add it to your web page (make sure you update player before copying the code)</p>
-                    <p style="font-size: 0.85em;"><strong>Note: this embed code is for demo purposes only. Do not use in production.</strong></p>
-                    <textarea class="form-control" rows="3"></textarea>
-                </div>
-                <div class="share-url-box well" style="display:none;">
-                    <button type="button" class="close" aria-hidden="true">&times;</button>
-                    <p style="font-size: 0.85em;">Copy the text and share as a link</p>
-                    <textarea class="form-control" rows="3"></textarea>
-                </div>
-                <div>
-                    <a id="share-url" class="pull-left btn btn-xs btn-warning">
-                        <span class="glyphicon glyphicon-globe"></span>&nbsp;get share url
-                    </a>
-                </div>
-
-                <div>
-                    <a id="embed-url" class="pull-right btn btn-xs btn-warning">
-                        <span class="glyphicon glyphicon-cloud-download"></span>&nbsp;get embed code
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-8 col-md-push-4">
+            <div class="col-md-9 col-md-push-3">
                 <section>
                     <div id="videoContainer">
                         <script>
@@ -116,7 +101,7 @@
                                 videoWidth = $(window).width() * 11 / 16;
                             }
                             document.getElementById("videoContainer").style.height = videoWidth + "px";
-                            $("#videoContainer").append('<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" preload="auto" width="100%" height="100%" poster="" tabindex=0><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>');
+                            $("#videoContainer").append('<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" preload="auto" width="100%" height="100%" tabindex=0><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>');
                             $(document).ready(function () {
                                 window.addEventListener('resize', function (event) {
                                     if (window.innerWidth < 750) {
@@ -133,96 +118,52 @@
                 </section>
                 <div id="copyrightInfo" class="muted"></div>
 
-                <div class="config-body row">
-                    <div class="well">
+                <div class="config-body row" style="margin:0px 0px">
+                    <ul class="nav nav-pills">
+
+                        <li class="active menuitem" id="playersetup-button"><a><span class="glyphicon glyphicon-cog"></span> Setup</a></li>
+                        <li class="menuitem" id="playerdiagnostics-button"><a><span class="glyphicon glyphicon-stats"></span> Diagnostics</a></li>
+                        <!--<li class="menuitem" id="shareurl-button"><a><span class="glyphicon glyphicon-globe"></span> Share URL</a></li>-->
+                        <li role="presentation" class="dropdown" id="code-button">
+                            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-console"></span> Code <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="menuitem" id="shareurl-button"><a><span class="glyphicon glyphicon-share"></span> Get share code</a></li>
+                                <li class="menuitem" id="embedcode-button"><a><span class="glyphicon glyphicon-globe"></span> Get embed code</a></li>
+                                <li class="menuitem" id="playercode-button"><a><span class="glyphicon glyphicon-list-alt"></span> Get player code</a></li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                    <div class="well" id="playersetup">
 
                         <div id="assetConfig" class="form-group adaptive">
 
                             <label for="adaptive-url">Adaptive streaming URL from Azure Media Services</label><br /><br />
 
                             <div class="row">
-                                <div class="col-md-2">Samples:</div>
-                                <div class="col-md-10">
+                                <div class="col-sm-2">Samples:</div>
+                                <div class="col-sm-10" id="samplesdropdown">
                                     <select class="form-control" id="selectSource" style="width: 100%">
-                                        <option value=" " disabled selected format="auto" protection="none" token="none" audiolabel="none">
+                                        <option value=" " disabled selected format="auto" aes="none" aestoken="none" playready="none" playreadytoken="none" widevine="none" widevinetoken="none" captions="none" subtitles="none">
                                             Select a sample
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest" format="auto" protection="none" token="none" audiolabel="none">
-                                            Azure Media Services Overview
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/69fbaeba-8e92-4740-aedc-ce09ae945073/AzurePromo.ism/manifest" format="auto" protection="none" token="none" audiolabel="none">
-                                            On Demand [Azure Promo]
-                                        </option>
-                                        <option value="//b028.wpc.azureedge.net/80B028/Samples/a38e6323-95e9-4f1f-9b38-75eba91704e4/5f2ce531-d508-49fb-8152-647eba422aec.ism/Manifest" format="auto" protection="none" token="none" audiolabel="none">
-                                            Live (Smooth Ingest) - 24x7
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/622b189f-ec39-43f2-93a2-201ac4e31ce1/BigBuckBunny.ism/manifest" format="auto" protection="drm" token="none" audiolabel="none">
-                                            DRM (PlayReady/Widevine) - On Demand [Big Buck Bunny]
-                                        </option>
-                                        <option value="//b028.wpc.azureedge.net/80B028/SampleStream/3f6088ec-9e1f-4db7-b7d9-3ec07183ce7d/e405bd0a-a34f-40e2-b70b-4322c46f5cb7.ism/manifest" format="auto" protection="drm" token="none" audiolabel="none">
-                                            DRM (PlayReady/Widevine) - Live (Smooth Ingest)
-                                        </option>
-
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/49b57c87-f5f3-48b3-ba22-c55cfdffa9cb/Sintel.ism/manifest" format="auto" protection="aes" token="none" audiolabel="none">
-                                            AES (no token) - On Demand [Sintel]
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/9ead18f1-29f8-453c-8721-4becc00ff611/BigBuckBunnyTrailer.ism/manifest" format="auto" protection="aes" token="Bearer%3Durn%253amicrosoft%253aazure%253amediaservices%253acontentkeyidentifier%3D5f5076de-4322-42f7-a533-6265f686d5b9%26Audience%3Durn%253atest%26ExpiresOn%3D4581880130%26Issuer%3Dhttp%253a%252f%252ftestacs.com%252f%26HMACSHA256%3D%252bx77Qo0CeBzP4aCntfe2sVkbKeKguOUNAebHQb53sLc%253d" audiolabel="none">
-                                            AES (SWT token) - On Demand [Big Buck Bunny Trailer]
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/830584f8-f0c8-4e41-968b-6538b9380aa5/TearsOfSteelTeaser.ism/manifest" format="auto" protection="aes" token="Bearer%3DeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cm46bWljcm9zb2Z0OmF6dXJlOm1lZGlhc2VydmljZXM6Y29udGVudGtleWlkZW50aWZpZXIiOiI5ZGRhMGJjYy01NmZiLTQxNDMtOWQzMi0zYWI5Y2M2ZWE4MGIiLCJpc3MiOiJodHRwOi8vdGVzdGFjcy5jb20vIiwiYXVkIjoidXJuOnRlc3QiLCJleHAiOjE3MTA4MDczODl9.lJXm5hmkp5ArRIAHqVJGefW2bcTzd91iZphoKDwa6w8" audiolabel="none">
-                                            AES (JWT token) - On Demand [Tears of Steel Teaser]
-                                        </option>
-                                        <option value="//b028.wpc.azureedge.net/80B028/Samples/0e8848ca-1db7-41a3-8867-fe911144c045/d34d8807-5597-47a1-8408-52ec5fc99027.ism/Manifest" format="auto" protection="aes" token="none" audiolabel="none">
-                                            AES (no token) - Live (Smooth Ingest)
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/de1470b3-7b3c-4902-ab53-d19b37ef3bd7/TearsOfSteelTeaser.ism/manifest" format="auto" protection="playready" token="none" audiolabel="none">
-                                            PlayReady (static/no token) - On Demand [Tears of Steel Teaser]
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/bf657309-71d9-4436-b94b-8ac0d2ca222b/SintelTrailer.ism/manifest" format="auto" protection="playready" token="none" audiolabel="none">
-                                            PlayReady (dynamic/no token) - On Demand [Sintel Trailer]
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/8b661219-cef3-4413-9471-a0b02794cc4c/BigBuckBunny.ism/manifest" format="auto" protection="playready" token="Bearer%3Durn%253amicrosoft%253aazure%253amediaservices%253acontentkeyidentifier%3Dea388c3e-a0ec-4117-8564-ae40b31ca416%26Audience%3Durn%253atest%26ExpiresOn%3D4581880646%26Issuer%3Dhttp%253a%252f%252ftestacs.com%252f%26HMACSHA256%3DBk8lBOgQvNyfL5ztAqmud3y652FBTkVPmkG2CQuIup4%253d" audiolabel="none">
-                                            PlayReady (dynamic/SWT token) - On Demand [Big Buck Bunny]
-                                        </option>
-                                        <option value="//b028.wpc.azureedge.net/80B028/Samples/859b335f-eebc-4ff1-ac03-98e9b614e2c1/0cc164eb-193e-48cb-bc6b-041cc28307e4.ism/Manifest" format="auto" protection="playready" token="none" audiolabel="none">
-                                            PlayReady (dynamic/no token) - Live (Smooth Ingest)
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TearsOfSteel.ism/manifest" format="auto" protection="none" token="none" audiolabel="none">
-                                            Subtitles (WebVTT) - On Demand [Tears of Steel]
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/b6822ec8-5c2b-4ae0-a851-fd46a78294e9/ElephantsDream.ism/manifest(filtername=FirstFilter)" format="auto" protection="none" token="none" audiolabel="none">
-                                            Dynamic Manifest - On Demand [Elephant's Dream]
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/3efdfbaa-f8f4-43ac-9ab8-013ff4a34f7f/ElephantsDreamMultiAudio.ism/manifest" format="auto" protection="none" token="none" audiolabel="auto">
-                                            Multi-Audio - On Demand [Elephant's Dream]
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/f1ee994f-fcb8-455f-a15d-07f6f2081a60/SintelMultiAudio.ism/manifest" format="auto" protection="none" token="none" audiolabel="manifest">
-                                            Multi-Audio - On Demand [Sintel]
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/634cd01c-6822-4630-8444-8dd6279f94c6/CaminandesLlamaDrama4K.ism/manifest" format="auto" protection="none" token="none" audiolabel="none">
-                                            4K - On Demand [Llama Drama]
-                                        </option>
-                                        <option value="//amssamples.streaming.mediaservices.windows.net/2e91931e-0d29-482b-a42b-9aadc93eb825/AzurePromo.mp4" format="mp4" protection="none" token="none" audiolabel="none">
-                                            Progressive MP4 [Azure Promo]
-                                        </option>
-                                        <option value="//nimbuspm.origin.mediaservices.windows.net/aed33834-ec2d-4788-88b5-a4505b3d032c/Microsoft's HoloLens Live Demonstration.ism/manifest" format="auto" protection="none" token="none" audiolabel="none">
-                                            Indexer Demo [Microsoft HoloLens Demo]
                                         </option>
                                     </select>
                                 </div>
                             </div>
                             <br />
                             <div class="row">
-                                <div class="col-md-2">URL:</div>
-                                <div class="col-md-10">
-                                    <span><input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="adaptive-url" value="//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest"></span>
+                                <div class="col-sm-2">URL:</div>
+                                <div class="col-sm-10">
+                                    <span><input style="width:100%;display:inline-block" type="text" class="input-sm form-control" id="adaptive-url" placeholder="Video/Manifest URL" value="//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest"></span>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6 col-md-offset-2">
+                                <div class="col-sm-6 col-sm-offset-2">
                                     <span id="urlHelp" class="help-block" style="font-size: 0.85em; padding-left: 0.5em;">The URL should contain <i>*.ism/manifest</i> or <i>*.mp4</i></span>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-sm-4">
                                     <span class="help-block" style="float: right; font-size: 0.85em;padding-right:0.5em"><input type="checkbox" name="advanced" value="advanced">Advanced Options</span>
                                 </div>
                             </div>
@@ -232,9 +173,24 @@
 
                             <label for="adaptive-url">Advanced Options </label><span class="help-block" style="font-size: 0.85em;padding-right:0.5em">Please note: not all formats are playable by all techs</span>
                             <br />
+
                             <div class="row">
-                                <div class="col-md-2">Format:</div>
-                                <div class="col-md-6">
+                                <div class="col-sm-2">Playback:</div>
+                                <div class="col-sm-4">
+                                    <select id="heuristicProfile" style="width: 100%" class="form-control">
+                                        <option value="hybrid" selected>Hybrid Heuristic Profile</option>
+                                        <option value="quickstart">Quick Start Heuristic Profile</option>
+                                        <option value="highquality">High Quality Heuristic Profile</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6" style="padding-top:6.4px">
+                                    <input type="checkbox" name="autoplay" value="enable"> AutoPlay (if applicable)
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-2">Format:</div>
+                                <div class="col-sm-4">
                                     <select id="selectFormat" style="width: 100%" class="form-control">
                                         <option value="auto" selected>Azure Auto-Generated</option>
                                         <option value="dash">DASH</option>
@@ -244,14 +200,17 @@
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
-                                <div id="formatOther" class="col-md-4">
-                                    <input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="formatOtherVal" placeholder="MIME_Type">
+                                <div id="formatOther" class="col-sm-6" style="padding-top:2px">
+                                    <input style="width:100%;display:inline-block" type="text" class="input-sm form-control" id="formatOtherVal" placeholder="Mime Type">
+                                </div>
+                                <div id="urlRewriter" class="col-sm-6" style="padding-top:6.4px">
+                                    <input type="checkbox" name="disableUrlRewriter" value="disable"> Disable Automatic URL Rewriter
                                 </div>
                             </div>
                             <br />
                             <div class="row">
-                                <div class="col-md-2">Tech:</div>
-                                <div class="col-md-6">
+                                <div class="col-sm-2">Tech:</div>
+                                <div class="col-sm-4">
                                     <select id="selectTech" style="width: 100%" class="form-control">
                                         <option value="auto" selected>Auto Select</option>
                                         <option value="js">JavaScript + HTML5 (MSE)</option>
@@ -260,47 +219,177 @@
                                         <option value="html5">Native HTML5 (Type 1)</option>
                                     </select>
                                 </div>
+                                <div id="muted" class="col-sm-6" style="padding-top:6.4px">
+                                    <input type="checkbox" name="muted" value="disable"> Muted (on start)
+                                </div>
                             </div>
                             <br />
                             <div class="row">
-                                <div class="col-md-2">Protection:</div>
-                                <div class="col-md-6">
-                                    <select id="selectContentProtection" style="width: 100%" class="form-control">
-                                        <option value="none" selected>None</option>
-                                        <option value="aes">AES</option>
-                                        <option value="playready">PlayReady</option>
-                                        <option value="widevine">Widevine</option>
-                                        <option value="drm">DRM (PlayReady and Widevine)</option>
+                                <div class="col-sm-2">Language:</div>
+                                <div class="col-sm-4">
+                                    <select id="selectLang" style="width: 100%" class="form-control">
+                                        <option value="en" selected>English</option>
+                                        <option value="cs">Czech</option>
+                                        <option value="de">German</option>
+                                        <option value="es">Spanish</option>
+                                        <option value="fr">French</option>
+                                        <option value="hu">Hungarian</option>
+                                        <option value="it">Italian</option>
+                                        <option value="ja">Japanese</option>
+                                        <option value="ko">Korean</option>
+                                        <option value="nl">Dutch</option>
+                                        <option value="pl">Polish</option>
+                                        <option value="pt-br">Portuguese - Brazil</option>
+                                        <option value="pt-pt">Portuguese - Portugal</option>
+                                        <option value="ru">Russian</option>
+                                        <option value="sv">Swedish</option>
+                                        <option value="tr">Turkish</option>
+                                        <option value="zh-hans">Chinese - simplified</option>
+                                        <option value="zh-hant">Chinese - traditional</option>
                                     </select>
                                 </div>
-                                <div id="protectionOther" class="col-md-4">
-                                    <input style="color:grey;width:100%;display:inline-block" type="text" class="input-sm form-control" id="token" placeholder="Token">
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-2" style="padding-top:3.4px">Protection:</div>
+                                <div class="col-sm-4" style="padding-top:3.4px">
+                                    <input type="checkbox" name="protection" value="aes"> AES
+                                </div>
+                                <div class="col-sm-6">
+                                    <input style="width:100%;display:inline-block" type="text" class="input-sm form-control" id="aesToken" placeholder="AES Token">
+                                </div>
+                                <br /><br />
+                                <div class="col-sm-4 col-sm-offset-2" style="padding-top:3.4px">
+                                    <input type="checkbox" name="protection" value="playready"> PlayReady
+                                </div>
+                                <div class="col-sm-6">
+                                    <input style="width:100%;display:inline-block" type="text" class="input-sm form-control" id="playreadyToken" placeholder="PlayReady Token">
+                                </div>
+                                <br /><br />
+
+                                <div class="col-sm-4 col-sm-offset-2" style="padding-top:3.4px">
+                                    <input type="checkbox" name="protection" value="widevine"> Widevine
+                                </div>
+                                <div class="col-sm-6">
+                                    <input style="width:100%;display:inline-block" type="text" class="input-sm form-control" id="widevineToken" placeholder="Widevine Token">
+                                </div>
+                                <br /><br />
+                            </div>
+                            <br />
+                            <div class="row" id="tracksList">
+                                <div class="col-sm-2">Tracks:</div>
+                                <div class="col-sm-4"><button id="addtrack" type="button" class="btn btn-xs btn-primary">Add Track</button></div>
+                                <br /><br />
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-2">Poster:</div>
+                                <div class="col-sm-10">
+                                    <input style="width:100%;display:inline-block" type="text" class="input-sm form-control" id="poster-url" placeholder="Poster URL">
                                 </div>
                             </div>
-                            <br /><br />
+                            <br />
                         </div>
-                        <button id="config-save" type="button" class="btn btn-sm btn-primary">update player</button>
+
+                        <button id="config-save" type="button" class="btn btn-sm btn-primary">Update Player</button>
+                    </div>
+                    <div id="playerdiagnostics" class="well">
+                        <div class="row">
+                            <div class="col-md-8 col-md-push-4">
+                                <div class="graphsRow" style="font-size:0.75em">
+                                    <div class="graphsDiv">
+                                        <div class="graphLegendDiv">
+                                            <div id="BWGraphsLegendDiv"></div>
+                                        </div>
+                                        <div id="BWGraphsDiv" style="height:150px"></div>
+                                    </div>
+                                    <br />
+                                    <div class="graphsDiv">
+                                        <div class="graphLegendDiv">
+                                            <div id="BufferGraphsLegendDiv"></div>
+                                        </div>
+                                        <div id="BufferGraphsDiv" style="height: 150px"></div>
+                                    </div>
+                                </div>
+                                <br />
+                                <textarea id="txtLog" style="width:100%" rows="6"></textarea>
+                                <br />
+                                <br />
+                                <button id="download-logs" type="button" class="btn btn-sm btn-primary">Download Verbose Logs</button>
+                                <a id="downloadlink" style="display:none;">Click or Right click to Save As</a>
+                                <br />
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <button id="email-logs" type="button" class="btn btn-sm btn-primary" disabled>Email Verbose Logs</button>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input style="width:100%;display:inline-block" type="text" name="emailAddress" class="input-sm form-control" id="emailAddress" placeholder="Email Address">
+                                    </div>
+                                    <br />
+                                    <div id="email-success" style="display:none;color:red"></div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-4 col-md-pull-8">
+                                <div id="propertiesDiv"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="playercode" class="playercode-box well">
+                        <p style="font-size: 0.85em;"><span class="glyphicon glyphicon-exclamation-sign"></span><strong> Note: this section is in beta mode and is intended for the simple use case. For more complex scenarios, please see the <a href="//aka.ms/ampsamples" target="_blank">samples page</a>.</strong></p>
+                        <p style="font-size: 0.85em;margin-bottom:0">Copy the code into the <code>&lt;head&gt;</code> of your HTML5 page</p>
+                        <textarea id="playercode-head" class="form-control" rows="2" style="font-size: 0.85em;"></textarea>
+                        <br />
+                        <p style="font-size: 0.85em;margin-bottom:0">Copy the code into the <code>&lt;body&gt;</code> of your HTML5 page</p>
+                        <textarea id="playercode-body" class="form-control" rows="1" style="font-size: 0.85em;"></textarea>
+                        <br />
+                        <p style="font-size: 0.85em;margin-bottom:0">Copy the code into your JavaScript file</p>
+                        <textarea id="playercode-javascript" class="form-control" rows="10" style="font-size: 0.85em;"></textarea>
+                    </div>
+                    <div id="embedcode" class="embed-code-box well">
+                        <p style="font-size: 0.85em;">Copy the text below and add it to your web page (make sure you update player before copying the code)</p>
+                        <p style="font-size: 0.85em;"><span class="glyphicon glyphicon-exclamation-sign"></span><strong> Note: this embed code is for demo purposes only. Do not use in production.</strong></p>
+                        <textarea class="form-control" rows="6"></textarea>
+                    </div>
+                    <div id="shareurl" class="share-url-box well">
+                        <p style="font-size: 0.85em;">Copy the text and share as a link</p>
+                        <textarea class="form-control" rows="3"></textarea>
                     </div>
                 </div>
+
             </div>
-            <div class="col-md-4 col-md-pull-8 well">
-                <h3>Getting Started</h3>
-                <p>Check out the Azure Media Player <a href="//aka.ms/ampdocs">documentation</a> to get learn more.</p>
+
+
+            <div class="col-md-3 col-md-pull-9 well" style="font-size:0.95em">
+                <h3 style="margin-top:0">Getting Started</h3>
+                <p>
+                    It's easy to use Azure Media Player:
+                    <br />
+                    <a href="//aka.ms/ampdocs" class="btn btn-info" target="_blank">documenation</a>
+                    <a href="//aka.ms/ampsamples" class="btn btn-info" target="_blank">samples</a>
+                </p>
                 <p>This demo page allows you to try out some of the features of Azure Media Player.</p>
-                <ol>
-                    <li>Select a sample or input a video URL from your <a href="http://manage.windowsazure.com">Azure Media Services account</a></li>
+                <ol style="padding-left:25px">
+                    <li>Select a sample or input a video URL from your <a href="http://manage.windowsazure.com">Media Services account</a></li>
                     <li>Update Player</li>
                 </ol>
-                <p><!-- If you like the player, you can click the get embed url button and get the embed code to use on your website.  -->Also, you can copy the URL from the "get share url" tab<!--browser's navigation pane--> and share this page.</p>
-                <p>Don't have an Azure Media Services account, no worries: <a href="http://azure.microsoft.com/en-us/pricing/free-trial/" class="btn btn-warning">start your free trial</a></p>
-                <h3>Chosen Player Options</h3>
+                <p>
+                    Copy the URL to share this page.
+                    <br />
+                    <a id="getshareurlbutton" class="btn btn-success">get share url</a>
+                </p>
+
+                <p>
+                    Don't have an Azure Media Services account? No worries:
+                    <br />
+                    <a href="http://azure.microsoft.com/en-us/pricing/free-trial/" class="btn btn-warning" target="_blank">start your free trial</a>
+                </p>
+                <h3 style="margin-top:0">Chosen Player Options</h3>
                 <table style="width:100%">
-                    <!--<tr>
-                        <td>Source URL:</td>
-                        <td><div id="sourceURL" title="Source URL"><p>test</p></div></td>
-                    </tr>-->
                     <tr>
-                        <td>Source Format:</td>
+                        <td>Format:</td>
                         <td><span id="sourceFormat"></span></td>
                     </tr>
                     <tr>
@@ -311,10 +400,10 @@
                         <td>Protection:</td>
                         <td><span id="protection"></span></td>
                     </tr>
-                    <!--<tr>
-                        <td>Token</td>
-                        <td><span id="currentToken"></span></td>
-                    </tr>-->
+                    <tr>
+                        <td>AMP Version:</td>
+                        <td><span id="ampVersion"></span></td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -333,7 +422,13 @@
     <script src="js/vendor/jquery-1.11.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/plugins.js"></script>
-    <script src="AzureMediaPlayer/main-amp.20151116.js"></script>
+    <script src="js/vendor/eligrey/FileSaver.min.js"></script>
+
+    <script src="AzureMediaPlayer/samples.js"></script>
+    <script src="AzureMediaPlayer/languages.js"></script>
+    <script src="AzureMediaPlayer/PrettyPrint.js"></script>
+    <script src="AzureMediaPlayer/main-amp.js"></script>
+
 
     <script>
         (function (i, s, o, g, r, a, m) {

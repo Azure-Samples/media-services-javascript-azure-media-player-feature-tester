@@ -557,7 +557,7 @@
     "token":"",
     "other":"Two audio streams: English, Spanish",
     "notes":"Multi-Audio",
-    "url":"http://amssamples.streaming.mediaservices.windows.net/3efdfbaa-f8f4-43ac-9ab8-013ff4a34f7f/ElephantsDreamMultiAudio.ism/manifest",
+    "url":"http://amssamples.streaming.mediaservices.windows.net/7ceb010f-d9a3-467a-915e-5728acced7e3/ElephantsDreamMultiAudio.ism/manifest",
     "copyright":""
     },
     {

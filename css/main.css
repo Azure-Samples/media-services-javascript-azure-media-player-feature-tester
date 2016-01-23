@@ -25,6 +25,10 @@ body {
 	font-size: 18px;
 }
 
+.jumbotron h3 {
+    padding-top:15px;
+}
+
 .embed-code-box {
 	padding-bottom:25px;
 }
@@ -34,8 +38,65 @@ body {
 	padding-top: 25px;
 }
 
+.nav-pills{
+    padding: 0px;
+    margin: 0px;
+    font-size:0.8em;
+}
+
+.nav-pills .menuitem{
+                        cursor: pointer;
+                    }
+
+.nav-pills li.active a, .nav-pills li.active a:hover, .nav-pills li.active a:focus {
+  background-color: #eee;
+  color: #428bca;
+} 
+
+.nav-pills li a {
+  border-radius: 0px;
+  padding: 10px 10px 10px 10px;
+}
+
+.well {
+  border-radius: 0px;
+  border: none;
+  box-shadow: none;
+  background-color: #eee;
+}
+
+.graphsDiv {
+    background-color:white;
+    border:1px solid black;
+}
+
+#propertiesDiv table {
+    border: 1px solid black;
+    background-color:white;
+}
+
+#propertiesDiv table td {
+    border: 1px solid black;
+    width: 50%;
+    padding: 1px;
+}
+
+
 @media (min-width: 768px) {
 	.container .value-item {
 		min-height: 205px;
 	}
+  .jumbotron h3 {
+    padding-top:0px;
+  }
 }
+
+@media (min-width: 299px) {
+	.nav-pills{
+    font-size:1em;
+    }
+}
+
+
+
+

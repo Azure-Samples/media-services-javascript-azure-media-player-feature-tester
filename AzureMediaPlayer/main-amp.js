@@ -1,31 +1,118 @@
 var myPlayer;
+var videoTag;
+var trackNumber = 0;
+var bwGraph = null;
+var bufferGraph = null;
+var bitrateEventGraph = null;
+var textFile = null;
 var config = {
     url: "//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest",
-    advanced: "false",
+    advanced: false,
     format: "auto",
     tech: "auto",
     protection: "none",
     token: "",
-    autoplay: "true",
-    version: "latest",
-    audiolabel: ""
+    aes: false,
+    aestoken: "",
+    playready: false,
+    playreadytoken: "",
+    widevine: false,
+    widevinetoken: "",
+    heuristicprofile: "hybrid",
+    autoplay: true,
+    muted: false,
+    language: "en",
+    disableurlrewriter: false,
+    captions: [],
+    subtitles: [],
+    poster: "",
+    mySourceList: [],
+    myTrackList: [],
+    myOptions: {}
 };
-
-/*function loadjscssfile(filename, filetype) {
-    if (filetype == "js") { //if filename is a external JavaScript file
-        var fileref = document.createElement('script')
-        fileref.setAttribute("type", "text/javascript")
-        fileref.setAttribute("src", filename)
+var PropertyInfo = (function () {
+    function PropertyInfo(n, f) {
+        this.name = n;
+        this.functionHandler = f;
+        this.txtAreaAmpProperties = null;
     }
-    else if (filetype == "css") { //if filename is an external CSS file
-        var fileref = document.createElement("link")
-        fileref.setAttribute("rel", "stylesheet")
-        fileref.setAttribute("type", "text/css")
-        fileref.setAttribute("href", filename)
-    }
-    if (typeof fileref != "undefined")
-        document.getElementsByTagName("head")[0].appendChild(fileref)
-}*/
+    return PropertyInfo;
+})();
+var properties = [
+        new PropertyInfo("techname", function () {
+            return this.currentTechName();
+        }),
+        new PropertyInfo("type", function () {
+            return this.currentType();
+        }),
+        /*new PropertyInfo("heuristicProfile", function () {
+            return this.currentHeuristicProfile();
+        }),*/
+        new PropertyInfo("isLive", function () {
+            return this.isLive();
+        }),
+        new PropertyInfo("bufferedRange", function () {
+            return PrettyPrint.timeTimeRange(this.buffered());
+        }),
+        new PropertyInfo("bufferAhead", function () {
+            var buffer = calculateBufferAhead();
+            return (buffer) ? buffer.toFixed(3) : "undefined";
+        }),
+        new PropertyInfo("currentTime", function () {
+            return PrettyPrint.toFixed(this.currentTime(), 3);
+        }),
+        new PropertyInfo("absoluteTime", function () {
+            return (this.currentAbsoluteTime()) ? PrettyPrint.toFixed(this.currentAbsoluteTime(), 3) : "undefined";
+        }),
+        new PropertyInfo("duration", function () {
+            return PrettyPrint.toFixed(this.duration(), 3);
+        }),
+        new PropertyInfo("volume", function () {
+            return this.volume();
+        }),
+        /*new PropertyInfo("readyState", function () {
+            return PrettyPrint.readyState(this.readyState);
+        }),*/
+        new PropertyInfo("seeking", function () {
+            return this.seeking();
+        }),
+        new PropertyInfo("paused", function () {
+            return this.paused();
+        }),
+        new PropertyInfo("ended", function () {
+            return this.ended();
+        }),
+        new PropertyInfo("error", function () {
+            return (this.error()) ? PrettyPrint.error(this.error().code) : "undefined";
+        }),
+        new PropertyInfo("playerResolution", function () {
+            return this.width() + " x " + this.height();
+        }),
+        new PropertyInfo("playerAspectRatio", function () {
+            return PrettyPrint.toFixed(this.width() / this.height(), 3);
+        }),
+        new PropertyInfo("videoResolution", function () {
+            return this.videoWidth() + " x " + this.videoHeight();
+        }),
+        new PropertyInfo("videoAspectRatio", function () {
+            return PrettyPrint.toFixed(this.videoWidth() / this.videoHeight(), 3);
+        }),
+        new PropertyInfo("videoBufferLevel", function () {
+            return (this.videoBufferData()) ? PrettyPrint.toFixed(this.videoBufferData().bufferLevel, 3) : "undefined";
+        }),
+        new PropertyInfo("audioBufferLevel", function () {
+            return (this.audioBufferData()) ? PrettyPrint.toFixed(this.audioBufferData().bufferLevel, 3) : "undefined";
+        }),
+        new PropertyInfo("perceivedBW (bps)", function () {
+            return (this.videoBufferData()) ? PrettyPrint.toFixed(this.videoBufferData().perceivedBandwidth, 3) : "undefined";
+        }),
+        new PropertyInfo("downloadBR (bps)", function () {
+            return (this.currentDownloadBitrate()) ? this.currentDownloadBitrate() : "undefined";
+        }),
+        new PropertyInfo("playbackBR (bps)", function () {
+            return (this.currentPlaybackBitrate()) ? this.currentPlaybackBitrate() : "undefined";
+        })
+];
 
 // put function into jQuery namespace
 jQuery.redirect = function (url, params) {
@@ -77,52 +164,170 @@ var initialize = function () {
     if (queryString.url) {
         config.url = decodeURIComponent(queryString.url).replace(/\+/g, " ");
     }
+
+
+    if (queryString.heuristicprofile) {
+        if (queryString.heuristicprofile != "hybrid") {
+            config.advanced = true;
+            config.heuristicprofile = queryString.heuristicprofile.toLowerCase();
+        }
+    }
+
+    if (queryString.autoplay) {
+        if (queryString.autoplay == "false") {
+            config.advanced = true;
+            config.autoplay = false;
+        }
+    }
+
+    if (queryString.muted) {
+        if (queryString.muted == "true") {
+            config.advanced = true;
+            config.muted = true;
+        }
+    }
+
     if (queryString.format) {
-        config.advanced = "true";
+        config.advanced = true;
         config.format = queryString.format.toLowerCase();
     }
 
-    if (queryString.player) {
-        config.advanced = "true";
+    if (queryString.language) {
+        config.advanced = true;
+        config.language = queryString.language.toLowerCase();
+    }
+
+    if (queryString.disableurlrewriter) {
+        if (queryString.disableurlrewriter == "true") {
+            config.advanced = true;
+            config.disableurlrewriter = true;
+        }
+    }
+
+    if (queryString.player) { //legacy from old site
+        config.advanced = true;
         config.tech = queryString.player.toLowerCase();
     }
 
     if (queryString.tech) {
-        config.advanced = "true";
+        config.advanced = true;
         config.tech = queryString.tech.toLowerCase();
     }
 
+    //legacy 
     if (queryString.protection) {
-        config.advanced = "true";
+        config.advanced = true;
         config.protection = queryString.protection.toLowerCase();
     }
+
+    //legacy + shared token
     if (queryString.token) {
-        config.advanced = "true";
-        config.token = queryString.token;
-    }
-    if (queryString.autoplay) {
-        if (queryString.autoplay == "false") {
-            config.autoplay = "false";
-        }
-    }
-    if (queryString.version) {
-        if (queryString.version != "latest") {
-            config.version = queryString.version;
-        }
-    }
-    if (queryString.audiolabel) {
-        config.audiolabel = queryString.audiolabel;
+        config.advanced = true;
+        config.token = decodeURIComponent(queryString.token.replace(/\+/g, " "));
     }
 
-    //Add more here
-    console.log("Configuration chosen is: URL - " + config.url);
+    if (queryString.protection) {
+        config.advanced = true;
 
-    if ($("#assetConfig")) {
+        switch (queryString.protection.toLowerCase()) {
+            case "aes":
+                config.aes = true;
+                if (queryString.token) {
+                    config.aestoken = decodeURIComponent(queryString.token.replace(/\+/g, " "));;
+                }
+                break;
+            case "drm":
+                config.playready = true;
+                config.widevine = true;
+                if (queryString.token) {
+                    config.playreadytoken = decodeURIComponent(queryString.token.replace(/\+/g, " "));;
+                    config.widevinetoken = decodeURIComponent(queryString.token.replace(/\+/g, " "));;
+                }
+                break;
+            case "playready":
+                config.playready = true;
+                if (queryString.token) {
+                    config.playreadytoken = decodeURIComponent(queryString.token.replace(/\+/g, " "));;
+                }
+                break;
+            case "widevine":
+                config.widevine = true;
+                if (queryString.token) {
+                    config.widevinetoken = decodeURIComponent(queryString.token.replace(/\+/g, " "));;
+                }
+                break;
+            default:
+        }
+
+    }
+    //cannot be aes AND drm -> only OR with current precedance for aes
+    if (queryString.aes) {
+        config.advanced = true;
+        config.aes = true;
+        if (queryString.token) {
+            config.aestoken = decodeURIComponent(queryString.token.replace(/\+/g, " "));
+        }
+        if (queryString.aestoken) {
+            config.aestoken = decodeURIComponent(queryString.aestoken.replace(/\+/g, " "));
+        }
+    } else {
+        if (queryString.playready) {
+            config.advanced = true;
+            config.playready = true;
+            if (queryString.token) {
+                config.playreadytoken = decodeURIComponent(queryString.token.replace(/\+/g, " "));
+            }
+            if (queryString.playreadytoken) {
+                config.playreadytoken = decodeURIComponent(queryString.playreadytoken.replace(/\+/g, " "));;
+            }
+        }
+        if (queryString.widevine) {
+            config.advanced = true;
+            config.widevine = true;
+            if (queryString.token) {
+                config.widevinetoken = decodeURIComponent(queryString.token.replace(/\+/g, " "));
+            }
+            if (queryString.widevinetoken) {
+                config.widevinetoken = decodeURIComponent(queryString.widevinetoken.replace(/\+/g, " "));
+            }
+        }
+    }
+
+    if (queryString.captions) {
+        config.advanced = true;
+        var captionslist = queryString.captions.split(";");
+        for (var i = 0; i < captionslist.length; i++) {
+            var captionspair = captionslist[i].split(",");
+            config.captions.push({ "label": captionspair[0], "language": captionspair[1], "trackurl": (decodeURIComponent(captionspair[2].replace(/\+/g, " "))) });
+        }
+    }
+    if (queryString.subtitles) {
+        config.advanced = true;
+        var subtitlelist = queryString.subtitles.split(";");
+        for (var i = 0; i < subtitlelist.length; i++) {
+            var subtitlespair = subtitlelist[i].split(",");
+            config.subtitles.push({ "label": subtitlespair[0], "language": subtitlespair[1], "trackurl": (decodeURIComponent(subtitlespair[2].replace(/\+/g, " "))) });
+        }
+    }
+    if (queryString.poster) {
+        config.poster = decodeURIComponent(queryString.poster).replace(/\+/g, " ");
+        config.advanced = true;
+    }
+
+    //make config nicer
+    var consoleLogConfig = "";
+    for (var key in config) {
+        consoleLogConfig += "\t" + key + ": " + config[key] + "\n";
+    }
+    console.log("Configuration chosen is: \n" + consoleLogConfig);
+
+    //Demo page UI setup 
+    if (document.getElementById('assetConfig')) {
         //setup modal dialog
         $(".config-body #adaptive-url").val(config.url);
 
         //Show advanced options
-        if (config.advanced == "true") {
+        if (config.advanced == true) {
             $("input[name='advanced'][value='advanced']").prop('checked', true);
             $("#advancedOptions").show();
             $("#urlHelp").hide();
@@ -131,234 +336,267 @@ var initialize = function () {
             $("#urlHelp").show();
         }
 
+        //Setup UI for Advanced: Playback
+        $("#heuristicProfile").val(config.heuristicprofile);
+        $("input[name='autoplay']").prop('checked', config.autoplay);
+        $("input[name='muted']").prop('checked', config.muted);
+
         //Setup UI for Advanced: Format
         $("#formatOtherVal").hide();
         switch (config.format) {
-            case "auto":
-                $("#selectFormat").val("auto");
-                break;
-            case "dash":
-                $("#selectFormat").val("dash");
-                break;
-            case "smooth":
-                $("#selectFormat").val("smooth");
-                break;
-            case "hls":
-                $("#selectFormat").val("hls");
-                break;
-            case "mp4":
-                $("#selectFormat").val("mp4");
-                break;
-            default:
+            case "other":
                 $("#selectFormat").val("other");
                 $("#formatOtherVal").show();
                 $("#formatOtherVal").val(config.format);
-                break;
+            default:
+                $("#selectFormat").val(config.format);
         }
+        $("input[name='disableUrlRewriter']").prop('checked', config.disableurlrewriter);
 
         //Setup UI for Advanced: Tech
-        switch (config.tech) {
-            case "auto":
-                $("#selectTech").val("auto");
-                break;
-            case "js":
-                $("#selectTech").val("js");
-                break;
-            case "flash":
-                $("#selectTech").val("flash");
-                break;
-            case "silverlight":
-                $("#selectTech").val("silverlight");
-                break;
-            case "html5":
-                $("#selectTech").val("html5");
-                break;
-            default:
-                $("#selectTech").val("auto");
-                break;
-        }
+        $("#selectTech").val(config.tech);
+
+        //Setup UI for Advanced: Language
+        $("#selectLang").val(config.language);
 
         //Setup UI for Advanced: Protection
-        $("#token").hide();
-        switch (config.protection) {
-            case "none":
-                $("#selectContentProtection").val("none");
-                break;
-            case "aes":
-                $("#selectContentProtection").val("aes");
-                $("#token").show();
-                if (config.token != "") {
-                    $("#token").val(decodeURIComponent(config.token.replace(/\+/g, " ")));
+        $("input[name='protection'][value='aes']").prop('checked', config.aes);
+        $("#aesToken").val(config.aestoken);
+        //disable DRM if AES selected
+        $("input[name='protection'][value='playready']").attr('disabled', config.aes);
+        $("#playreadyToken").attr('disabled', config.aes);
+        $("input[name='protection'][value='widevine']").attr('disabled', config.aes);
+        $("#widevineToken").attr('disabled', config.aes);
+
+        $("input[name='protection'][value='playready']").prop('checked', config.playready);
+        $("#playreadyToken").val(config.playreadytoken);
+        $("input[name='protection'][value='widevine']").prop('checked', config.widevine);
+        $("#widevineToken").val(config.widevinetoken);
+
+        //Setup UI for Advanced: Tracks
+        if (config.captions.length > 0) {
+            for (var i = 0; i < config.captions.length; i++) {
+                addTrack();
+                $("#trackkind" + (trackNumber - 1)).val("captions")
+                var obj = config.captions[i];
+                for (var key in obj) {
+                    if (key == "label") {
+                        $("#tracklabel" + (trackNumber - 1)).val(obj[key].toString());
+                    } else if (key == "language") {
+                        $("#tracklang" + (trackNumber - 1)).val(obj[key].toString());
+                    } else if (key == "trackurl") {
+                        $("#trackurl" + (trackNumber - 1)).val(obj[key].toString());
+                    }
                 }
-                break;
-            case "playready":
-                $("#selectContentProtection").val("playready");
-                $("#token").show();
-                if (config.token != "") {
-                    $("#token").val(decodeURIComponent(config.token.replace(/\+/g, " ")));
-                }
-                break;
-            case "widevine":
-                $("#selectContentProtection").val("widevine");
-                $("#token").show();
-                if (config.token != "") {
-                    $("#token").val(decodeURIComponent(config.token.replace(/\+/g, " ")));
-                }
-                break;
-            case "drm":
-                $("#selectContentProtection").val("drm");
-                $("#token").show();
-                if (config.token != "") {
-                    $("#token").val(decodeURIComponent(config.token.replace(/\+/g, " ")));
-                }
-                break;
-            default:
-                $("#selectContentProtection").val("none");
-                break;
+            }
         }
+        if (config.subtitles.length > 0) {
+            for (var i = 0; i < config.subtitles.length; i++) {
+                addTrack();
+                $("#trackkind" + (trackNumber - 1)).val("subtitles")
+                var obj = config.subtitles[i];
+                for (var key in obj) {
+                    if (key == "label") {
+                        $("#tracklabel" + (trackNumber - 1)).val(obj[key].toString())
+                    } else if (key == "language") {
+                        $("#tracklang" + (trackNumber - 1)).val(obj[key].toString());
+                    } else if (key == "trackurl") {
+                        $("#trackurl" + (trackNumber - 1)).val(obj[key].toString())
+                    }
+                }
+            }
+        }
+        //Setup UI for Advanced: Protection
+        $("#poster-url").val(config.poster);
     }
 };
 
 var appendSourceUrl = function (url) {
 
+    //determine mime type
     var mimeType = "application/vnd.ms-sstr+xml";
-    var boolDisableURLRewrite = false;
-    var isProtected = false;
-    var protectionType = "";
-
     if (config.format == "auto") {
         if ((url.trim().toLowerCase().match('.ism/manifest')) || (url.trim().toLowerCase().match('.isml/manifest'))) {
         } else if (url.toLowerCase().match('.mpd$')) {
             mimeType = "application/dash+xml";
-            boolDisableURLRewrite = true;
         } else if (url.toLowerCase().match('.flv$')) {
             mimeType = "video/x-flv";
-            boolDisableURLRewrite = true;
         } else if (url.toLowerCase().match('.ogv$')) {
             mimeType = "video/ogg";
-            boolDisableURLRewrite = true;
         } else if (url.toLowerCase().match('.webm$')) {
             mimeType = "video/webm";
-            boolDisableURLRewrite = true;
         } else if (url.toLowerCase().match('.3gp$')) {
             mimeType = "video/3gp";
-            boolDisableURLRewrite = true;
         } else if (url.toLowerCase().match('.mp4')) {
             mimeType = "video/mp4";
-            boolDisableURLRewrite = true;
         }
     } else if (config.format == "dash") {
         mimeType = "application/dash+xml";
-        boolDisableURLRewrite = true;
     } else if (config.format == "smooth") {
         mimeType = "application/vnd.ms-sstr+xml";
-        boolDisableURLRewrite = true;
     } else if (config.format == "hls") {
         mimeType = "application/vnd.apple.mpegurl";
-        boolDisableURLRewrite = true;
     } else if (config.format == "mp4") {
         mimeType = "video/mp4";
-        boolDisableURLRewrite = true;
     } else {
         mimeType = $("#formatOtherVal").val();
-        boolDisableURLRewrite = true;
     }
 
-    if (config.protection == "none") {
-    } else if (config.protection == "aes") {
-        isProtected = true;
-        protectionType = "AES";
-    } else if (config.protection == "playready") {
-        isProtected = true;
-        protectionType = "PlayReady";
-    } else if (config.protection == "widevine") {
-        isProtected = true;
-        protectionType = "Widevine";
-    } else if (config.protection == "drm") {
-        isProtected = true;
-        protectionType = "DRM";
-    }
-
-
-    if (isProtected == false) {
-        var mySourceList = [{ src: url.trim(), type: mimeType, disableUrlRewriter: boolDisableURLRewrite }, ];
-    } else if (protectionType == "DRM") {
-        if (config.token !== "") {
-            var mySourceList = [{ src: url.trim(), type: mimeType, disableUrlRewriter: boolDisableURLRewrite, protectionInfo: [{ type: "PlayReady", authenticationToken: decodeURIComponent(config.token.replace(/\+/g, " ")) }, { type: "Widevine", authenticationToken: decodeURIComponent(config.token.replace(/\+/g, " ")) }] }, ];
-        } else {
-            var mySourceList = [{ src: url.trim(), type: mimeType, disableUrlRewriter: boolDisableURLRewrite, protectionInfo: [{ type: "PlayReady" }, { type: "Widevine" }] }, ];
-        }
+    //setup source object
+    var mySourceList = [];
+    var sourceListObject = new Object;
+    if (url.match("^//")) {
+        sourceListObject.src = location.protocol + url.trim();
     } else {
-        var mySourceList = [{ src: url.trim(), type: mimeType, disableUrlRewriter: boolDisableURLRewrite, protectionInfo: [{ type: protectionType, authenticationToken: decodeURIComponent(config.token.replace(/\+/g, " ")) }] }, ];
+        sourceListObject.src = url.trim();
+    }
+    sourceListObject.type = mimeType;
+    if (config.disableurlrewriter) {
+        sourceListObject.disableUrlRewriter = config.disableurlrewriter;
+    } else if (config.format != "auto") {
+
+        if (config.format == "dash") {
+            sourceListObject.streamingFormats = [];
+            sourceListObject.streamingFormats.push("DASH");
+        } else if (config.format == "smooth") {
+            sourceListObject.streamingFormats = [];
+            sourceListObject.streamingFormats.push("SMOOTH");
+        } else if (config.format == "hls") {
+            sourceListObject.streamingFormats = [];
+            sourceListObject.streamingFormats.push("HLS-V4");
+            sourceListObject.streamingFormats.push("HLS-V3");
+        }
+    }
+    if (config.aes) {
+        sourceListObject.protectionInfo = [];
+        var aesProtectionInfo = new Object;
+        aesProtectionInfo.type = "AES";
+        if (config.aestoken) {
+            aesProtectionInfo.authenticationToken = config.aestoken;
+        }
+        sourceListObject.protectionInfo.push(aesProtectionInfo);
+    } else {
+        if (config.playready || config.widevine) {
+            sourceListObject.protectionInfo = [];
+        }
+        if (config.playready) {
+            var playreadyProtectionInfo = new Object;
+            playreadyProtectionInfo.type = "PlayReady";
+            if (config.playreadytoken) {
+                playreadyProtectionInfo.authenticationToken = config.playreadytoken;
+            }
+            sourceListObject.protectionInfo.push(playreadyProtectionInfo);
+        }
+        if (config.widevine) {
+            var widevineProtectionInfo = new Object;
+            widevineProtectionInfo.type = "Widevine";
+            if (config.widevinetoken) {
+                widevineProtectionInfo.authenticationToken = config.widevinetoken;
+            }
+            sourceListObject.protectionInfo.push(widevineProtectionInfo);
+        }
+    }
+    mySourceList.push(sourceListObject);
+
+    //setup track objects
+    var myTrackList = [];
+    if (config.captions.length > 0) {
+        for (var i = 0; i < config.captions.length; i++) {
+            var captionsListObject = new Object;
+            captionsListObject.src = config.captions[i].trackurl;
+            captionsListObject.srclang = config.captions[i].language;
+            captionsListObject.label = config.captions[i].label;
+            captionsListObject.kind = "captions";
+            myTrackList.push(captionsListObject);
+        }
+    }
+    if (config.subtitles.length > 0) {
+        for (var i = 0; i < config.subtitles.length; i++) {
+            var subtitlesListObject = new Object;
+            subtitlesListObject.src = config.subtitles[i].trackurl;
+            subtitlesListObject.srclang = config.subtitles[i].language;
+            subtitlesListObject.label = config.subtitles[i].label;
+            subtitlesListObject.kind = "subtitles";
+            myTrackList.push(subtitlesListObject);
+        }
     }
 
+    //setup options
     var myOptions = {
         //sources: mySourceList,
         "nativeControlsForTouch": false,
-        "autoplay": false,
         "controls": true,
-        heuristicProfile: "High Quality",
-        customPlayerSettings: {
-            "customHeuristicSettings": {
-                "preRollInSec": 4,
-                "windowSizeHeuristics": true
-            }
-        },
+        "autoplay": config.autoplay,
+        "muted": config.muted,
+        "language": config.language,
         skinConfig: {
-            audioTracksMenu :{
+            audioTracksMenu: {
                 "enabled": true,
                 "useManifestForLabel": false
             }
         },
+        traceConfig: {
+            TraceTargets: [{ target: 'memory' }],
+            maxLogLevel: 3
+        },
+        hotkeys: {
+            "volumeStep": 0.1,
+            "seekStep": 5,
+            "enableMute": true,
+            "enableFullscreen": true,
+            "enableNumbers": true,
+            "enableJogStyle": false
+        },
         plugins: {
-            EventHubQoS: {
+            /*EventHubQoS: {
                 "appName": "AMP Demo Page",
                 "heartBeatIntervalMs": 10000,
                 "disableGeoLocation": true
-            },
-            hotkeys: {
-                "volumeStep": 0.1,
-                "seekStep": 5,
-                "enableMute": true,
-                "enableFullscreen": true,
-                "enableNumbers": true,
-                "enableJogStyle": false
-            },
-            progressTips: {},
+            },*/
             ga: {
                 'eventsToTrack': ['playerConfig', 'loaded', 'playTime', 'percentsPlayed', 'start', 'end', 'play', 'pause', 'error', 'buffering', 'fullscreen', 'bitrate'],
                 'debug': false
             }
         }
     };
-
-    if (config.tech == "js") {
-        myOptions.techOrder = ["azureHtml5JS"];
-    } else if (config.tech == "flash") {
-        myOptions.techOrder = ["flashSS"];
-    } else if (config.tech == "silverlight") {
-        myOptions.techOrder = ["silverlightSS"];
-    } else if (config.tech == "html5") {
-        myOptions.techOrder = ["html5"];
-    } else {
-        myOptions.techOrder = ["azureHtml5JS", "flashSS", "silverlightSS", "html5"];
-    }
-
-    //Multi-Audio
-    /*switch (config.audioLabel) {
-        case "none":
+    switch (config.heuristicprofile) {
+        case "quickstart":
+            myOptions.heuristicProfile = "Quick Start";
             break;
-        case "manifest":
-            break;
-        case "auto":
+        case "highquality":
+            myOptions.heuristicProfile = "High Quality";
             break;
         default:
+            myOptions.heuristicProfile = "High Quality",
+            myOptions.customPlayerSettings = {
+                "customHeuristicSettings": {
+                    "preRollInSec": 4,
+                    "windowSizeHeuristics": true
+                }
+            }
+    }
+    //Options for tech order
+    switch (config.tech) {
+        case "js":
+            myOptions.techOrder = ["azureHtml5JS"];
             break;
-    }*/
+        case "flash":
+            myOptions.techOrder = ["flashSS"];
+            break;
+        case "silverlight":
+            myOptions.techOrder = ["silverlightSS"];
+            break;
+        case "html5":
+            myOptions.techOrder = ["html5"];
+            break;
+        default:
+            myOptions.techOrder = ["azureHtml5JS", "flashSS", "silverlightSS", "html5"];
+    }
+    //Options for audio menu
     if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/f1ee994f-fcb8-455f-a15d-07f6f2081a60/SintelMultiAudio.ism/manifest'.toLowerCase())) {
         myOptions.skinConfig.audioTracksMenu.enabled = true;
         myOptions.skinConfig.audioTracksMenu.useManifestForLabel = true;
-    } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/3efdfbaa-f8f4-43ac-9ab8-013ff4a34f7f/ElephantsDreamMultiAudio.ism/manifest'.toLowerCase())) {
+    } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/7ceb010f-d9a3-467a-915e-5728acced7e3/ElephantsDreamMultiAudio.ism/manifest'.toLowerCase())) {
         myOptions.skinConfig.audioTracksMenu.enabled = true;
         myOptions.skinConfig.audioTracksMenu.useManifestForLabel = false;
     } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net'.toLowerCase())) {
@@ -368,50 +606,41 @@ var appendSourceUrl = function (url) {
         myOptions.skinConfig.audioTracksMenu.enabled = true;
         myOptions.skinConfig.audioTracksMenu.useManifestForLabel = false;
     }
-
-    var myTrackList;
-
-    if (url.trim().toLowerCase().match('ams-samplescdn.streaming.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/Sintel_WAMEH264AdaptiveBitrateMP4SetSD4x3iOSCellularOnly.ism/manifest'.toLowerCase())) {
-        myTrackList = [
-            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/sintel-en-us.vtt", srclang: "en", kind: "subtitles", label: "english" },
-            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/sintel-fr.vtt", srclang: "fr", kind: "subtitles", label: "fran&#231ais" },
-            { src: "//ams-samplescdn.streaming.mediaservices.windows.net/7c58a29f-4926-4a4e-9dbc-4b46f843561e/sintel-it.vtt", srclang: "it", kind: "subtitles", label: "italiano" }
-        ];
-    } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TearsOfSteel.ism/manifest'.toLowerCase())) {
-        myTrackList = [
-            { src: "//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-en.vtt", srclang: "en", kind: "subtitles", label: "english" },
-            { src: "//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-es.vtt", srclang: "es", kind: "subtitles", label: "espa&#241ol" },
-            { src: "//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-fr.vtt", srclang: "fr", kind: "subtitles", label: "fran&#231ais" },
-            { src: "//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-it.vtt", srclang: "it", kind: "subtitles", label: "italiano" }
-        ];
-    } else if (url.trim().toLowerCase().match("nimbuspm.origin.mediaservices.windows.net/aed33834-ec2d-4788-88b5-a4505b3d032c/Microsoft's".toLowerCase())) {
-        myTrackList = [
-            { src: "http://nimbuspm.origin.mediaservices.windows.net/aed33834-ec2d-4788-88b5-a4505b3d032c/pp4_blog_demo.vtt", srclang: "en", kind: "subtitles", label: "english" }
-        ];
+    //Options for poster
+    if (config.poster != "") {
+        myOptions.poster = config.poster;
     }
 
+    //add axinom header for Axinom Widevine content
     if ((url.trim().toLowerCase().match("samplestreamseu.streaming.mediaservices.windows.net/65b76566-1381-4540-87ab-7926568901d8/bbb_sunflower_1080p_30fps_normal.ism".toLowerCase())) || ((url.trim().toLowerCase().match("samplestreamseu.streaming.mediaservices.windows.net/60d15401-a440-4f1f-bb97-0e1ffa2ff17d/76474ddb-f917-4b1a-9f13-042ed1365e4e.ism".toLowerCase())))) {
         AzureHtml5JS.KeySystem.WidevineCustomAuthorizationHeader = "X-AxDRM-Message";
     }
 
+    //initialize player and set options
     if (!myPlayer) {
         myPlayer = amp("azuremediaplayer", myOptions);
     } else {
         myPlayer.options(myOptions);
     }
-    if (config.autoplay == "true") {
-        myPlayer.autoplay(true);
+
+    //save settings
+    config.mySourceList = mySourceList;
+    config.myTrackList = myTrackList;
+    config.myOptions = myOptions;
+
+    //Register Events
+    if (document.getElementById("playerdiagnostics")) {
+        registerEvents();
+        //chartControl();
     }
+
+    //set source
     myPlayer.src(mySourceList, myTrackList);
 };
 
 var displayConfig = function () {
     //This function updates the "Chosen Player Options" display to the user
-
-    //$("#sourceURL").text("<button onclick='alert(\"" + myPlayer.currentSrc() + "\");'>URL</button>");
-    //$("#sourceURL").text(myPlayer.currentSrc());
-
-    if ($("#sourceFormat")) {
+    if (document.getElementById('sourceFormat')) {
         switch (myPlayer.currentType()) {
             case "video/mp4":
                 $("#sourceFormat").text("MP4");
@@ -430,7 +659,7 @@ var displayConfig = function () {
         }
     }
 
-    if ($("#tech")) {
+    if (document.getElementById('tech')) {
         switch (myPlayer.techName) {
             case "AzureHtml5JS":
                 $("#tech").text("JavaScript + HTML5 (MSE)");
@@ -452,32 +681,25 @@ var displayConfig = function () {
         }
     }
 
-    if ($("#protection")) {
-        switch (config.protection) {
-            case "aes":
-                $("#protection").text("AES-128 bit");
-                break;
-            case "playready":
-                $("#protection").text("PlayReady");
-                break;
-            case "widevine":
-                $("#protection").text("Widevine");
-                break;
-            case "drm":
+    if (document.getElementById('protection')) {
+        if (config.aes) {
+            $("#protection").text("AES-128 bit");
+        } else {
+            if (config.playready && config.widevine) {
                 $("#protection").text("DRM Common Encryption");
-                break;
-            default:
+            } else if (config.playready) {
+                $("#protection").text("PlayReady");
+            } else if (config.widevine) {
+                $("#protection").text("Widevine");
+            } else {
                 $("#protection").text("None/Unknown");
+            }
         }
     }
 
-    //if (config.token != "") {
-    //    $("#currentToken").text("<button onclick='alert(\"" + config.token + "\");'>Token</button>");
-    //    //$("#currentToken").text(config.token);
-    //} else {
-    //    $("#currentToken").text("None");
-    //}
-
+    if (document.getElementById('ampVersion')) {
+        $("#ampVersion").text(myPlayer.getAmpVersion());
+    }
 }
 
 var displayCopyrightInfo = function () {
@@ -498,199 +720,667 @@ var displayCopyrightInfo = function () {
 }
 
 var updateConfig = function () {
-    config.url = $("#adaptive-url").val();
-    config.advanced = "false";
+    config.url = $("#adaptive-url").val().trim();
+    config.advanced = false;
     config.format = "auto";
     config.tech = "auto";
     config.protection = "none";
     config.token = "";
+    config.aes = false;
+    config.aestoken = "";
+    config.playready = false;
+    config.playreadytoken = "";
+    config.widevine = false;
+    config.widevinetoken = "";
+    config.heuristicprofile = "hybrid",
+    config.autoplay = true;
+    config.muted = false;
+    config.language = "en";
+    config.disableurlrewriter = false,
+    config.captions = [];
+    config.subtitles = [];
+    config.poster = "";
 
     if ($("input[name='advanced']").is(':checked')) {
-        config.advanced = "true";
+        config.advanced = true;
+
+        config.heuristicprofile = $("#heuristicProfile").val();
+
+        if (!($("input[name='autoplay']").is(':checked'))) {
+            config.autoplay = false;
+        }
+
+        if (($("input[name='muted']").is(':checked'))) {
+            config.muted = true;
+        }
 
         switch ($("#selectFormat").val()) {
-            case "auto":
-                //config.format = "auto";
-                break;
-            case "dash":
-                config.format = "dash";
-                break;
-            case "smooth":
-                config.format = "smooth";
-                break;
-            case "hls":
-                config.format = "hls";
-                break;
-            case "mp4":
-                config.format = "mp4";
-                break;
             case "other":
                 config.format = $("#formatOtherVal").val();
                 break;
             default:
+                config.format = $("#selectFormat").val();
                 break;
         }
-        switch ($("#selectTech").val()) {
-            case "auto":
-                //config.tech = "auto";
-                break;
-            case "js":
-                config.tech = "js";
-                break;
-            case "flash":
-                config.tech = "flash";
-                break;
-            case "silverlight":
-                config.tech = "silverlight";
-                break;
-            case "html5":
-                config.tech = "html5";
-                break;
-            default:
-                break;
+        if ($("input[name='disableUrlRewriter']").is(':checked')) {
+            config.disableurlrewriter = true;
         }
-        switch ($("#selectContentProtection").val()) {
-            case "none":
-                //config.protection = "none"
-                break;
-            case "aes":
-                config.protection = "aes";
-                if ($("#token").val() != "Token" && $("#token").val().trim() != "") {
-                    config.token = encodeURIComponent($("#token").val()).replace(/'/g, "%27").replace(/"/g, "%22");
+
+        config.tech = $("#selectTech").val();
+        config.language = $("#selectLang").val();
+        config.poster = $("#poster-url").val().trim();
+
+        for (var i = 0; i < trackNumber; i++) {
+            if ($("#trackurl" + i).val().trim() != "") {
+                if ($("#trackkind" + i).val() == "captions") {
+                    config.captions.push({ "label": ($("#tracklabel" + i).val().trim() || ($("#tracklang" + i).val() || "Caption")), "language": ($("#tracklang" + i).val() || "und"), "trackurl": $("#trackurl" + i).val().trim() });
+                } else if ($("#trackkind" + i).val() == "subtitles") {
+                    config.subtitles.push({ "label": ($("#tracklabel" + i).val().trim() || ($("#tracklang" + i).val() || "Subtitle")), "language": ($("#tracklang" + i).val() || "und"), "trackurl": $("#trackurl" + i).val().trim() });
                 }
-                break;
-            case "playready":
-                config.protection = "playready";
-                if ($("#token").val() != "Token" && $("#token").val().trim() != "") {
-                    config.token = encodeURIComponent($("#token").val()).replace(/'/g, "%27").replace(/"/g, "%22");
-                }
-                break;
-            case "widevine":
-                config.protection = "widevine";
-                if ($("#token").val() != "Token" && $("#token").val().trim() != "") {
-                    config.token = encodeURIComponent($("#token").val()).replace(/'/g, "%27").replace(/"/g, "%22");
-                }
-                break;
-            case "drm":
-                config.protection = "drm";
-                if ($("#token").val() != "Token" && $("#token").val().trim() != "") {
-                    config.token = encodeURIComponent($("#token").val()).replace(/'/g, "%27").replace(/"/g, "%22");
-                }
-                break;
-            default:
-                break;
+            }
+        }
+
+        //cannot be aes AND drm -> only OR with current precedance for aes
+        if ($("input[name='protection'][value='aes']").is(':checked')) {
+            config.aes = true;
+            config.aestoken = $("#aesToken").val();
+        } else {
+            if ($("input[name='protection'][value='playready']").is(':checked')) {
+                config.playready = true;
+                config.playreadytoken = $("#playreadyToken").val();
+            }
+            if ($("input[name='protection'][value='widevine']").is(':checked')) {
+                config.widevine = true;
+                config.widevinetoken = $("#widevineToken").val();
+            }
+            if (config.playreadytoken == config.widevinetoken) {
+                config.token = config.playreadytoken;
+            }
         }
     }
 }
 
 var updateParamsInAddressURL = function () {
     var urlParams = "";
-    var manifestURL = config.url.trim().toLowerCase();
-    if (manifestURL.match("^http://") || manifestURL.match("^https://")||manifestURL.match("^//")) {
+    manifestURL = config.url.trim().toLowerCase();
+    if (manifestURL.match("^http://") || manifestURL.match("^https://") || manifestURL.match("^//") || manifestURL.match("^file://")) {
         manifestURL = config.url.trim();
     } else {
         manifestURL = "//" + config.url.trim();
     }
-    urlParams += "?url=" + encodeURIComponent(manifestURL).replace(/'/g, "%27").replace(/"/g, "%22");
-    if (config.advanced == "true") {
-        switch (config.format) {
-            case "auto":
-                //urlParams += "&format=auto";
-                break;
-            case "dash":
-                urlParams += "&format=dash";
-                break;
-            case "smooth":
-                urlParams += "&format=smooth";
-                break;
-            case "hls":
-                urlParams += "&format=hls";
-                break;
-            case "mp4":
-                urlParams += "&format=mp4"
-            case "other":
-                urlParams += "&format=" + $("#formatOtherVal").val();
-                break;
-            default:
-                break;
-        }
-        switch (config.tech) {
-            case "auto":
-                //urlParams += "&tech=auto";
-                break;
-            case "js":
-                urlParams += "&tech=js";
-                break;
-            case "flash":
-                urlParams += "&tech=flash";
-                break;
-            case "silverlight":
-                urlParams += "&tech=silverlight";
-                break;
-            case "html5":
-                urlParams += "&tech=html5";
-                break;
-            default:
-                break;
-        }
 
-        switch (config.protection) {
-            case "none":
-                //urlParams += "&protection=none";
-                break;
-            case "aes":
-                urlParams += "&protection=aes";
-                if (config.token) {
-                    urlParams += "&token=" + config.token;
+    urlParams += "?url=" + encodeURIComponent(manifestURL).replace(/'/g, "%27").replace(/"/g, "%22");
+    if (config.advanced == true) {
+        if (config.format != "auto") {
+            urlParams += "&format=" + config.format;
+        }
+        if (config.disableurlrewriter == true) {
+            urlParams += "&disableurlrewriter=true"
+        }
+        if (config.tech != "auto") {
+            urlParams += "&tech=" + config.tech;
+        }
+        if (config.language != "en") {
+            urlParams += "&language=" + config.language;
+        }
+        if (config.heuristicprofile != "hybrid") {
+            urlParams += "&heuristicprofile=" + config.heuristicprofile;
+        }
+        if (config.autoplay == false) {
+            urlParams += "&autoplay=false";
+        }
+        if (config.muted == true) {
+            urlParams += "&muted=true";
+        }
+        if (config.captions.length > 0) {
+            urlParams += "&captions="
+            for (var i = 0; i < config.captions.length; i++) {
+                var obj = config.captions[i];
+                for (var key in obj) {
+                    if (key == "label" || key == "language") {
+                        urlParams += obj[key].toString() + ",";
+                    } else if (key == "trackurl") {
+                        urlParams += encodeURIComponent(obj[key].toString()).replace(/'/g, "%27").replace(/"/g, "%22");
+                    }
                 }
-                break;
-            case "playready":
-                urlParams += "&protection=playready";
-                if (config.token) {
-                    urlParams += "&token=" + config.token;
+                if (i < config.captions.length - 1) {
+                    urlParams += ";";
                 }
-                break;
-            case "widevine":
-                urlParams += "&protection=widevine";
-                if (config.token) {
-                    urlParams += "&token=" + config.token;
+            }
+        }
+        if (config.subtitles.length > 0) {
+            urlParams += "&subtitles="
+            for (var i = 0; i < config.subtitles.length; i++) {
+                var obj = config.subtitles[i];
+                for (var key in obj) {
+                    if (key == "label" || key == "language") {
+                        urlParams += obj[key].toString() + ",";
+                    } else if (key == "trackurl") {
+                        urlParams += encodeURIComponent(obj[key].toString()).replace(/'/g, "%27").replace(/"/g, "%22");
+                    }
                 }
-                break;
-            case "drm":
-                urlParams += "&protection=drm";
-                if (config.token) {
-                    urlParams += "&token=" + config.token;
+                if (i < config.subtitles.length - 1) {
+                    urlParams += ";";
                 }
-                break;
-            default:
-                break;
+            }
+        }
+        if (config.aes == true) {
+            urlParams += "&aes=true";
+            if (config.aestoken != "") {
+                urlParams += "&aestoken=" + encodeURIComponent(config.aestoken).replace(/'/g, "%27").replace(/"/g, "%22");
+            }
+        } else {
+            if (config.playready && config.widevine && config.token) {
+                urlParams += "&playready=true&widevine=true&token=" + encodeURIComponent(config.token).replace(/'/g, "%27").replace(/"/g, "%22");
+            } else {
+                if (config.playready) {
+                    urlParams += "&playready=true";
+                    if (config.playreadytoken != "") {
+                        urlParams += "&playreadytoken=" + encodeURIComponent(config.playreadytoken).replace(/'/g, "%27").replace(/"/g, "%22");
+                    }
+                }
+                if (config.widevine) {
+                    urlParams += "&widevine=true";
+                    if (config.widevinetoken != "") {
+                        urlParams += "&widevinetoken=" + encodeURIComponent(config.widevinetoken).replace(/'/g, "%27").replace(/"/g, "%22");
+                    }
+                }
+            }
+        }
+        if (config.poster != "") {
+            urlParams += "&poster=" + encodeURIComponent(config.poster).replace(/'/g, "%27").replace(/"/g, "%22");;
         }
     }
     return urlParams;
 }
 
 var updateEmbedCode = function () {
-    $('.embed-code-box textarea').val('<iframe src="//aka.ms/azuremediaplayeriframe' + updateParamsInAddressURL() + '&autoplay=false" name="azuremediaplayer" scrolling="no" frameborder="no" align="center" height="280px" width="500px" allowfullscreen></iframe>');
+    $('.embed-code-box textarea').val('<iframe src="//aka.ms/azuremediaplayeriframe' + updateParamsInAddressURL() + '" name="azuremediaplayer" scrolling="no" frameborder="no" align="center" height="280px" width="500px" allowfullscreen></iframe>');
 }
 
 var updateShareUrl = function () {
-    $('.share-url-box textarea').val("http://aka.ms/azuremediaplayer" + updateParamsInAddressURL());
+    $('.share-url-box textarea').val(location.protocol + "//aka.ms/azuremediaplayer" + updateParamsInAddressURL());
+}
+
+var playerCode = function () {
+    $('#playercode-head').val('<link href="//amp.azure.net/libs/amp/' + myPlayer.getAmpVersion() + '/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">\n<script src="//amp.azure.net/libs/amp/' + myPlayer.getAmpVersion() + '/azuremediaplayer.min.js"></script>');
+    $('#playercode-body').val('<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" tabindex="0"></video>');
+
+    //create the JS code
+    var jscode = "";
+
+    jscode += "var myOptions = {\n"
+            + "\t" + "\"nativeControlsForTouch\": false," + "\n"
+            + "\t" + "controls: true," + "\n"
+            + "\t" + "autoplay: " + config.autoplay + "," + "\n"
+            + "\t" + "width: \"640\"," + "\n"
+            + "\t" + "height: \"400\"," + "\n";
+    if (config.muted) {
+        jscode += "\t" + "muted: " + config.muted + "," + "\n"
+    }
+    if (config.language != "en") {
+        jscode += "\t" + "language: " + config.language + "," + "\n"
+    }
+
+    //Options for tech order
+    switch (config.tech) {
+        case "js":
+            jscode += "\t" + "techOrder: [\"azureHtml5JS\"]," + "\n";
+            break;
+        case "flash":
+            jscode += "\t" + "techOrder: [\"flashSS\"]," + "\n";
+            break;
+        case "silverlight":
+            jscode += "\t" + "techOrder: [\"silverlightSS\"]," + "\n";
+            break;
+        case "html5":
+            jscode += "\t" + "techOrder: [\"html5\"]," + "\n";
+            break;
+        default:
+
+    }
+    //options for heuristic profile
+    switch (config.heuristicprofile) {
+        case "quickstart":
+            break;
+        case "highquality":
+            jscode += "\t" + "heuristicProfile: \"High Quality\"," + "\n";
+            break;
+        default:
+            /*jscode += "\t" + "heuristicProfile: \"High Quality\"," + "\n"
+                    + "\t" + "customPlayerSettings: {" + "\n"
+                    + "\t\t" + "\"customHeuristicSettings\": {" + "\n"
+                    + "\t\t\t" + "\"preRollInSec\": 4," + "\n"
+                    + "\t\t\t" + "\"windowSizeHeuristics\": true" + "\n"
+                    + "\t\t" + "}" + "\n"
+                    + "\t" + "}," + "\n";*/
+    }
+
+    //options for audio track menu 
+    /*jscode += "\t" + "skinConfig: {" + "\n"
+            + "\t\t" + "audioTracksMenu: {" + "\n";
+    if (config.url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/f1ee994f-fcb8-455f-a15d-07f6f2081a60/SintelMultiAudio.ism/manifest'.toLowerCase())) {
+        jscode += "\t\t\t" + "\"enabled\": true," + "\n"
+        + "\t\t\t" + "\"useManifestForLabel\": true" + "\n"
+    } else if (config.url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/3efdfbaa-f8f4-43ac-9ab8-013ff4a34f7f/ElephantsDreamMultiAudio.ism/manifest'.toLowerCase())) {
+        jscode += "\t\t\t" + "\"enabled\": true," + "\n"
+        + "\t\t\t" + "\"useManifestForLabel\": false" + "\n"
+    } else if (config.url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net'.toLowerCase())) {
+        jscode += "\t\t\t" + "\"enabled\": false," + "\n"
+        + "\t\t\t" + "\"useManifestForLabel\": false" + "\n"
+    } else {
+        jscode += "\t\t\t" + "\"enabled\": true," + "\n"
+        + "\t\t\t" + "\"useManifestForLabel\": false" + "\n"
+    }
+    jscode += "\t\t" + "}" + "\n"
+            + "\t" + "}," + "\n";*/
+
+    //options for poster
+    if (config.poster != "") {
+        jscode += "\t" + "poster: \"" + config.poster + "\"" + "\n"
+    }
+
+    //close options bracket
+    jscode += "}" + "\n"
+
+    var mySourceListTemp = config.mySourceList;
+    mySourceListTemp[0].src = config.url.trim();
+
+    //initialize player code
+    jscode += "myPlayer = amp(\"azuremediaplayer\", myOptions);" + "\n"
+            + "myPlayer.src(" + JSON.stringify(mySourceListTemp, null, 8);
+    if (config.myTrackList.length > 0) {
+        jscode += ",\n" + JSON.stringify(config.myTrackList, null, 8);
+    }
+    jscode += ");";
+
+    $('#playercode-javascript').val(jscode);
+
+
+}
+
+var addTrack = function () {
+    if (document.getElementById("tracksList")) {
+        $("#tracksList").append('<div id="track' + trackNumber + '">'
+                                    + '<div class="col-md-2 col-md-offset-2"><select id="trackkind' + trackNumber + '" style="width: 100%" class="form-control"></select></div>'
+                                    + '<div class="col-md-2" style="padding-top:2px"><input style="width:100%;display:inline-block" type="text" class="input-sm form-control" id="tracklabel' + trackNumber + '" placeholder="Track Label"></div>'
+                                    + '<div class="col-md-3"><select id="tracklang' + trackNumber + '" style="width: 100%" class="form-control"><option selected disabled value=" ">Language</option></select></div>'
+                                    + '<div class="col-md-3" style="padding-top:2px"><input style="width:100%;display:inline-block" type="text" class="input-sm form-control" id="trackurl' + trackNumber + '" placeholder="WebVTT URL"></div>'
+                                    + '<br /><br /></div>');
+
+        $("#trackkind" + trackNumber).append($("<option></option>").attr("value", "none").text("Kind"));
+        $("#trackkind" + trackNumber).append($("<option></option>").attr("value", "captions").text("Captions"));
+        $("#trackkind" + trackNumber).append($("<option></option>").attr("value", "subtitles").text("Subtitles"));
+        if (jsonLanguageList.length > 0) {
+            for (var i = 0; i < jsonLanguageList.length; i++) {
+                $("#tracklang" + trackNumber).append($("<option></option>").attr("value", jsonLanguageList[i].code).text(jsonLanguageList[i].name));
+            }
+        }
+        trackNumber++;
+    }
+}
+
+var removeTrack = function () {
+    if (trackNumber > 0) {
+        $("#track" + (trackNumber - 1)).remove();
+        trackNumber--;
+    }
+}
+
+var updateSampleList = function () {
+    if (document.getElementById("selectSource")) {
+        if (jsonSamplesList.length > 0) {
+            for (var i = 0; i < jsonSamplesList.length; i++) {
+                $("#selectSource")
+                .append($("<option></option>")
+                .attr("value", jsonSamplesList[i].src)
+                .attr("format", jsonSamplesList[i].format)
+                .attr("aes", jsonSamplesList[i].aes)
+                .attr("aestoken", jsonSamplesList[i].aestoken)
+                .attr("playready", jsonSamplesList[i].playready)
+                .attr("playreadytoken", jsonSamplesList[i].playreadytoken)
+                .attr("widevine", jsonSamplesList[i].widevine)
+                .attr("widevinetoken", jsonSamplesList[i].widevinetoken)
+                .attr("captions", jsonSamplesList[i].captions)
+                .attr("subtitles", jsonSamplesList[i].subtitles)
+                .attr("poster", jsonSamplesList[i].poster)
+                .text(jsonSamplesList[i].title));
+            }
+        } else {
+            setTimeout(updateSampleList, 100);
+        }
+    }
+}
+
+var chartControl = function () {
+
+    var graphs = [];
+    var graphData = [];
+    var startTime = Date.now();
+
+    var bwGraphData = [];
+    var bufferGraphData = [];
+
+    function setupCharts() {
+        bwGraph = new Dygraph(document.getElementById("BWGraphsDiv"), bwGraphData, {
+            labels: ['time', 'MeasuredBW', 'AverageBW', 'DownloadBR', 'PlaybackBR'],
+            strokeWidth: 2,
+            drawPoints: true,
+            pointSize: 3,
+            axisLabelFontSize: 10,
+            ylabel: 'Bandwidth (bps)',
+            y2label: 'Bitrate (bps)',
+            y2LabelWidth: 20,
+            labelsKMB: true,
+            labelsDiv: 'BWGraphsLegendDiv',
+            legend: 'always',
+            series: {
+                MeasuredBW: { axis: 'y' },
+                AverageBW: { axis: 'y' },
+                DownloadBR: { axis: 'y2' },
+                PlaybackBR: { axis: 'y2' }
+            },
+            axes: {
+                x: {},
+                y: {},
+                y2: {}
+            }
+        });
+        graphs.push(bwGraph);
+
+        bufferGraph = new Dygraph(document.getElementById("BufferGraphsDiv"), bufferGraphData, {
+            labels: ['time', 'videoBuffer', 'audioBuffer', 'videoDLTime'],
+            strokeWidth: 2,
+            drawPoints: true,
+            pointSize: 2,
+            axisLabelFontSize: 10,
+            ylabel: 'Buffer Size (s)',
+            y2label: 'Download Time (ms)',
+            y2LabelWidth: 0,
+            labelsKMB: true,
+            labelsDiv: 'BufferGraphsLegendDiv',
+            legend: 'always',
+            series: {
+                videoBuffer: { axis: 'y' },
+                audioBuffer: { axis: 'y' },
+                videoDLTime: { axis: 'y2' }
+            },
+            axes: {
+                x: {},
+                y: {},
+                y2: {}
+            }
+        });
+        graphs.push(bufferGraph);
+
+        var sync = Dygraph.synchronize(graphs, {
+            zoom: false,
+            selection: true
+        });
+
+        myPlayer.addEventListener("loadedmetadata", registerBufferDataEvents);
+        myPlayer.addEventListener("playbackbitratechanged", handleBufferData);
+    }
+
+    function registerBufferDataEvents() {
+        var bufferData = myPlayer.videoBufferData();
+        if (bufferData) {
+            bufferData.addEventListener("downloadcompleted", handleBufferData);
+        }
+    }
+
+    function handleBufferData() {
+        var bufferData = myPlayer.videoBufferData();
+        if (bufferData) {
+            var completed = bufferData.downloadCompleted;
+            var download = completed.mediaDownload;
+
+            if (bwGraphData.length > 30) {
+                bwGraphData.shift();
+            }
+
+            if (bufferGraphData.length > 30) {
+                bufferGraphData.shift();
+            }
+
+            bwGraphData.push([(Date.now() - startTime) / 1000, completed.measuredBandwidth, bufferData.perceivedBandwidth, download.bitrate, myPlayer.currentPlaybackBitrate()]);
+            bufferGraphData.push([(Date.now() - startTime) / 1000, bufferData.bufferLevel, myPlayer.audioBufferData().bufferLevel, completed.totalDownloadMs]);
+
+            bwGraph.updateOptions({ file: bwGraphData });
+            bufferGraph.updateOptions({ file: bufferGraphData });
+        }
+    }
+    setupCharts();
+}
+
+var setupProperties = function () {
+    var propTable = document.getElementById("propertiesDiv");
+    var table = document.createElement("table");
+    var tbody = document.createElement("tbody");
+    for (var i = 0; i < properties.length; i++) {
+
+
+        var tr = document.createElement("tr");
+
+        var td = document.createElement("td");
+        td.appendChild(document.createTextNode(properties[i].name));
+        tr.appendChild(td);
+
+        var td1 = document.createElement("td");
+        properties[i].txtAreaAmpProperties = td1;
+        tr.appendChild(td1);
+        tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    propTable.appendChild(table);
+}
+
+var registerEvents = function () {
+    myPlayer.addEventListener(amp.eventName.volumechange, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.ended, _ampEventHandler);
+    //myPlayer.addEventListener(amp.eventName.timeupdate, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.durationchange, _ampEventHandler);
+
+    myPlayer.addEventListener(amp.eventName.pause, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.play, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.playing, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.seeking, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.seeked, _ampEventHandler);
+
+    myPlayer.addEventListener(amp.eventName.loadstart, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.loadeddata, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.loadedmetadata, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.fullscreenchange, _ampEventHandler);
+
+    myPlayer.addEventListener(amp.eventName.waiting, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.canplaythrough, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.error, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.downloadbitratechanged, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.playbackbitratechanged, _ampEventHandler);
+
+    var videoTag;
+
+    if ($("#azuremediaplayer_html5_api")) {
+        videoTag = document.getElementById("azuremediaplayer_html5_api");
+    } else {
+        videoTag = document.getElementById("azuremediaplayer");
+    }
+
+    if (videoTag) {
+        //videoTag.addEventListener("loadstart", _videoEventHandler, false);
+        //videoTag.addEventListener("progress", _videoEventHandler, false);
+        videoTag.addEventListener("suspend", _videoEventHandler, false);
+        videoTag.addEventListener("abort", _videoEventHandler, false);
+        videoTag.addEventListener("error", _videoEventHandler, false);
+        videoTag.addEventListener("emptied", _videoEventHandler, false);
+        videoTag.addEventListener("stalled", _videoEventHandler, false);
+        //videoTag.addEventListener("play", _videoEventHandler, false);
+        // videoTag.addEventListener("pause", _videoEventHandler, false);
+        videoTag.addEventListener("loadedmetadata", _videoEventHandler, false);
+        //videoTag.addEventListener("loadeddata", _videoEventHandler, false);
+        videoTag.addEventListener("waiting", _videoEventHandler, false);
+        //videoTag.addEventListener("playing", _videoEventHandler, false);
+        videoTag.addEventListener("canplay", _videoEventHandler, false);
+        //videoTag.addEventListener("canplaythrough", _videoEventHandler, false);
+        //videoTag.addEventListener("seeking", _videoEventHandler, false);
+        //videoTag.addEventListener("seeked", _videoEventHandler, false);
+        //videoTag.addEventListener("timeupdate", _videoEventHandler, false);
+        //videoTag.addEventListener("ended", _videoEventHandler, false);
+        videoTag.addEventListener("ratechange", _videoEventHandler, false);
+        //videoTag.addEventListener("durationchange", _videoEventHandler, false);
+        //videoTag.addEventListener("volumechange", _videoEventHandler, false);
+    }
+}
+
+function updateconfigtextbox() {
+    document.getElementById("txtLog").value += "user-agent: " + navigator.userAgent + "\n" + "source: " + myPlayer.currentSrc() + "\n";
+}
+
+function _videoEventHandler(event) {
+    var txtLog = document.getElementById("txtLog");
+
+    if ("progress" !== event.type && "timeupdate" !== event.type) {
+        PrettyPrint.log(txtLog, "videoTag: " + event.type + ", currentTime: " + myPlayer.currentTime());
+    }
+}
+
+function _ampEventHandler(evt) {
+    var txtLog = document.getElementById("txtLog");
+    var logStr;
+
+    if (amp.eventName.timeupdate !== evt.type) {
+        logStr = evt.type;
+    } else {
+        return;
+    }
+
+    if (amp.eventName.error === evt.type) {
+        logStr += " " + PrettyPrint.errorInfo(myPlayer.error());
+    } else if (amp.eventName.playbackbitratechanged === evt.type) {
+        logStr += " " + myPlayer.currentPlaybackBitrate();
+    } else if (amp.eventName.downloadbitratechanged === evt.type) {
+        logStr += " " + myPlayer.currentDownloadBitrate();
+    }
+
+    if (logStr) {
+        PrettyPrint.log(txtLog, "amp: " + logStr + ", currentTime: " + myPlayer.currentTime());
+    }
+
+    _updateProperties();
+
+}
+
+var _updateProperties = function () {
+    if (!myPlayer) {
+        return;
+    }
+
+    for (var i = 0; i < properties.length; i++) {
+        var value = properties[i].functionHandler.call(myPlayer);
+        if (value != properties[i].txtAreaAmpProperties) {
+            properties[i].txtAreaAmpProperties.innerHTML = value;
+        }
+    }
+}
+
+function calculateBufferAhead() {
+    var output = 0;
+
+    var buffered = myPlayer.buffered(), currentTime = myPlayer.currentTime();
+
+    if (!buffered) {
+        return undefined;
+    }
+
+    for (var i = 0; i < buffered.length; i++) {
+        if (currentTime >= buffered.start(i) && currentTime <= buffered.end(i)) {
+            output = (buffered.end(i) - currentTime);
+        }
+    }
+
+    return output;
+}
+
+function validateEmail(email) {
+    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
+var email = function (toEmail) {
+    if (validateEmail(toEmail)) {
+
+        var textToWrite = myPlayer.getMemoryLog(false);
+        var fileName = "AmpTrace" + Date.now().toString();
+
+        $.ajax({
+            type: 'POST',
+            url: 'https://mandrillapp.com/api/1.0/messages/send.json',
+            data: {
+                'key': 'G5HmPfV6pJ25VaB1_Be_fw',
+                'message': {
+                    'from_email': 'ampinfo@microsoft.com',
+                    'to': [
+                        {
+                            'email': toEmail,
+                            'name': 'AMP User',
+                            'type': 'to'
+                        }
+                    ],
+                    'autotext': 'true',
+                    'subject': 'AMP Test - Verbose Log',
+                    'html': 'See attachment for Verbose Log' + '<br><br>' + '<br><br>' + 'Log: ' + $("#txtLog").val().replace(/\n/g, '<br/>'),
+                    "attachments": [
+                        {
+                            "type": "text/plain",
+                            "name": fileName,
+                            "content": btoa(textToWrite)
+                        }
+                    ]
+                }
+            }
+        });
+        document.getElementById("email-success").innerHTML = "Log sent at " + Date();
+        $("#email-success").show();
+    } else {
+        document.getElementById("email-success").innerHTML = "Logs not sent. Not a valid email address";
+        $("#email-success").show();
+    }
 }
 
 $(document).ready(function () {
     initialize();
-    //loadjscssfile("//amp.azure.net/libs/amp/" + config.version + "/skins/amp-default/azuremediaplayer.min.css", "css");
-    //loadjscssfile("//amp.azure.net/libs/amp/" + config.version + "/azuremediaplayer.min.js", "js");
-    //amp.options.flashSS.swf = "//amp.azure.net/libs/amp/" + config.version + "/techs/StrobeMediaPlayback.2.0.swf";
-    //amp.options.flashSS.plugin = "//amp.azure.net/libs/amp/" + config.version + "/techs/MSAdaptiveStreamingPlugin-osmf2.0.swf";
-    //amp.options.silverlightSS.xap = "//amp.azure.net/libs/amp/" + config.version + "/techs/SmoothStreamingPlayer.xap";
+    if (document.getElementById("selectSource")) {
+        updateSampleList();
+        $('#playersetup').show();
+        $('#playerdiagnostics').hide();
+        $('#playercode').hide();
+        $('#embedcode').hide();
+        $('#shareurl').hide();
+        updateEmbedCode();
+        updateShareUrl();
+        setupProperties();
+    }
 
     appendSourceUrl(config.url);
 
-    setTimeout(function () {
-        displayConfig();
-        displayCopyrightInfo();
-    }, 2);
+    if (document.getElementById("selectSource")) {
+        if (myPlayer.videoBufferData()) {
+            chartControl();
+        } else {
+            $(".graphsRow").hide();
+        }
+        playerCode();
+        myPlayer.addEventListener("loadedmetadata", function (e) {
+            displayConfig();
+            displayCopyrightInfo();
+            updateconfigtextbox()
+        });
+        setInterval(_updateProperties, 1000);
+    }
+
+    document.getElementById("azuremediaplayer").focus();
+
+
 
     //Update Player is selected
     $(".config-body #config-save").click(function (e) {
@@ -714,88 +1404,194 @@ $(document).ready(function () {
 
     //Updated source from the selectable samples
     $("#selectSource").change(function (e) {
+
         $(".config-body #adaptive-url").val($("#selectSource").val());
+
+        //Reset options on the page to default
         //$("input[name='advanced'][value='advanced']").prop('checked', false);
         //$("#advancedOptions").hide();
         $("#urlHelp").show();
+        $("#heuristicprofile").val("hybrid");
+        $("input[name='autoplay']").prop('checked', true);
+        $("input[name='muted']").prop('checked', false);
+        $("#selectFormat").val("auto");
+        $("#selectLang").val("en");
+        $("#formatOtherVal").hide();
+        $("input[name='disableUrlRewriter']").prop('checked', false);
         $("#selectTech").val("auto");
-        $("#selectContentProtection").val("none");
-        $("#token").hide();
-        $("#token").val("");
+        $("input[name='protection'][value='aes']").prop('checked', false);
+        $("#aesToken").val("");
+        $("input[name='protection'][value='playready']").prop('checked', false).attr('disabled', false);
+        $("#playreadyToken").val("").attr('disabled', false);
+        $("input[name='protection'][value='widevine']").prop('checked', false).attr('disabled', false);
+        $("#widevineToken").val("").attr('disabled', false);
+        while (trackNumber > 0) {
+            removeTrack();
+        }
+        $("#poster-url").val("");
 
-        switch (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("protection")) {
-            case "aes":
+        //set values based on selected stream
+        if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("aes") == "true") {
+            $("input[name='advanced'][value='advanced']").prop('checked', true);
+            $("#advancedOptions").show();
+            $("#urlHelp").hide();
+            $("input[name='protection'][value='aes']").prop('checked', true);
+            if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("aestoken") != "") {
+                $("#aesToken").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("aestoken")).replace(/\+/g, " "));
+            }
+            //disable drm
+            $("input[name='protection'][value='playready']").prop('checked', false).attr('disabled', true);
+            $("input[name='protection'][value='widevine']").prop('checked', false).attr('disabled', true);
+            $("#playreadyToken").attr('disabled', true);
+            $("#widevineToken").attr('disabled', true);
+        } else {
+            if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("playready") == "true") {
                 $("input[name='advanced'][value='advanced']").prop('checked', true);
                 $("#advancedOptions").show();
                 $("#urlHelp").hide();
-                $("#selectContentProtection").val("aes");
-                $("#token").show();
-                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token") != "none") {
-                    $("#token").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token")).replace(/\+/g, " "));
+                $("input[name='protection'][value='playready']").prop('checked', true);
+                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("playreadytoken") != "") {
+                    $("#playreadyToken").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("playreadytoken")).replace(/\+/g, " "));
                 }
-                break;
-            case "playready":
+            }
+            if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("widevine") == "true") {
                 $("input[name='advanced'][value='advanced']").prop('checked', true);
                 $("#advancedOptions").show();
                 $("#urlHelp").hide();
-                $("#selectContentProtection").val("playready");
-                $("#token").show();
-                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token") != "none") {
-                    $("#token").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token")).replace(/\+/g, " "));
+                $("input[name='protection'][value='widevine']").prop('checked', true);
+                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("widevinetoken") != "") {
+                    $("#widevineToken").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("widevinetoken")).replace(/\+/g, " "));
                 }
-                break;
-            case "widevine":
-                $("input[name='advanced'][value='advanced']").prop('checked', true);
-                $("#advancedOptions").show();
-                $("#urlHelp").hide();
-                $("#selectContentProtection").val("widevine");
-                $("#token").show();
-                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token") != "none") {
-                    $("#token").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token")).replace(/\+/g, " "));
-                }
-                break;
-            case "drm":
-                $("input[name='advanced'][value='advanced']").prop('checked', true);
-                $("#advancedOptions").show();
-                $("#urlHelp").hide();
-                $("#selectContentProtection").val("drm");
-                $("#token").show();
-                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token") != "none") {
-                    $("#token").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("token")).replace(/\+/g, " "));
-                }
-                break;
-            default:
-                break;
+            }
+        }
 
+        if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("poster") != "") {
+            $("input[name='advanced'][value='advanced']").prop('checked', true);
+            $("#advancedOptions").show();
+            $("#urlHelp").hide();
+            $("#poster-url").val(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("poster"))
+        }
+
+        var captionslistfromsourcelist = document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("captions");
+        if (captionslistfromsourcelist != "") {
+            $("input[name='advanced'][value='advanced']").prop('checked', true);
+            $("#advancedOptions").show();
+            $("#urlHelp").hide();
+            var captionslist = captionslistfromsourcelist.split(";");
+            for (var i = 0; i < captionslist.length; i++) {
+                addTrack();
+                $("#trackkind" + (trackNumber - 1)).val("captions")
+                var captionspair = captionslist[i].split(",");
+                $("#tracklabel" + (trackNumber - 1)).val(captionspair[0]);
+                $("#tracklang" + (trackNumber - 1)).val(captionspair[1]);
+                $("#trackurl" + (trackNumber - 1)).val(captionspair[2]);
+            }
+
+        }
+        var subtitleslistfromsourcelist = document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("subtitles");
+        if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("subtitles") != "") {
+            $("input[name='advanced'][value='advanced']").prop('checked', true);
+            $("#advancedOptions").show();
+            $("#urlHelp").hide();
+            var subtitleslist = subtitleslistfromsourcelist.split(";");
+            for (var i = 0; i < subtitleslist.length; i++) {
+                addTrack();
+                $("#trackkind" + (trackNumber - 1)).val("subtitles")
+                var subtitlespair = subtitleslist[i].split(",");
+                $("#tracklabel" + (trackNumber - 1)).val(subtitlespair[0]);
+                $("#tracklang" + (trackNumber - 1)).val(subtitlespair[1]);
+                $("#trackurl" + (trackNumber - 1)).val(subtitlespair[2]);
+            }
         }
 
     });
 
-    //Setting up the embed code
-    $('#embed-url').click(function (e) {
-        updateEmbedCode();
-        $('.share-url-box').hide();
-        $('.embed-code-box').toggle();
+    $(".nav-pills .menuitem").click(function (e) {
+        $('#playersetup').hide();
+        $('#playerdiagnostics').hide();
+        $('#playercode').hide();
+        $('#embedcode').hide();
+        $('#shareurl').hide();
+        $('#playersetup-button').removeClass("active");
+        $('#playerdiagnostics-button').removeClass("active");
+        $('#playercode-button').removeClass("active");
+        $('#embedcode-button').removeClass("active");
+        $('#shareurl-button').removeClass("active");
+        $('#code-button').css("background-color", "none");;
+
+        var buttonId = e.currentTarget.id;
+
+        $('#' + buttonId).addClass("active");
+        if (buttonId == "playercode-button" || buttonId == "embedcode-button" || buttonId == "shareurl-button") {
+            $('#code-button').css("background-color", "#eee");
+        }
+
+        $('#' + buttonId.split("-button")[0]).show();
+        if (buttonId == "playerdiagnostics-button") {
+            if (bwGraph) {
+                bwGraph.resize();
+            }
+            if (bufferGraph) {
+                bufferGraph.resize();
+            }
+        }
     });
 
-    $('.embed-code-box .close').click(function (e) {
-        $('.embed-code-box').hide();
+    $('#getshareurlbutton').click(function (e) {
+        $('#playersetup').hide();
+        $('#playerdiagnostics').hide();
+        $('#playercode').hide();
+        $('#embedcode').hide();
+        $('#shareurl').hide();
+        $('#playersetup-button').removeClass("active");
+        $('#playerdiagnostics-button').removeClass("active");
+        $('#playercode-button').removeClass("active");
+        $('#embedcode-button').removeClass("active");
+        $('#shareurl-button').removeClass("active");
+        $('#code-button').css("background-color", "none");;
+
+        var buttonId = e.currentTarget.id;
+
+        $('#shareurl-button').addClass("active");
+        $('#code-button').css("background-color", "#eee");
+        $('#shareurl').show();
     });
 
-    //Setting up the share url
-    $('#share-url').click(function (e) {
-        updateShareUrl();
-        $('.embed-code-box').hide();
-        $('.share-url-box').toggle();
+    $('#download-logs').click(function (e) {
+        /*try {
+            var isFileSaverSupported = !!new Blob;
+        } catch (e) {
+            isFileSaverSupported = false;
+        }*/
+
+        var textToWrite = myPlayer.getMemoryLog(false);
+        var fileName = "AmpTrace" + Date.now().toString() + ".txt";
+
+        if (textToWrite) {
+            if (window.saveAs) {
+                var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
+                saveAs(textFileAsBlob, fileName);
+            }else if(window.saveTextAs){
+                saveTextAs(textToWrite, fileName);
+            } else {
+                var link = document.getElementById("downloadlink");
+                link.download = fileName;
+                link.style.display = "inline-block";
+                link.href = 'data:text/plain;charset=utf-8,' + textToWrite;
+            }
+        }
     });
 
-    $('.share-url-box .close').click(function (e) {
-        $('.share-url-box').hide();
+    $("#emailAddress").bind('keyup', function (event) {
+        $("#email-logs").prop("disabled", !validateEmail($("#emailAddress").val()));
+    });
+
+    $("#email-logs").click(function (e) {
+        email($("#emailAddress").val());
     });
 
     //toggle advanded functions
-    $("input[name='advanced'][value='advanced']").change(
-    function () {
+    $("input[name='advanced'][value='advanced']").change(function () {
         if ($(this).is(':checked')) {
             $("#advancedOptions").show();
             $("#urlHelp").hide();
@@ -814,6 +1610,22 @@ $(document).ready(function () {
         }
     });
 
+    //disable DRM if AES selected
+    $("input[name='protection'][value='aes']").change(function () {
+        if ($(this).is(':checked')) {
+
+            $("input[name='protection'][value='playready']").prop('checked', false).attr('disabled', true);
+            $("#playreadyToken").attr('disabled', true);
+            $("input[name='protection'][value='widevine']").prop('checked', false).attr('disabled', true);
+            $("#widevineToken").attr('disabled', true);
+        } else {
+            $("input[name='protection'][value='playready']").attr('disabled', false);
+            $("#playreadyToken").attr('disabled', false);
+            $("input[name='protection'][value='widevine']").attr('disabled', false);
+            $("#widevineToken").attr('disabled', false);
+        }
+    });
+
     //protection display token text
     $("#selectContentProtection").change(function (e) {
         if ($("#selectContentProtection").val() != "none") {
@@ -822,4 +1634,11 @@ $(document).ready(function () {
             $("#token").hide();
         }
     });
+
+    //add tracks
+    $("#addtrack").click(function (e) {
+        addTrack();
+    });
+
+
 });
