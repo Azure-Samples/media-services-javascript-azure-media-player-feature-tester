@@ -31,7 +31,7 @@ var config = {
     myOptions: {},
     sessionID: ""
 };
-
+ 
 function generateInstanceId() {
     var d = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -1593,7 +1593,7 @@ $(document).ready(function () {
             if (window.saveAs) {
                 var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
                 saveAs(textFileAsBlob, fileName);
-            } else if (window.saveTextAs) {
+            }else if(window.saveTextAs){
                 saveTextAs(textToWrite, fileName);
             } else {
                 var link = document.getElementById("downloadlink");
