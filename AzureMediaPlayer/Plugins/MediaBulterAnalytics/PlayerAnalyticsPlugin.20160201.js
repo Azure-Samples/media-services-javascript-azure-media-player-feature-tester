@@ -28,6 +28,9 @@ var amp;
             //TMP:switch Control 
             this._swHeartbeat = false;
             this._CurrentBitRate = 0;
+            this._myIp = '';
+            //TimeToReady
+            this._TimeToReady = 0;
 
             this._eventBufferMaxLength = 10;
             var that = this;
@@ -55,7 +58,10 @@ var amp;
                     function loadedData() {
                         that._player.removeEventListener('loadeddata', loadedData);
                         var endTime = new Date();
+
                         var timeToReady = endTime.getTime() - startTime.getTime() / 1000;
+                        that._TimeToReady = timeToReady;
+
                         that._baseEvent.streamID = that._player.currentSrc();
                         var evt = new EventDataModel.Demographics.SourceLoadedEvent(that._baseEvent);
                         evt.playerName = 'AMP';
@@ -63,14 +69,15 @@ var amp;
                         evt.userAgent = navigator.userAgent;
                         evt.locale = navigator.userLanguage || navigator.language;
                         evt.deviceResolution = [screen.availWidth, screen.availHeight, screen.deviceXDPI, screen.deviceYDPI];
-                        try {
-                            if (navigator.geolocation) {
-                                navigator.geolocation.getCurrentPosition(function (position) {
-                                    evt.geoLocation = [position.coords.latitude, position.coords.longitude];
-                                });
-                            }
-                        }
-                        catch (error) { }
+                        /* try {
+                             if (navigator.geolocation) {
+                                 navigator.geolocation.getCurrentPosition(function (position) {
+                                     evt.geoLocation = [position.coords.latitude, position.coords.longitude];
+                                 });
+                             }
+                         }
+                         catch (error) { }
+                         */
                         that.enqueueEvent(evt);
                         that.enqueueEvent(new EventDataModel.QoE.TimeToReadyEvent(that._baseEvent, timeToReady));
                         this._CurrentBitRate = that._player.currentDownloadBitrate();
@@ -124,7 +131,9 @@ var amp;
                     evt.absoluteCurrentTime = that._player.currentAbsoluteTime();
                     evt.errorCode = that._player.error().code;
                     evt.errorMessage = that._player.error().message;
-                    evt.playerSnapshot = new EventDataModel.QoE.PlayerSnapshot(that._player.videoBufferData().bufferLevel, that._player.videoBufferData().perceivedBandwidth);
+                    if (that._player.videoBufferData()) {
+                        evt.playerSnapshot = new EventDataModel.QoE.PlayerSnapshot(that._player.videoBufferData().bufferLevel, that._player.videoBufferData().perceivedBandwidth);
+                    }
                     that.enqueueEvent(evt);
                 });
                 window.addEventListener('beforeunload', function () {
@@ -140,34 +149,56 @@ var amp;
                     evt.playerVersion = that._player.getAmpVersion();
                     evt.userAgent = navigator.userAgent;
                     evt.locale = navigator.userLanguage || navigator.language;
+                    //Screen Resolution
                     //evt.deviceResolution = [screen.availWidth, screen.availHeight, screen.deviceXDPI, screen.deviceYDPI];
                     evt.deviceResolutionavailWidth = screen.availWidth;
                     evt.deviceResolutionavailHeight = screen.availHeight;
                     evt.deviceResolutiondeviceXDPI = screen.deviceXDPI;
                     evt.deviceResolutiondeviceYDPI = screen.deviceYDPI;
-
+                    //Stream protocol
                     evt.streamProtocol = that._player.currentType();
 
-                    evt.geoLatitud = 0;
-                    evt.geoLongitude = 0;
+                    evt.country_code = '';
+                    evt.country_name = '';
+                    evt.geoLongitude = '';
+                    evt.geoLongitude = '';
+                    //Geo position
+                    try {
+                        evt.playerIP = this._myIp;
+                        evt.country_code = this._country_code;
+                        evt.country_name = this._country_name;
+                        evt.geoLatitude = this._latitude;
+                        evt.geoLongitude = this._longitude;
+
+                    } catch (e) {
+
+                    }
+
+                    //Time To Ready
+                    evt.TimeToReady = this._TimeToReady;
+
+                    /*
                     try {
                         if (navigator.geolocation) {
                             navigator.geolocation.getCurrentPosition(function (position) {
                                 evt.geoLatitud = position.coords.latitude;
-                                evt.geoLongitude = position.coords.longitude;
+                                evt.geoLongitude=position.coords.longitude;
                             });
                         }
                     }
 
-                    catch (error) {
+                    catch (error)
+                    {
                         console.log("Error HeartbeatEvent : " + error)
                     }
-
+                    */
+                    //Technology
                     evt.techName = that._player.techName;
 
                     //Add Buffer Level
-                    evt.videoBufferData = that._player.videoBufferData().bufferLevel;
-                    evt.audioBufferData = that._player.audioBufferData().bufferLevel;
+
+                    evt.videoBufferData = that._player.videoBufferData() ? that._player.videoBufferData().bufferLevel : null;
+                    evt.audioBufferData = that._player.audioBufferData() ? that._player.audioBufferData().bufferLevel : null;
 
                     return evt;
                 }
@@ -293,9 +324,25 @@ var amp;
                 }
                 payload = payload.substring(0, payload.length - 1);
                 payload += ']';
-                //var token = this.getSasToken();
+
+                //Get IP
+                if (xxx._myIp == '') {
+
+                    $.getJSON('https://api.ipify.org/?format=json', function (result) {
+                        xxx._myIp = result.ip;
+                        //get GEO INFO
+                        $.getJSON('http://freegeoip.net/json/' + xxx._myIp, function (result) {
+                            xxx._country_code = result.country_code;
+                            xxx._country_name = result.country_name;
+                            xxx._latitude = result.latitude;
+                            xxx._longitude = result.longitude;
+
+                        });
 
 
+                    });
+
+                }
                 var now = new Date();
                 if (now >= this._PlayerAnalyticsDataExpiration) {
                     //Renew Token
@@ -437,4 +484,3 @@ var amp;
     amp.EventHubProxy = EventHubProxy;
 })(amp || (amp = {}));
 //# sourceMappingURL=PlayerAnalyticsPlugin.js.map
-

@@ -1108,7 +1108,7 @@ var chartControl = function () {
                 y2: {}
             }
         });
-        graphs.push(bwGraph);
+        //graphs.push(bwGraph);
 
         bufferGraph = new Dygraph(document.getElementById("BufferGraphsDiv"), bufferGraphData, {
             labels: ['time', 'videoBuffer', 'audioBuffer', 'videoDLTime'],
@@ -1133,12 +1133,12 @@ var chartControl = function () {
                 y2: {}
             }
         });
-        graphs.push(bufferGraph);
+        //graphs.push(bufferGraph);
 
-        var sync = Dygraph.synchronize(graphs, {
+        /*var sync = Dygraph.synchronize(graphs, {
             zoom: false,
             selection: true
-        });
+        });*/
 
         myPlayer.addEventListener("loadedmetadata", registerBufferDataEvents);
         myPlayer.addEventListener("playbackbitratechanged", handleBufferData);
