@@ -31,7 +31,7 @@ var config = {
     myOptions: {},
     sessionID: ""
 };
- 
+
 function generateInstanceId() {
     var d = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -576,7 +576,10 @@ var appendSourceUrl = function (url) {
                 eventHubNamespace: 'mediaanalytics',
                 eventHubQueueName: 'ma',
                 eventHubPublisherId: 'AMP' + '_' + Math.floor((Math.random() * 10000000) + 1),
-                eventBufferLength: 2
+                eventBufferLength: 2,
+                TokenApiUrl: "http://playeranalytics.azurewebsites.net/api/EventHubSasToken",
+                ApplicationID: "demo1",
+                streamName: ''
             }
 
         }
@@ -1593,7 +1596,7 @@ $(document).ready(function () {
             if (window.saveAs) {
                 var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
                 saveAs(textFileAsBlob, fileName);
-            }else if(window.saveTextAs){
+            } else if (window.saveTextAs) {
                 saveTextAs(textToWrite, fileName);
             } else {
                 var link = document.getElementById("downloadlink");

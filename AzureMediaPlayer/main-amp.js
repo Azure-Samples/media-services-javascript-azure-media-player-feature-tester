@@ -576,7 +576,10 @@ var appendSourceUrl = function (url) {
                 eventHubNamespace: 'mediaanalytics',
                 eventHubQueueName: 'ma',
                 eventHubPublisherId: 'AMP' + '_' + Math.floor((Math.random() * 10000000) + 1),
-                eventBufferLength: 2
+                eventBufferLength: 2,
+                TokenApiUrl: "http://playeranalytics.azurewebsites.net/api/EventHubSasToken",
+                ApplicationID: "demo1",
+                streamName: ''
             }
 
         }
