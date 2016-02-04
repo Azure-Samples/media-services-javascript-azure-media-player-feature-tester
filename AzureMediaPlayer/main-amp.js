@@ -4,7 +4,9 @@ var trackNumber = 0;
 var bwGraph = null;
 var bufferGraph = null;
 var bitrateEventGraph = null;
+var graphsDrawn = false;
 var textFile = null;
+
 var config = {
     url: "//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest",
     advanced: false,
@@ -570,7 +572,7 @@ var appendSourceUrl = function (url) {
             ga: {
                 'eventsToTrack': ['playerConfig', 'loaded', 'playTime', 'percentsPlayed', 'start', 'end', 'play', 'pause', 'error', 'buffering', 'fullscreen', 'bitrate'],
                 'debug': false
-            },
+            }/*,
             PlayerAnalytics: {
                 sessionID: config.sessionID,
                 eventHubNamespace: 'mediaanalytics',
@@ -580,8 +582,7 @@ var appendSourceUrl = function (url) {
                 TokenApiUrl: "http://playeranalytics.azurewebsites.net/api/EventHubSasToken",
                 ApplicationID: "demo1",
                 streamName: ''
-            }
-
+            }*/
         }
     };
     switch (config.heuristicprofile) {
@@ -1111,7 +1112,7 @@ var chartControl = function () {
                 y2: {}
             }
         });
-        //graphs.push(bwGraph);
+        graphs.push(bwGraph);
 
         bufferGraph = new Dygraph(document.getElementById("BufferGraphsDiv"), bufferGraphData, {
             labels: ['time', 'videoBuffer', 'audioBuffer', 'videoDLTime'],
@@ -1136,15 +1137,13 @@ var chartControl = function () {
                 y2: {}
             }
         });
-        //graphs.push(bufferGraph);
+        graphs.push(bufferGraph);
 
-        /*var sync = Dygraph.synchronize(graphs, {
+        var sync = Dygraph.synchronize(graphs, {
             zoom: false,
             selection: true
-        });*/
+        });
 
-        myPlayer.addEventListener("loadedmetadata", registerBufferDataEvents);
-        myPlayer.addEventListener("playbackbitratechanged", handleBufferData);
     }
 
     function registerBufferDataEvents() {
@@ -1171,11 +1170,20 @@ var chartControl = function () {
             bwGraphData.push([(Date.now() - startTime) / 1000, completed.measuredBandwidth, bufferData.perceivedBandwidth, download.bitrate, myPlayer.currentPlaybackBitrate()]);
             bufferGraphData.push([(Date.now() - startTime) / 1000, bufferData.bufferLevel, myPlayer.audioBufferData().bufferLevel, completed.totalDownloadMs]);
 
+            if (!graphsDrawn) {
+                setupCharts();
+                graphsDrawn = true;
+            }
+
             bwGraph.updateOptions({ file: bwGraphData });
             bufferGraph.updateOptions({ file: bufferGraphData });
+
         }
     }
-    setupCharts();
+
+    myPlayer.addEventListener("loadedmetadata", registerBufferDataEvents);
+    myPlayer.addEventListener("playbackbitratechanged", handleBufferData);
+
 }
 
 var setupProperties = function () {
