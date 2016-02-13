@@ -5,6 +5,10 @@ var bwGraph = null;
 var bufferGraph = null;
 var bitrateEventGraph = null;
 var graphsDrawn = false;
+var bwGraphData = [];
+var bufferGraphData = [];
+var updatingProperties = false;
+var setIntervalUpdateProperties;
 var textFile = null;
 
 var config = {
@@ -1084,59 +1088,88 @@ var chartControl = function () {
     var graphData = [];
     var startTime = Date.now();
 
-    var bwGraphData = [];
-    var bufferGraphData = [];
+    function setupCharts(ifBufferData) {
 
-    function setupCharts() {
-        bwGraph = new Dygraph(document.getElementById("BWGraphsDiv"), bwGraphData, {
-            labels: ['time', 'MeasuredBW', 'AverageBW', 'DownloadBR', 'PlaybackBR'],
+        var bwGraphOptions = {
+            labels: ['time', 'DownloadBR', 'PlaybackBR'],
             strokeWidth: 2,
             drawPoints: true,
             pointSize: 3,
             axisLabelFontSize: 10,
-            ylabel: 'Bandwidth (bps)',
-            y2label: 'Bitrate (bps)',
-            y2LabelWidth: 20,
+            digitsAfterDecimal: 1,
             labelsKMB: true,
             labelsDiv: 'BWGraphsLegendDiv',
             legend: 'always',
+            ylabel: 'Bitrate (bps)',
             series: {
-                MeasuredBW: { axis: 'y' },
-                AverageBW: { axis: 'y' },
-                DownloadBR: { axis: 'y2' },
-                PlaybackBR: { axis: 'y2' }
+                DownloadBR: { axis: 'y' },
+                PlaybackBR: { axis: 'y' }
             },
             axes: {
                 x: {},
                 y: {},
                 y2: {}
             }
-        });
+        };
+
+
+        if (ifBufferData) {
+            bwGraphOptions.labels = ['time', 'DownloadBR', 'PlaybackBR', 'MeasuredBW', 'AverageBW'];
+            bwGraphOptions.y2label = 'Bandwidth (bps)';
+            bwGraphOptions.y2labelWidth = 20;
+            bwGraphOptions.series = {
+                DownloadBR: { axis: 'y' },
+                PlaybackBR: { axis: 'y' },
+                MeasuredBW: { axis: 'y2' },
+                AverageBW: { axis: 'y2' }
+            };
+            bwGraphOptions.axes = {
+                x: {},
+                y: {},
+                y2: {}
+            };
+        }
+
+        bwGraph = new Dygraph(document.getElementById("BWGraphsDiv"), bwGraphData, bwGraphOptions);
         graphs.push(bwGraph);
 
-        bufferGraph = new Dygraph(document.getElementById("BufferGraphsDiv"), bufferGraphData, {
-            labels: ['time', 'videoBuffer', 'audioBuffer', 'videoDLTime'],
+        var bufferGraphOptions = {
+            labels: ['time', 'bufferSize'],
             strokeWidth: 2,
             drawPoints: true,
             pointSize: 2,
             axisLabelFontSize: 10,
+            digitsAfterDecimal: 1,
             ylabel: 'Buffer Size (s)',
-            y2label: 'Download Time (ms)',
-            y2LabelWidth: 0,
             labelsKMB: true,
             labelsDiv: 'BufferGraphsLegendDiv',
             legend: 'always',
             series: {
-                videoBuffer: { axis: 'y' },
-                audioBuffer: { axis: 'y' },
-                videoDLTime: { axis: 'y2' }
+                bufferSize: { axis: 'y' },
             },
             axes: {
                 x: {},
                 y: {},
+            }
+        }
+
+        if (ifBufferData) {
+            bufferGraphOptions.labels = ['time', 'videoBuffer', 'audioBuffer', 'videoDLTime'];
+            bufferGraphOptions.y2label = 'Download Time (ms)';
+            bufferGraphOptions.y2LabelWidth = 0;
+            bufferGraphOptions.series = {
+                videoBuffer: { axis: 'y' },
+                audioBuffer: { axis: 'y' },
+                videoDLTime: { axis: 'y2' }
+            };
+            bufferGraphOptions.axes = {
+                x: {},
+                y: {},
                 y2: {}
             }
-        });
+        }
+
+        bufferGraph = new Dygraph(document.getElementById("BufferGraphsDiv"), bufferGraphData, bufferGraphOptions);
         graphs.push(bufferGraph);
 
         var sync = Dygraph.synchronize(graphs, {
@@ -1147,43 +1180,85 @@ var chartControl = function () {
     }
 
     function registerBufferDataEvents() {
-        var bufferData = myPlayer.videoBufferData();
-        if (bufferData) {
-            bufferData.addEventListener("downloadcompleted", handleBufferData);
+        if (!graphsDrawn) {
+            var bufferData = myPlayer.videoBufferData();
+            if (bufferData) {
+                bufferData.addEventListener("downloadcompleted", addGraphData);
+            } else {
+                myPlayer.addEventListener("timeupdate", function () {
+                    if (myPlayer.paused()) {
+                        if (myPlayer.currentTechName() == "Html5") {
+                            addGraphData();
+                        } else if (myPlayer.currentTechName() != "SilverlightSS") {
+                            if (calculateBufferAhead() < 29) {
+                                addGraphData();
+                            }
+                        }
+                    } else {
+                        addGraphData();
+                    }
+                });
+            }
         }
     }
 
-    function handleBufferData() {
+    function addGraphData() {
         var bufferData = myPlayer.videoBufferData();
-        if (bufferData) {
-            var completed = bufferData.downloadCompleted;
-            var download = completed.mediaDownload;
+        var completed = bufferData ? bufferData.downloadCompleted : null;
+        var download = bufferData ? completed.mediaDownload : null;
 
-            if (bwGraphData.length > 30) {
-                bwGraphData.shift();
-            }
+        var measuredBandwidth = completed ? completed.measuredBandwidth : null;
+        var perceivedBandwidth = bufferData ? bufferData.perceivedBandwidth : null
+        var downloadBitrate = download ? download.bitrate : myPlayer.currentDownloadBitrate();
+        var currentPlaybackBitrate = myPlayer.currentPlaybackBitrate();
+        var videoBufferLevel = bufferData ? bufferData.bufferLevel : calculateBufferAhead();
+        var audioBufferLevel = myPlayer.audioBufferData() ? myPlayer.audioBufferData().bufferLevel : null;
+        var downloadTimeInMs = completed ? completed.totalDownloadMs : null;
 
-            if (bufferGraphData.length > 30) {
-                bufferGraphData.shift();
-            }
-
-            bwGraphData.push([(Date.now() - startTime) / 1000, completed.measuredBandwidth, bufferData.perceivedBandwidth, download.bitrate, myPlayer.currentPlaybackBitrate()]);
-            bufferGraphData.push([(Date.now() - startTime) / 1000, bufferData.bufferLevel, myPlayer.audioBufferData().bufferLevel, completed.totalDownloadMs]);
-
-            if (!graphsDrawn) {
-                setupCharts();
-                graphsDrawn = true;
-            }
-
-            bwGraph.updateOptions({ file: bwGraphData });
-            bufferGraph.updateOptions({ file: bufferGraphData });
-
+        if (bwGraphData.length > 30) {
+            bwGraphData.shift();
         }
+
+        if (bufferGraphData.length > 30) {
+            bufferGraphData.shift();
+        }
+
+        if (bufferData) {
+            bwGraphData.push([(Date.now() - startTime) / 1000, downloadBitrate, currentPlaybackBitrate, measuredBandwidth, perceivedBandwidth]);
+            bufferGraphData.push([(Date.now() - startTime) / 1000, videoBufferLevel, audioBufferLevel, downloadTimeInMs]);
+        } else {
+            bwGraphData.push([(Date.now() - startTime) / 1000, downloadBitrate, currentPlaybackBitrate]);
+            bufferGraphData.push([(Date.now() - startTime) / 1000, videoBufferLevel]);
+        }
+
+        if (!graphsDrawn) {
+            setupCharts(bufferData);
+            graphsDrawn = true;
+            $(".graphsRow").show();
+            if (myPlayer.currentTechName() == "SilverlightSS") {
+                $("#BufferGraphs").hide();
+            } else if (myPlayer.currentTechName() == "Html5") {
+                $("#BWGraphs").hide();
+            }
+        }
+        updateGraphs();
     }
+
 
     myPlayer.addEventListener("loadedmetadata", registerBufferDataEvents);
-    myPlayer.addEventListener("playbackbitratechanged", handleBufferData);
+    myPlayer.addEventListener("playbackbitratechanged", addGraphData);
 
+}
+
+var updateGraphs = function () {
+    if (graphsDrawn && document.getElementById('playerdiagnostics').style.display != "none") {
+        if (document.getElementById('BWGraphs').style.display != "none") {
+            bwGraph.updateOptions({ file: bwGraphData });
+        }
+        if (document.getElementById('BufferGraphs').style.display != "none") {
+            bufferGraph.updateOptions({ file: bufferGraphData });
+        }
+    }
 }
 
 var setupProperties = function () {
@@ -1266,7 +1341,10 @@ var registerEvents = function () {
 }
 
 function updateconfigtextbox() {
-    document.getElementById("txtLog").value += "user-agent: " + navigator.userAgent + "\n" + "source: " + myPlayer.currentSrc() + "\n";
+    //$("#txtLog").prepend("user-agent: " + navigator.userAgent + "\n" + "source: " + myPlayer.currentSrc() + "\n");
+    document.getElementById("txtLog").value = "user-agent: " + navigator.userAgent + "\n" + "source: " + myPlayer.currentSrc() + "\n" + document.getElementById("txtLog").value;
+
+    //document.getElementById("txtLog").value += "user-agent: " + navigator.userAgent + "\n" + "source: " + myPlayer.currentSrc() + "\n";
 }
 
 function _videoEventHandler(event) {
@@ -1316,6 +1394,62 @@ var _updateProperties = function () {
     }
 }
 
+var startIntervalUpdateProperties = function () {
+    if (!updatingProperties) {
+        setIntervalUpdateProperties = setInterval(_updateProperties, 1000);
+        updatingProperties = true;
+    }
+}
+
+var stopIntervalUpdateProperties = function () {
+    if (updatingProperties) {
+        clearInterval(setIntervalUpdateProperties);
+        updatingProperties = false;
+    }
+}
+
+var _setPeriodicUpdateProperties = function () {
+    if (myPlayer.paused()) {
+        _updateProperties();
+        stopIntervalUpdateProperties();
+        var timeInSeconds = myPlayer.isLive() ? 29 : myPlayer.duration() - myPlayer.currentTime();
+        periodicUpdateProperties(timeInSeconds);
+    }
+}
+
+var periodicUpdateProperties = function (numberSeconds) {
+    if (!updatingProperties) {
+        if (numberSeconds > 0) {
+            var techName = myPlayer.currentTechName();
+            var buffered = myPlayer.buffered();
+            var duration = myPlayer.duration();
+            var currentTime = myPlayer.currentTime();
+            var maxBuffer = techName != "Html5" ? 29 : duration;
+
+            if (techName != "SilverlightSS") {
+                var bufferedAhead = calculateBufferAhead();
+                if (bufferedAhead < maxBuffer) {
+                    if (myPlayer.isLive()) {
+                        setTimeout(function () {
+                            _updateProperties();
+                            periodicUpdateProperties(numberSeconds - 1);
+                        }, 1000);
+                    } else if (duration - currentTime > bufferedAhead + 1) {
+                        setTimeout(function () {
+                            _updateProperties();
+                            periodicUpdateProperties(numberSeconds - 1);
+                        }, 1000);
+                    } else {
+                        setTimeout(function () {
+                            _updateProperties();
+                        }, 2000);
+                    }
+                }
+            }
+        }
+    }
+}
+
 function calculateBufferAhead() {
     var output = 0;
 
@@ -1325,11 +1459,15 @@ function calculateBufferAhead() {
         return undefined;
     }
 
-    for (var i = 0; i < buffered.length; i++) {
+    output = Math.max(0, buffered.end(buffered.length - 1) - currentTime);
+
+    /*for (var i = 0; i < buffered.length; i++) {
         if (currentTime >= buffered.start(i) && currentTime <= buffered.end(i)) {
-            output = (buffered.end(i) - currentTime);
+            output += (buffered.end(i) - currentTime);
+        } else if (buffered.start(i) > currentTime) {
+            output += (buffered.end(i) - buffered.start(i));
         }
-    }
+    }*/
 
     return output;
 }
@@ -1389,26 +1527,38 @@ $(document).ready(function () {
         $('#playercode').hide();
         $('#embedcode').hide();
         $('#shareurl').hide();
+        $(".graphsRow").hide();
         updateEmbedCode();
         updateShareUrl();
         setupProperties();
+        document.getElementById("txtLog").value = "";
     }
 
     appendSourceUrl(config.url);
 
     if (document.getElementById("selectSource")) {
-        if (myPlayer.videoBufferData()) {
-            chartControl();
-        } else {
-            $(".graphsRow").hide();
-        }
+        chartControl();
         playerCode();
+        updateconfigtextbox();
+        myPlayer.addEventListener("error", function () {
+            _updateProperties();
+            stopIntervalUpdateProperties();
+        });
         myPlayer.addEventListener("loadedmetadata", function (e) {
             displayConfig();
             displayCopyrightInfo();
-            updateconfigtextbox()
+            //updateconfigtextbox();
         });
-        setInterval(_updateProperties, 1000);
+
+        //update properties table
+        startIntervalUpdateProperties();
+        
+        myPlayer.addEventListener("playing", startIntervalUpdateProperties);
+        myPlayer.addEventListener("ended", stopIntervalUpdateProperties);
+        myPlayer.addEventListener("pause", _setPeriodicUpdateProperties);
+        myPlayer.addEventListener("seeked", _setPeriodicUpdateProperties);
+        myPlayer.addEventListener("downloadbitratechanged", _setPeriodicUpdateProperties);
+
     }
 
     document.getElementById("azuremediaplayer").focus();
@@ -1561,12 +1711,14 @@ $(document).ready(function () {
 
         $('#' + buttonId.split("-button")[0]).show();
         if (buttonId == "playerdiagnostics-button") {
+            updateGraphs();
             if (bwGraph) {
                 bwGraph.resize();
             }
             if (bufferGraph) {
                 bufferGraph.resize();
             }
+
         }
     });
 
