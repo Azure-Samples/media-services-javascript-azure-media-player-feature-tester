@@ -1284,27 +1284,27 @@ var setupProperties = function () {
 }
 
 var registerEvents = function () {
-    myPlayer.addEventListener(amp.eventName.volumechange, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.ended, _ampEventHandler);
-    //myPlayer.addEventListener(amp.eventName.timeupdate, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.durationchange, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.volumechange, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.ended, ampEventHandler);
+    //myPlayer.addEventListener(amp.eventName.timeupdate, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.durationchange, ampEventHandler);
 
-    myPlayer.addEventListener(amp.eventName.pause, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.play, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.playing, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.seeking, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.seeked, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.pause, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.play, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.playing, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.seeking, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.seeked, ampEventHandler);
 
-    myPlayer.addEventListener(amp.eventName.loadstart, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.loadeddata, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.loadedmetadata, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.fullscreenchange, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.loadstart, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.loadeddata, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.loadedmetadata, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.fullscreenchange, ampEventHandler);
 
-    myPlayer.addEventListener(amp.eventName.waiting, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.canplaythrough, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.error, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.downloadbitratechanged, _ampEventHandler);
-    myPlayer.addEventListener(amp.eventName.playbackbitratechanged, _ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.waiting, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.canplaythrough, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.error, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.downloadbitratechanged, ampEventHandler);
+    myPlayer.addEventListener(amp.eventName.playbackbitratechanged, ampEventHandler);
 
     var videoTag;
 
@@ -1315,39 +1315,36 @@ var registerEvents = function () {
     }
 
     if (videoTag) {
-        //videoTag.addEventListener("loadstart", _videoEventHandler, false);
-        //videoTag.addEventListener("progress", _videoEventHandler, false);
-        videoTag.addEventListener("suspend", _videoEventHandler, false);
-        videoTag.addEventListener("abort", _videoEventHandler, false);
-        videoTag.addEventListener("error", _videoEventHandler, false);
-        videoTag.addEventListener("emptied", _videoEventHandler, false);
-        videoTag.addEventListener("stalled", _videoEventHandler, false);
-        //videoTag.addEventListener("play", _videoEventHandler, false);
-        // videoTag.addEventListener("pause", _videoEventHandler, false);
-        videoTag.addEventListener("loadedmetadata", _videoEventHandler, false);
-        //videoTag.addEventListener("loadeddata", _videoEventHandler, false);
-        videoTag.addEventListener("waiting", _videoEventHandler, false);
-        //videoTag.addEventListener("playing", _videoEventHandler, false);
-        videoTag.addEventListener("canplay", _videoEventHandler, false);
-        //videoTag.addEventListener("canplaythrough", _videoEventHandler, false);
-        //videoTag.addEventListener("seeking", _videoEventHandler, false);
-        //videoTag.addEventListener("seeked", _videoEventHandler, false);
-        //videoTag.addEventListener("timeupdate", _videoEventHandler, false);
-        //videoTag.addEventListener("ended", _videoEventHandler, false);
-        videoTag.addEventListener("ratechange", _videoEventHandler, false);
-        //videoTag.addEventListener("durationchange", _videoEventHandler, false);
-        //videoTag.addEventListener("volumechange", _videoEventHandler, false);
+        //videoTag.addEventListener("loadstart", videoTagEventHandler, false);
+        //videoTag.addEventListener("progress", videoTagEventHandler, false);
+        videoTag.addEventListener("suspend", videoTagEventHandler, false);
+        videoTag.addEventListener("abort", videoTagEventHandler, false);
+        videoTag.addEventListener("error", videoTagEventHandler, false);
+        videoTag.addEventListener("emptied", videoTagEventHandler, false);
+        videoTag.addEventListener("stalled", videoTagEventHandler, false);
+        //videoTag.addEventListener("play", videoTagEventHandler, false);
+        // videoTag.addEventListener("pause", videoTagEventHandler, false);
+        videoTag.addEventListener("loadedmetadata", videoTagEventHandler, false);
+        //videoTag.addEventListener("loadeddata", videoTagEventHandler, false);
+        videoTag.addEventListener("waiting", videoTagEventHandler, false);
+        //videoTag.addEventListener("playing", videoTagEventHandler, false);
+        videoTag.addEventListener("canplay", videoTagEventHandler, false);
+        //videoTag.addEventListener("canplaythrough", videoTagEventHandler, false);
+        //videoTag.addEventListener("seeking", videoTagEventHandler, false);
+        //videoTag.addEventListener("seeked", videoTagEventHandler, false);
+        //videoTag.addEventListener("timeupdate", videoTagEventHandler, false);
+        //videoTag.addEventListener("ended", videoTagEventHandler, false);
+        videoTag.addEventListener("ratechange", videoTagEventHandler, false);
+        //videoTag.addEventListener("durationchange", videoTagEventHandler, false);
+        //videoTag.addEventListener("volumechange", videoTagEventHandler, false);
     }
 }
 
-function updateconfigtextbox() {
-    //$("#txtLog").prepend("user-agent: " + navigator.userAgent + "\n" + "source: " + myPlayer.currentSrc() + "\n");
+function updateTextLogUA() {
     document.getElementById("txtLog").value = "user-agent: " + navigator.userAgent + "\n" + "source: " + myPlayer.currentSrc() + "\n" + document.getElementById("txtLog").value;
-
-    //document.getElementById("txtLog").value += "user-agent: " + navigator.userAgent + "\n" + "source: " + myPlayer.currentSrc() + "\n";
 }
 
-function _videoEventHandler(event) {
+function videoTagEventHandler(event) {
     var txtLog = document.getElementById("txtLog");
 
     if ("progress" !== event.type && "timeupdate" !== event.type) {
@@ -1355,7 +1352,7 @@ function _videoEventHandler(event) {
     }
 }
 
-function _ampEventHandler(evt) {
+function ampEventHandler(evt) {
     var txtLog = document.getElementById("txtLog");
     var logStr;
 
@@ -1377,26 +1374,27 @@ function _ampEventHandler(evt) {
         PrettyPrint.log(txtLog, "amp: " + logStr + ", currentTime: " + myPlayer.currentTime());
     }
 
-    _updateProperties();
+    updateProperties();
 
 }
 
-var _updateProperties = function () {
+var updateProperties = function () {
     if (!myPlayer) {
         return;
     }
-
-    for (var i = 0; i < properties.length; i++) {
-        var value = properties[i].functionHandler.call(myPlayer);
-        if (value != properties[i].txtAreaAmpProperties) {
-            properties[i].txtAreaAmpProperties.innerHTML = value;
+    if (document.getElementById('playerdiagnostics').style.display != "none") {
+        for (var i = 0; i < properties.length; i++) {
+            var value = properties[i].functionHandler.call(myPlayer);
+            if (value != properties[i].txtAreaAmpProperties) {
+                properties[i].txtAreaAmpProperties.innerHTML = value;
+            }
         }
     }
 }
 
 var startIntervalUpdateProperties = function () {
     if (!updatingProperties) {
-        setIntervalUpdateProperties = setInterval(_updateProperties, 1000);
+        setIntervalUpdateProperties = setInterval(updateProperties, 1000);
         updatingProperties = true;
     }
 }
@@ -1408,9 +1406,9 @@ var stopIntervalUpdateProperties = function () {
     }
 }
 
-var _setPeriodicUpdateProperties = function () {
+var setPeriodicUpdateProperties = function () {
     if (myPlayer.paused()) {
-        _updateProperties();
+        updateProperties();
         stopIntervalUpdateProperties();
         var timeInSeconds = myPlayer.isLive() ? 29 : myPlayer.duration() - myPlayer.currentTime();
         periodicUpdateProperties(timeInSeconds);
@@ -1431,17 +1429,17 @@ var periodicUpdateProperties = function (numberSeconds) {
                 if (bufferedAhead < maxBuffer) {
                     if (myPlayer.isLive()) {
                         setTimeout(function () {
-                            _updateProperties();
+                            updateProperties();
                             periodicUpdateProperties(numberSeconds - 1);
                         }, 1000);
                     } else if (duration - currentTime > bufferedAhead + 1) {
                         setTimeout(function () {
-                            _updateProperties();
+                            updateProperties();
                             periodicUpdateProperties(numberSeconds - 1);
                         }, 1000);
                     } else {
                         setTimeout(function () {
-                            _updateProperties();
+                            updateProperties();
                         }, 2000);
                     }
                 }
@@ -1539,15 +1537,15 @@ $(document).ready(function () {
     if (document.getElementById("selectSource")) {
         chartControl();
         playerCode();
-        updateconfigtextbox();
+        updateTextLogUA();
         myPlayer.addEventListener("error", function () {
-            _updateProperties();
+            updateProperties();
             stopIntervalUpdateProperties();
         });
         myPlayer.addEventListener("loadedmetadata", function (e) {
             displayConfig();
             displayCopyrightInfo();
-            //updateconfigtextbox();
+            //updateTextLogUA();
         });
 
         //update properties table
@@ -1555,9 +1553,9 @@ $(document).ready(function () {
         
         myPlayer.addEventListener("playing", startIntervalUpdateProperties);
         myPlayer.addEventListener("ended", stopIntervalUpdateProperties);
-        myPlayer.addEventListener("pause", _setPeriodicUpdateProperties);
-        myPlayer.addEventListener("seeked", _setPeriodicUpdateProperties);
-        myPlayer.addEventListener("downloadbitratechanged", _setPeriodicUpdateProperties);
+        myPlayer.addEventListener("pause", setPeriodicUpdateProperties);
+        myPlayer.addEventListener("seeked", setPeriodicUpdateProperties);
+        myPlayer.addEventListener("downloadbitratechanged", setPeriodicUpdateProperties);
 
     }
 
@@ -1711,6 +1709,7 @@ $(document).ready(function () {
 
         $('#' + buttonId.split("-button")[0]).show();
         if (buttonId == "playerdiagnostics-button") {
+            updateProperties();
             updateGraphs();
             if (bwGraph) {
                 bwGraph.resize();
