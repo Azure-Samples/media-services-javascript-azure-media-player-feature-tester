@@ -209,7 +209,7 @@ var initialize = function () {
 
     if (queryString.format) {
         config.advanced = true;
-        config.format = queryString.format.toLowerCase();
+        config.format = decodeURIComponent(queryString.format).replace(/\+/g, " ").toLowerCase();
     }
 
     if (queryString.language) {
@@ -449,6 +449,8 @@ var appendSourceUrl = function (url) {
             mimeType = "video/3gp";
         } else if (url.toLowerCase().match('.mp4')) {
             mimeType = "video/mp4";
+        } else if (url.toLowerCase().match('.mp3')) {
+            mimeType = "audio/mp3";
         }
     } else if (config.format == "dash") {
         mimeType = "application/dash+xml";
@@ -459,7 +461,7 @@ var appendSourceUrl = function (url) {
     } else if (config.format == "mp4") {
         mimeType = "video/mp4";
     } else {
-        mimeType = $("#formatOtherVal").val();
+        mimeType = config.format;
     }
 
     //setup source object
@@ -842,7 +844,7 @@ var updateParamsInAddressURL = function () {
     urlParams += "?url=" + encodeURIComponent(manifestURL).replace(/'/g, "%27").replace(/"/g, "%22");
     if (config.advanced == true) {
         if (config.format != "auto") {
-            urlParams += "&format=" + config.format;
+            urlParams += "&format=" + encodeURIComponent(config.format).replace(/'/g, "%27").replace(/"/g, "%22");
         }
         if (config.disableurlrewriter == true) {
             urlParams += "&disableurlrewriter=true"
