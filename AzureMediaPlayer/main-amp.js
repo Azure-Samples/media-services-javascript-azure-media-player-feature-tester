@@ -927,7 +927,7 @@ var updateParamsInAddressURL = function () {
 }
 
 var updateEmbedCode = function () {
-    $('.embed-code-box textarea').val('<iframe src="//aka.ms/azuremediaplayeriframe' + updateParamsInAddressURL() + '" name="azuremediaplayer" scrolling="no" frameborder="no" align="center" height="280px" width="500px" allowfullscreen></iframe>');
+    $('.embed-code-box textarea').val('<iframe src="//aka.ms/ampembed' + updateParamsInAddressURL() + '" name="azuremediaplayer" scrolling="no" frameborder="no" align="center" height="280px" width="500px" allowfullscreen></iframe>');
 }
 
 var updateShareUrl = function () {
