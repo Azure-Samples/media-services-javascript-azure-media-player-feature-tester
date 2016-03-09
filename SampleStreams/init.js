@@ -85,7 +85,7 @@ function getAMPUrl(d) {
 
 $(document).ready(function () {
         var table = $('#example').DataTable( {
-        "ajax": "dataTables/data/amsSamples.txt",
+        "ajax": "SampleStreams/data/amsSamples.txt",
         paging: false,
         jQueryUI: true,
         //responsive: true,
