@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Amp Diagnostic Center</title>
+
+    <script src="http://amp.azure.net/libs/amp/latest/azuremediaplayer.min.js"></script>
+    <link href="http://amp.azure.net/libs/amp/latest/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet" />
+
+    <!-- Begin External Libraries -->
+    <script src="lib/node_modules/jQuery/jquery-2.1.1.min.js"></script>
+    <script src="lib/node_modules/bootstrap/js/bootstrap.min.js"></script>
+    <script src="lib/node_modules/bootstraptoggles/bootstrap-toggle.min.js"></script>
+    <script src="lib/node_modules/dygraphs/dygraph-combined.js"></script>
+    <script src="lib/node_modules/dygraphs/synchronizer.js"></script>
+
+    <!-- End External Libraries -->
+
+    <script src="app.js"></script>
+    <script src="ChartControl.js"></script>
+    <script src="PrettyPrint.js"></script>
+
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="lib/node_modules/bootstrap/js/bootstrap.min.css" rel="stylesheet" />
+    <link href="lib/node_modules/bootstraptoggles/bootstrap-toggle.min.css" rel="stylesheet" />
+    <link href="css/myPage.css" rel="stylesheet" />
+
+    <script>
+        amp.options.flashSS.swf = 'http://amp.azure.net/libs/amp/latest/techs/StrobeMediaPlayback.2.0.swf';
+        amp.options.flashSS.plugin = 'http://amp.azure.net/libs/amp/latest/techs/MSAdaptiveStreamingPlugin-osmf2.0.swf';
+        amp.options.silverlightSS.xap = 'http://amp.azure.net/libs/amp/latest/techs/SmoothStreamingPlayer.xap';
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            document.getElementById('main').style.height = $(window).height() - $('#header').height() - $('#footer').height() + 'px';
+            $(window).resize(function () {
+                document.getElementById('main').style.height = $(window).height() - $('#header').height() - $('#footer').height() + 'px';
+            });
+        });
+    </script>
+</head>
+<body onload="AmpDiagnosticCenter.initialize(true);">
+    <header id="header" class="top-header"><h3 style="color:#FFA500">NOTE: This page is not longer being maintained.  Try the new Diagnostics tab on the <a href="//aka.ms/azuremediaplayer">official demo page</a></h3>       
+        <div class="container-fluid expanded-panel">
+            <div class="row">
+                <div class="col-xs-12 col-lg-2 navbar-brand" id="logoDiv">
+                    <a href="www.azure.com/media">
+                        <div id="logo">
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-lg-10" id="top-panel">
+                    <div>
+                        <div class="top-panel-middle">
+                            <div id="mediaUrlDiv">
+                                <input type="text" id="mediaUrlTxt" placeholder="Media Url">
+                            </div>
+                        </div>
+                        <div class="top-panel-right">
+                            <ul class="top-panel-controls">
+                                <li>
+                                    <button id="setSrcBtn" class="btn btn-default" onclick="$('#advancedDiv').collapse('hide'); AmpDiagnosticCenter.btnSrcClick()">Load</button>
+                                </li>
+                                <li>
+                                    <button class="btn btn-default" data-toggle="collapse" data-target="#advancedDiv">Config</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+        <div id="main" class="media-row">
+            <div class="collapse" id="advancedDiv">
+                <div class="row">
+                    <div class="col-xs-6 col-md-3 advancedSectionDiv">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                AutoPlay
+                            </div>
+                            <div class="col-xs-6">
+                                <input id="autoplayChk" checked data-toggle="toggle" type="checkbox" style="float:right" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">HeuristicProfile</div>
+                            <div class="col-xs-6">
+                                <select id="selectHeuristicProfile" style="width: 100%" class="form-control">
+                                    <option value="quickStart" selected="">QuickStart</option>
+                                    <option value="highQuality">HighQuality</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-md-3 advancedSectionDiv">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                Log Level
+                            </div>
+                            <div class="col-xs-6">
+                                <select id="selectLogLevel" style="width: 100%" class="form-control">
+                                    <option value=3 selected="">Verbose</option>
+                                    <option value=2>Warning</option>
+                                    <option value=1>Error</option>
+                                    <option value=0>None</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                Console Trace Enabled
+                            </div>
+                            <div class="col-xs-6">
+                                <input id="isTraceEnabledChk" checked type="checkbox" data-toggle="toggle">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                Memory Trace Enabled
+                            </div>
+                            <div class="col-xs-6">
+                                <input id="isMemoryEnabledChk" type="checkbox" onchange="AmpDiagnosticCenter.memoryTraceChanged();" data-toggle="toggle" style="display:inline-block">
+                                <button id="downloadTraceBtn" style="display:none" class="btn btn-default" onclick="AmpDiagnosticCenter.generateDownloadLink()">DownloadTrace</button>
+                                <a href="" id="downloadlink" style="display: none">Download Trace</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 advancedSectionDiv">
+                        <div class="row">
+                            <div class="col-md-2">Format:</div>
+                            <div class="col-md-6">
+                                <select id="selectFormat" style="width: 100%" class="form-control">
+                                    <option value="auto" selected="">Azure Auto-Generated</option>
+                                    <option value="dash">DASH</option>
+                                    <option value="smooth">Smooth</option>
+                                    <option value="hls">HLS</option>
+                                    <option value="mp4">Progressive MP4</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div id="formatOther" class="col-md-4">
+                                <input style="color: grey; width: 100%; display: none;" type="text" class="input-sm form-control" id="formatOtherVal" value="MIME_Type">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">Tech:</div>
+                            <div class="col-md-6">
+                                <select id="selectTech" style="width: 100%" class="form-control">
+                                    <option value="auto" selected="">Auto Select</option>
+                                    <option value="azureHtml5JS">AzureHtml5JS</option>
+                                    <option value="flashSS">FlashSS</option>
+                                    <option value="silverlightSS">SilverlightSS</option>
+                                    <option value="html5">Html5JS</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">Protection:</div>
+                            <div class="col-md-6">
+                                <select id="selectContentProtection" style="width: 100%" class="form-control">
+                                    <option value="none" selected="">None</option>
+                                    <option value="aes">AES</option>
+                                    <option value="playready">PlayReady</option>
+                                </select>
+                            </div>
+                            <div id="protectionOther" class="col-md-4">
+                                <input style="color: grey; width: 100%; display: inline-block;" type="text" class="input-sm form-control" id="token" value="Token">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="mediaRow" class="row" style="min-height:100%">
+                <nav class="navbar navbar-inverse panel with-nav-tabs side-nav" role="navigation" style="z-index:90000">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div id="statsNavBar" class="collapse navbar-collapse navbar-ex1-collapse">
+                        <div class="nav navbar-nav  panel-default">
+                            <div class="panel-heading">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#tab1Properties" data-toggle="tab">Properties</a></li>
+                                    <li><a href="#tab2Events" data-toggle="tab">Events</a></li>
+                                </ul>
+                            </div>
+                            <div class="panel-body">
+                                <div class="tab-content">
+                                    <div class="tab-pane fade in active" id="tab1Properties">
+                                        <div id="propertiesDiv">
+                                        </div>
+                                    </div>
+                                    <div class="tab-content tab-pane fade" id="tab2Events">
+                                        <textarea id="eventsLog" class="col-md-12" rows="30"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+                <div id="videoContainer" style="height:100%;z-index:999999">
+                    <video id="vid1" class="azuremediaplayer amp-default-skin amp-big-play-centered" controls
+                           poster="images/amp_poster.jpg">
+                        <p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
+                    </video>
+                </div>
+            </div>
+            <div id="footer">
+                <div style="height:300px">
+                    <div class="row graphsRow">
+                        <div class="col-md-6 graphsDiv">
+                            <div class="graphLegendDiv">
+                                <div id="BWGraphsLegendDiv"></div>
+                            </div>
+                            <div id="BWGraphsDiv" style="height:250px"></div>
+                        </div>
+                        <div class="col-md-6 graphsDiv">
+                            <div class="graphLegendDiv">
+                                <div id="BufferGraphsLegendDiv"></div>
+                            </div>
+                            <div id="BufferGraphsDiv" style="height: 250px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>
