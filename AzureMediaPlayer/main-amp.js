@@ -561,7 +561,7 @@ var appendSourceUrl = function (url) {
             TraceTargets: [{ target: 'memory' }],
             maxLogLevel: 3
         },
-        hotkeys: {
+        hotKeys: {
             "volumeStep": 0.1,
             "seekStep": 5,
             "enableMute": true,
@@ -625,10 +625,10 @@ var appendSourceUrl = function (url) {
             myOptions.techOrder = ["azureHtml5JS", "flashSS", "silverlightSS", "html5"];
     }
     //Options for audio menu
-    if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/f1ee994f-fcb8-455f-a15d-07f6f2081a60/SintelMultiAudio.ism/manifest'.toLowerCase())) {
+    if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/f1ee994f-fcb8-455f-a15d-07f6f2081a60/Sintel_MultiAudio.ism/manifest'.toLowerCase())) {
         myOptions.skinConfig.audioTracksMenu.enabled = true;
         myOptions.skinConfig.audioTracksMenu.useManifestForLabel = true;
-    } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/7ceb010f-d9a3-467a-915e-5728acced7e3/ElephantsDreamMultiAudio.ism/manifest'.toLowerCase())) {
+    } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net/55034fb3-11af-43e4-a4de-d1b3ca56c5aa/ElephantsDream_MultiAudio.ism/manifest'.toLowerCase())) {
         myOptions.skinConfig.audioTracksMenu.enabled = true;
         myOptions.skinConfig.audioTracksMenu.useManifestForLabel = false;
     } else if (url.trim().toLowerCase().match('amssamples.streaming.mediaservices.windows.net'.toLowerCase())) {
