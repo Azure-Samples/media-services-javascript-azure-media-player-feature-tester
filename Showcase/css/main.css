@@ -1,0 +1,322 @@
+@font-face {
+  font-family: 'SegoePro-Light';
+  /*src: url('fonts/SegoePro-Light.eot');
+  src: url('fonts/SegoePro-Light.eot#iefix') format('embedded-opentype');
+  src: url('fonts/SegoePro-Light.woff') format('woff');*/
+  src: url('fonts/SegoePro-Light.ttf') format('truetype');
+  /*src: url('fonts/SegoePro-Light.svg#web') format('svg');*/
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'SegoePro-Regular';
+  /*src: url('fonts/SegoePro-Regular.eot');
+  src: url('fonts/SegoePro-Regular.eot#iefix') format('embedded-opentype');
+  src: url('fonts/SegoePro-Regular.woff') format('woff');*/
+  src: url('fonts/SegoePro-Regular.ttf') format('truetype');
+  /*src: url('fonts/SegoePro-Regular.svg#web') format('svg');*/
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'SegoePro-Bold';
+  /*src: url('fonts/SegoePro-Bold.eot');
+  src: url('fonts/SegoePro-Bold.eot#iefix') format('embedded-opentype');
+  src: url('fonts/SegoePro-Bold.woff') format('woff');*/
+  src: url('fonts/SegoePro-Bold.ttf') format('truetype');
+  /*src: url('fonts/SegoePro-Bold.svg#web') format('svg');*/
+  font-weight: normal;
+}
+
+body {
+	background-color: #000;
+	/*font-family: 'SegoePro-Regular', Helvetica, Arial, sans-serif;*/
+	font-family: 'SegoePro-Regular', wf_segoe-ui_normal,"Segoe UI","Segoe WP",Tahoma,Arial,sans-serif;
+	font-size: 16px;
+	overflow-x: hidden; 
+	min-width: 328px;
+	margin: 0;
+	padding: 0;
+}
+
+body > .container {
+	margin: 0;
+	padding: 0;
+	width: auto;
+}
+
+#background {
+	background: url(../images/background.png) top center no-repeat;
+	-webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#gradient {
+	background: url(../images/gradient.png) top center no-repeat;
+	-webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+.center {
+	text-align: center;
+}
+
+.inline {
+	display: inline-block;
+}
+
+.bold {
+	font-family: 'SegoePro-Bold', wf_segoe-ui_bold,Tahoma,Arial,sans-serif;
+}
+
+.no-margin {
+	margin: 0;
+}
+
+.navbar-default {
+	background-color: transparent;
+  border: none;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.navbar-brand {
+	display: block;
+	padding: 5px 0;
+	width: 100%;
+}
+	.navbar-brand > img {
+		display: inline-block;
+		position: relative;
+  	top: -4px;
+	}
+	.navbar-brand span {
+		color: #fff;
+		display: inline-block;
+		font-family: 'SegoePro-Light', wf_segoe-ui_light,"Segoe UI Light","Segoe WP Light","Segoe UI","Segoe WP",Tahoma,Arial,sans-serif;
+		font-size: 22px;
+		margin-left: 10px;
+  	-webkit-transition : color 300ms ease-out;
+	  -moz-transition : color 300ms ease-out;
+	  -o-transition : color 300ms ease-out;
+	  transition : color 300ms ease-out;
+	}
+	.navbar-brand:hover {
+		text-decoration: none;
+	}
+
+	section h2 {
+		font-family: 'SegoePro-Light', wf_segoe-ui_light,"Segoe UI Light","Segoe WP Light","Segoe UI","Segoe WP",Tahoma,Arial,sans-serif;
+		font-size: 30px;
+		margin: 0;
+	}
+
+.section-header {
+	margin: 20px 0 15px 0;
+}
+
+.subtitle {
+	color: #fff;
+	font-family: 'SegoePro-Light', wf_segoe-ui_light,"Segoe UI Light","Segoe WP Light","Segoe UI","Segoe WP",Tahoma,Arial,sans-serif;
+	font-size: 20px;
+	line-height: 28px;
+	margin: 0 0 10px 0;
+	text-align: center;
+}
+
+#video-container {
+	background: url(../images/mobiledevice_small2.png) center 0 no-repeat;
+	background-size: 900px 450px;
+	height: 100%;
+	padding: 10px; 
+
+	margin: 0 auto;
+}
+
+#video-player {
+	background: #000;
+	height: 145px;
+  margin: 29px auto;
+  width: 268px;
+}
+
+#carousel-videos-container {
+	position: relative;
+}
+
+#carousel-videos {
+	position: relative;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+	#carousel-videos .item {
+		min-width: 245px;
+		margin: 0 10%;
+	}
+	#carousel-videos .carousel-control.left,
+	#carousel-videos .carousel-control.right {
+		background: none;
+	}
+
+.video-card {
+	color: #fff;
+	cursor: pointer;
+}
+
+.video-card-details {
+	min-height: 80px;
+	padding: 20px 10px;
+	vertical-align: top;
+	width: 79%;
+}
+	.video-card-details h3 {
+		ffont-family: 'SegoePro-Light', wf_segoe-ui_light,"Segoe UI Light","Segoe WP Light","Segoe UI","Segoe WP",Tahoma,Arial,sans-serif;
+		font-size: 20px;
+		font-weight: normal;
+		margin: 0 0 5px 0;
+	}
+	.video-card-details p {
+		font-family: 'SegoePro-Bold', wf_segoe-ui_bold,Tahoma,Arial,sans-serif;
+		font-size: 16px;
+		margin: 0;
+	}
+
+.video-card-play {
+	background-color: #93dbf8;
+	background-color: rgba(255, 255, 255, 0.26);  
+	min-height: 94px;
+	padding: 25px 20px;
+	position: absolute;
+	right: 0;
+	vertical-align: top;
+	text-align: center;
+	width: 24%;
+}
+	.video-card-play .fa {
+		font-size: 26px;
+		margin-bottom: 5px;
+	}
+
+.video1 {
+	background-color: #662d91; 
+}
+
+.video1 .video-card-play {
+	background-color: #662d91;
+	background-color: rgba(255, 255, 255, 0.26);  
+}
+
+.video2 {
+	background-color: #0078d7; 
+}
+
+.video2 .video-card-play {
+	background-color: #0078d7;
+	background-color: rgba(255, 255, 255, 0.26);  
+}
+
+.video3 {
+	background-color: #6dcff6; 
+}
+
+.video3 .video-card-play {
+	background-color: #93dbf8;
+	background-color: rgba(255, 255, 255, 0.26);  
+}
+
+.video4 {
+	background-color: #8dc63f; 
+}
+
+.video4 .video-card-play {
+	background-color: #8dc63f;
+	background-color: rgba(255, 255, 255, 0.26);  
+}
+
+.video5 {
+	background-color: #9e005d; 
+}
+
+.video5 .video-card-play {
+	background-color: #9e005d;
+	background-color: rgba(255, 255, 255, 0.26);  
+}
+
+.video6 {
+	background-color: #e28602; 
+}
+
+.video6 .video-card-play {
+	background-color: #e28602;
+	background-color: rgba(255, 255, 255, 0.26);  
+}
+
+.video7 {
+	background-color: #00a651; 
+}
+
+.video7 .video-card-play {
+	background-color: #00a651;
+	background-color: rgba(255, 255, 255, 0.26);  
+}
+
+.video8 {
+	background-color: #44536a; 
+}
+
+.video8 .video-card-play {
+	background-color: #44536a;
+	background-color: rgba(255, 255, 255, 0.26);  
+}
+
+#carousel-info-mobile {
+	color: #fff;
+	opacity: 0.7;
+  filter: alpha(opacity=70); 
+  margin: 5px 8%;
+}
+
+.player-info {
+	color: #fff;
+}
+.player-info .fa {
+		font-size: 20px;
+		margin-right: 10px;
+	}
+
+.gray-box {
+	background-color: #5a6261;
+	background-color: rgba(0, 0, 0, 0.27);
+	color: #fff;
+	padding: 20px; 
+}
+	.gray-box p {
+		margin: 0 0 5px 0;
+	}
+
+#copyright {
+	color: #fff;
+	opacity: 0.45;
+  filter: alpha(opacity=45); 
+  margin: 10px 12%;
+  text-align: center;
+}
+
+footer {
+	padding: 20px 25px 0 25px; 
+	position: relative;
+	z-index: 2;
+}
