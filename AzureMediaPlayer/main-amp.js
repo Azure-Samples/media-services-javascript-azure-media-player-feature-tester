@@ -655,6 +655,22 @@ var appendSourceUrl = function (url) {
         myPlayer.options(myOptions);
     }
 
+    //if DD+ 
+    if (url.trim().toLowerCase().match("amssamples.streaming.mediaservices.windows.net/d499bfae-117a-40ab-9bd4-036cc575fac3/DolbyDigitalPlus.ism/manifest".toLowerCase())) {
+        myPlayer.addEventListener(amp.eventName.loadedmetadata, function () {
+            if (MediaSource.isTypeSupported('audio/mp4; codecs="ec-3"') && myPlayer.currentTechName() == "AzureHtml5JS") {
+                for (var i = 0; i < myPlayer.currentAudioStreamList().streams.length; i++) {
+                    if (myPlayer.currentAudioStreamList().streams[i].codec == 'ec-3') {
+                        myPlayer.currentAudioStreamList().switchIndex(i);
+                        break;
+                    }
+
+                }
+            }
+        });
+    }
+
+
     //save settings
     config.mySourceList = mySourceList;
     config.myTrackList = myTrackList;
@@ -747,6 +763,8 @@ var displayCopyrightInfo = function () {
             document.getElementById('copyrightInfo').innerHTML = 'Tears of Steel video - &copy; Blender Foundation | <a href="http://www.mango.blender.org" target="_blank">mango.blender.org</a>';
         } else if (config.url.match(/caminandes/i) && config.url.match(/llama/i)) {
             document.getElementById('copyrightInfo').innerHTML = 'Caminandes video - &copy; copyright 2013, Blender Foundation | <a href="http://caminandes.com" target="_blank">caminandes.com</a>';
+        } else if (config.url.match(/dolby/i) && config.url.match(/digital/i) && config.url.match(/plus/i)) {
+            document.getElementById('copyrightInfo').innerHTML = 'Silent - &copy; copyright 2016, Dolby Laboratories, Inc. | <a href="http://www.dolby.com/us/en/dolby/silent-video.html" target="_blank">Dolby Laboratories</a>';
         }
     }
 }

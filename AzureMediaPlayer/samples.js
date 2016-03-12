@@ -238,6 +238,20 @@
       "poster": ""
   },
   {
+      "title": "Dolby Digital Plus - On Demand [Silent]",
+      "src": "//amssamples.streaming.mediaservices.windows.net/d499bfae-117a-40ab-9bd4-036cc575fac3/DolbyDigitalPlus.ism/manifest",
+      "format": "auto",
+      "aes": false,
+      "aestoken": "",
+      "playready": false,
+      "playreadytoken": "",
+      "widevine": false,
+      "widevinetoken": "",
+      "captions": "",
+      "subtitles": "",
+      "poster": ""
+  },
+  {
       "title": "4K - On Demand [Llama Drama]",
       "src": "//amssamples.streaming.mediaservices.windows.net/634cd01c-6822-4630-8444-8dd6279f94c6/CaminandesLlamaDrama4K.ism/manifest",
       "format": "auto",
