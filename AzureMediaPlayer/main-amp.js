@@ -35,7 +35,8 @@ var config = {
     mySourceList: [],
     myTrackList: [],
     myOptions: {},
-    sessionID: ""
+    sessionID: "",
+    logo: true
 };
 
 function generateInstanceId() {
@@ -333,6 +334,11 @@ var initialize = function () {
         config.poster = decodeURIComponent(queryString.poster).replace(/\+/g, " ");
         config.advanced = true;
     }
+	if (queryString.wm) {
+        if (queryString.wm == 0) {
+            config.logo = false;
+        }
+    }
 
     //make config nicer
     var consoleLogConfig = "";
@@ -568,6 +574,9 @@ var appendSourceUrl = function (url) {
             "enableFullscreen": true,
             "enableNumbers": true,
             "enableJogStyle": false
+        },
+		logo: {
+            "enabled": config.logo
         },
         plugins: {
             /*EventHubQoS: {
@@ -1612,10 +1621,8 @@ $(document).ready(function () {
         myPlayer.addEventListener("pause", setPeriodicUpdateProperties);
         myPlayer.addEventListener("seeked", setPeriodicUpdateProperties);
         myPlayer.addEventListener("downloadbitratechanged", setPeriodicUpdateProperties);
-
+		document.getElementById("azuremediaplayer").focus();
     }
-
-    document.getElementById("azuremediaplayer").focus();
 
     if (document.getElementById("selectSource")) {
         //Update Player is selected
