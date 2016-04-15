@@ -1,0 +1,22 @@
+display-value {
+  align-items: center;
+  display: flex;
+
+  input {
+    flex: 1 1 100%;
+  }
+
+  .copy-button {
+    background: none;
+    border: 0;
+    flex: 0 0 40px;
+    font-family: 'azuremediaplayer';
+    font-size: 16px;
+    padding: 0;
+    text-align: right;
+
+    &::before {
+      content: '\e630';
+    }
+  }
+}

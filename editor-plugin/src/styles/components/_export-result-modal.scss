@@ -1,0 +1,74 @@
+.modal {
+  @include position(absolute, 65px null null 50%);
+
+  background-color: $modal-bg;
+  border: 3px solid $modal-border-color;
+  color: $white;
+  max-width: 620px;
+  padding: 15px 20px;
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 200;
+}
+
+.modal-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5em;
+
+  .close-btn {
+    @include size(18px);
+
+    color: $white;
+    font-size: 18px;
+
+    &::before {
+      content: '';
+    }
+  }
+}
+
+.modal-body {
+  p {
+    font-size: 13px;
+    line-height: 18px;
+    margin-bottom: .7em;
+    margin-right: 50px;
+  }
+
+  a {
+    color: $modal-link-color;
+  }
+
+  .form-group {
+    margin: 0;
+
+    &.is-first {
+      margin-top: 1.5em;
+    }
+
+    > div {
+      padding-top: .375rem;
+    }
+  }
+
+  label {
+    font-size: 15px;
+    padding-left: 0;
+  }
+
+  img {
+    display: block;
+    margin-top: 10px;
+  }
+}
+
+.modal-footer {
+  margin-top: 1.5em;
+  text-align: right;
+
+  .amve-btn {
+    border: 0;
+  }
+}

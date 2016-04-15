@@ -1,0 +1,15 @@
+.banner {
+  background: $orange;
+  color: $white;
+  font-size: 24px;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 500;
+  margin-bottom: 1em;
+  padding: 12px 0;
+  text-align: center;
+  text-shadow: 0 .5px 0 rgba(0, 0, 0, .7);
+
+  @include media('<=550px') {
+    font-size: 14px;
+  }
+}
