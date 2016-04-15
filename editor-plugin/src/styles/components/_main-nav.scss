@@ -1,0 +1,73 @@
+.main-nav {
+  display: flex;
+  justify-content: center;
+  min-height: 50px;
+  padding: 6px 1em;
+
+  .container {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .row {
+    align-items: center;
+    display: flex;
+    flex: 1 1 100%;
+    justify-content: space-between;
+    position: relative;
+
+  // Uncomment to display the current breakpoint on the top left corner of the page
+    // &::after {
+    //   @include position(fixed, 0 null null 0);
+    //
+    //   background: $black;
+    //   color: $white;
+    //   padding: 5px;
+    //
+    //   @include media-breakpoint-up(xs) {
+    //     content: 'xs';
+    //   }
+    //
+    //   @include media-breakpoint-up(sm) {
+    //     content: 'sm';
+    //   }
+    //
+    //   @include media-breakpoint-up(md) {
+    //     content: 'md';
+    //   }
+    //
+    //   @include media-breakpoint-up(lg) {
+    //     content: 'lg';
+    //   }
+    //
+    //   @include media-breakpoint-up(xl) {
+    //     content: 'xl';
+    //   }
+    // }
+  }
+
+  .navbar-brand {
+    background: url($ams-logo) center left no-repeat;
+    background-size: 27px 30px;
+    padding-left: 32px;
+
+    @include media('<=550px') {
+      font-size: 14px;
+    }
+
+    @include media('<=475px') {
+      span {
+        display: none;
+      }
+    }
+  }
+
+  .ms-logo {
+    @include size(105px 25px);
+    @include hide-text;
+
+    background: url($ms-logo) center left no-repeat;
+    background-size: 105px 25px;
+  }
+}

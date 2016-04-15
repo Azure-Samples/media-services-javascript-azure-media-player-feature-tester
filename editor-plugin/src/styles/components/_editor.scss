@@ -1,0 +1,47 @@
+// scss-lint:disable ImportantRule
+editor {
+  display: block;
+
+  h6 {
+    margin-bottom: 2em;
+  }
+
+  .c-select {
+    width: 100%;
+  }
+
+  .amve-container {
+    min-width: 0;
+
+    .amve-submitdlg-entry {
+      height: 410px !important;
+    }
+
+    .amve-submitdlg-entry-middle {
+      height: auto !important;
+    }
+  }
+
+  .azuremediaplayer {
+    height: auto !important;
+    min-height: 320px !important;
+    width: auto !important;
+  }
+
+  .readonly-input {
+    background: none;
+    border: 0;
+    font-size: 12px;
+    padding: 0;
+    width: 100%;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  editor.col-xs-12 { // scss-lint:disable QualifyingElement
+    flex: 1 1 100%;
+    margin-left: -1em;
+    margin-right: -1em;
+  }
+}
+// scss-lint:enable ImportantRule

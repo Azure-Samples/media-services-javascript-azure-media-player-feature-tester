@@ -1,0 +1,47 @@
+<div id="video-player-container">
+  <video id="video-player" class="azuremediaplayer amp-default-skin amp-big-play-centered">
+    <p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p>
+  </video>
+
+  <export-result-modal
+    *ngIf="shouldShowExportResultsModal"
+    [result]="exportResult"
+    id="export-result-modal"
+    class="modal"
+    (closeRequest)="closeExportResultsModal()">
+  </export-result-modal>
+</div>
+
+<div class="card card-block">
+  <h6>Adaptive streaming URL from Azure Media Services</h6>
+
+  <div class="form-group row">
+    <label for="sample" class="col-xs-12 col-md-2 form-control-label">Sample video</label>
+    <div class="col-xs-12 col-md-10">
+      <select name="sample" id="sample" class="c-select" [(ngModel)]="selectedSample">
+        <option *ngFor="#sample of samples; #i=index" [ngValue]="sample">{{ sample.title }}</option>
+      </select>
+
+      <display-value *ngIf="!selectedSample.isCustom" [value]="selectedSample.url" [canCopy]="false"></display-value>
+    </div>
+  </div>
+
+  <div *ngIf="selectedSample.isCustom" class="form-group row">
+    <label for="url" class="col-xs-12 col-md-2 form-control-label">URL</label>
+    <div class="col-xs-12 col-md-10">
+      <input type="text" class="form-control" id="url" placeholder="Video/Manifest URL" [(ngModel)]="customURL">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-xs-12 col-md-offset-2 col-xs-12 col-md-10">
+      <button
+        type="submit"
+        class="btn btn-sm btn-primary"
+        [disabled]="selectedSample.isCustom && !customURL"
+        (click)="updatePlayerSrc()">
+        Update Player
+      </button>
+    </div>
+  </div>
+</div>
