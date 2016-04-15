@@ -1549,32 +1549,20 @@ function email(toEmail) {
 
         $.ajax({
             type: 'POST',
-            url: 'https://mandrillapp.com/api/1.0/messages/send.json',
+            url: 'https://api.sendgrid.com/api/mail.send.json',
             data: {
-                'key': 'G5HmPfV6pJ25VaB1_Be_fw',
-                'message': {
-                    'from_email': 'ampinfo@microsoft.com',
-                    'to': [
-                        {
-                            'email': toEmail,
-                            'name': 'AMP User',
-                            'type': 'to'
-                        }
-                    ],
-                    'autotext': 'true',
-                    'subject': 'AMP Test - Verbose Log',
-                    'html': 'See attachment for Verbose Log' + '<br><br>' + '<br><br>' + 'Log: ' + $("#txtLog").val().replace(/\n/g, '<br/>'),
-                    "attachments": [
-                        {
-                            "type": "text/plain",
-                            "name": fileName,
-                            "content": btoa(textToWrite)
-                        }
-                    ]
-                }
+                api_user: "amsclientteam",
+                api_key: "WTvskikJBHxpJrYn0yYuanUulAP50s7sd5ABkr8m",
+                from: "ampinfo@microsoft.com",
+                to: toEmail,
+                name: "AMP User",
+                subject: "AMP Test - Verbose Log",
+                html: 'See below for basic event logs and full verbose logs.' + '<h1>Basic event logs</h1>' + 'Log: ' + $("#txtLog").val().replace(/\n/g, '<br/>') + '<h1>Verbose logs</h1>' + textToWrite.replace(/\n/g, '<br/>')
+
             }
         });
-        document.getElementById("email-success").innerHTML = "Log sent at " + Date();
+
+        document.getElementById("email-success").innerHTML = "Log sent at " + Date() + "<br/> If you do not receive your verbose logs, please check your spam/junk folder";
         $("#email-success").show();
     } else {
         document.getElementById("email-success").innerHTML = "Logs not sent. Not a valid email address";
