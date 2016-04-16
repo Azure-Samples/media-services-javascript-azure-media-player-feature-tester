@@ -584,6 +584,9 @@ var appendSourceUrl = function (url) {
                 "heartBeatIntervalMs": 10000,
                 "disableGeoLocation": true
             },*/
+            appInsights: {
+                'debug': false
+            },
             ga: {
                 'eventsToTrack': ['playerConfig', 'loaded', 'playTime', 'percentsPlayed', 'start', 'end', 'play', 'pause', 'error', 'buffering', 'fullscreen', 'bitrate'],
                 'debug': false
