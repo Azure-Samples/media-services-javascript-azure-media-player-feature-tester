@@ -84,15 +84,15 @@ var properties = [
         new PropertyInfo("absoluteTime", function () {
             return (this.currentAbsoluteTime()) ? PrettyPrint.toFixed(this.currentAbsoluteTime(), 3) : "undefined";
         }),
+        new PropertyInfo("mediaTime", function () {
+            return (this.currentMediaTime()) ? PrettyPrint.toFixed(this.currentMediaTime(), 3) : "undefined";
+        }),
         new PropertyInfo("duration", function () {
             return PrettyPrint.toFixed(this.duration(), 3);
         }),
         new PropertyInfo("volume", function () {
             return this.volume();
         }),
-        /*new PropertyInfo("readyState", function () {
-            return PrettyPrint.readyState(this.readyState);
-        }),*/
         new PropertyInfo("seeking", function () {
             return this.seeking();
         }),
@@ -611,13 +611,7 @@ var appendSourceUrl = function (url) {
             myOptions.heuristicProfile = "High Quality";
             break;
         default:
-            myOptions.heuristicProfile = "High Quality",
-            myOptions.customPlayerSettings = {
-                "customHeuristicSettings": {
-                    "preRollInSec": 4,
-                    "windowSizeHeuristics": true
-                }
-            }
+            myOptions.heuristicProfile = "Hybrid";
     }
     //Options for tech order
     switch (config.tech) {
@@ -1120,7 +1114,7 @@ var chartControl = function () {
     var graphData = [];
     var startTime = Date.now();
 
-    function setupCharts(ifBufferData) {
+    function setupCharts(ifBufferDataAvailable) {
 
         var bwGraphOptions = {
             labels: ['time', 'DownloadBR', 'PlaybackBR'],
@@ -1144,8 +1138,7 @@ var chartControl = function () {
             }
         };
 
-
-        if (ifBufferData) {
+        if (ifBufferDataAvailable) {
             bwGraphOptions.labels = ['time', 'DownloadBR', 'PlaybackBR', 'MeasuredBW', 'AverageBW'];
             bwGraphOptions.y2label = 'Bandwidth (bps)';
             bwGraphOptions.y2labelWidth = 20;
@@ -1185,7 +1178,7 @@ var chartControl = function () {
             }
         }
 
-        if (ifBufferData) {
+        if (ifBufferDataAvailable) {
             bufferGraphOptions.labels = ['time', 'videoBuffer', 'audioBuffer', 'videoDLTime'];
             bufferGraphOptions.y2label = 'Download Time (ms)';
             bufferGraphOptions.y2LabelWidth = 0;
