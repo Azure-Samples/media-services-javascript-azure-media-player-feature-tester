@@ -585,7 +585,7 @@ var appendSourceUrl = function (url) {
                 "disableGeoLocation": true
             },*/
             appInsights: {
-                'debug': false
+                'metricsToTrack': ['loaded', 'error', 'playbackSummary']
             },
             ga: {
                 'eventsToTrack': ['playerConfig', 'loaded', 'playTime', 'percentsPlayed', 'start', 'end', 'play', 'pause', 'error', 'buffering', 'fullscreen', 'bitrate'],
