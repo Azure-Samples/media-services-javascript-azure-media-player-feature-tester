@@ -585,6 +585,7 @@ var appendSourceUrl = function (url) {
                 "disableGeoLocation": true
             },*/
             appInsights: {
+                'debug': false,
                 'metricsToTrack': ['loaded', 'error', 'playbackSummary']
             },
             ga: {
