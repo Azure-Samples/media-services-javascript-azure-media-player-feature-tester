@@ -99,11 +99,11 @@
                     <div id="videoContainer">
                         <!--<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" width="100%" height="auto" tabindex=0><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>-->
                         <script>
-                            var videoWidth = 500;
+                            var videoHeight = 500;
                             if ($(window).width() < 750) {
-                                videoWidth = $(window).width() * 11 / 16;
+                                videoHeight = $(window).width() * 11 / 16;
                             }
-                            document.getElementById("videoContainer").style.height = videoWidth + "px";
+                            document.getElementById("videoContainer").style.height = videoHeight + "px";
                             $("#videoContainer").append('<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" width="100%" height="100%" tabindex=0><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>');
                             $(document).ready(function () {
                                 window.addEventListener('resize', function (event) {

@@ -36,7 +36,8 @@ var config = {
     myTrackList: [],
     myOptions: {},
     sessionID: "",
-    logo: true
+    logo: true,
+    theme: "amp"
 };
 
 function generateInstanceId() {
@@ -334,9 +335,19 @@ var initialize = function () {
         config.poster = decodeURIComponent(queryString.poster).replace(/\+/g, " ");
         config.advanced = true;
     }
-	if (queryString.wm) {
+    if (queryString.wm) {
         if (queryString.wm == 0) {
             config.logo = false;
+        }
+    }
+    if (queryString.theme) {
+        if (queryString.theme == "stream") {
+            config.theme = "stream";
+            $("<link/>", {
+                rel: "stylesheet",
+                type: "text/css",
+                href: "/AzureMediaPlayer/themes/stream/stream-theme.css"
+            }).appendTo("head");
         }
     }
 
@@ -575,7 +586,7 @@ var appendSourceUrl = function (url) {
             "enableNumbers": true,
             "enableJogStyle": false
         },
-		logo: {
+        logo: {
             "enabled": config.logo
         },
         plugins: {
@@ -1600,13 +1611,13 @@ $(document).ready(function () {
 
         //update cadence for properties table
         startIntervalUpdateProperties();
-        
+
         myPlayer.addEventListener("playing", startIntervalUpdateProperties);
         myPlayer.addEventListener("ended", stopIntervalUpdateProperties);
         myPlayer.addEventListener("pause", setPeriodicUpdateProperties);
         myPlayer.addEventListener("seeked", setPeriodicUpdateProperties);
         myPlayer.addEventListener("downloadbitratechanged", setPeriodicUpdateProperties);
-		document.getElementById("azuremediaplayer").focus();
+        document.getElementById("azuremediaplayer").focus();
     }
 
     if (document.getElementById("selectSource")) {
@@ -1870,6 +1881,21 @@ $(document).ready(function () {
         $("#addtrack").click(function (e) {
             addTrack();
         });
+
+
     }
+
+    //logo click can happen on both demo and embed pages
+    $(".amp-logo").css({ "cursor": "pointer" });
+    $(".amp-logo").click(function (e) {
+        if (myPlayer && !myPlayer.error()) {
+            myPlayer.pause();
+        }
+        if(config.theme == "amp")  {
+            window.open("http://aka.ms/ampinfo", "_blank");
+        } else if (config.theme == "stream") {
+            window.open("https://stream.microsoft.com", "_blank");
+        }
+    });
 
 });
