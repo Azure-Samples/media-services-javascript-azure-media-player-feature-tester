@@ -1,5 +1,5 @@
 ﻿.amp-default-skin .vjs-loading-spinner {
-    background: url('streamloading.png');
+    background: url(streamloading.png);
     width: 170px;
     height: 75px;
     animation: loading 1.5s steps(48) infinite;
@@ -11,9 +11,9 @@
     transform: translate(-50%, -50%);
 }
 
-.amp-default-skin .vjs-loading-spinner:before {
+    .amp-default-skin .vjs-loading-spinner:before {
         content: none;
-}
+    }
 
 @keyframes loading {
     100% {
@@ -21,23 +21,34 @@
     }
 }
 
-.amp-default-skin .amp-logo{
-    /*position: absolute;
-    overflow: hidden;
-    z-index: 5;*/
-    background-image: url(stream-icon-white.svg);
+.amp-default-skin .amp-logo {
+    background-image: url(stream-icon-watermark.svg);
     /*background-repeat: no-repeat;*/
-    width: 40px;
-    height: 40px;
-    right: 10px !important;
-    top: 10px !important;
+    width: 32px;
+    height: 32px;
+    /*right: 10px !important;*/
+    top: auto !important;
     left: auto !important;
-    opacity: 0.4 !important;
+    /*opacity: 0.4 !important;*/
+    /*cursor: pointer;*/
+    margin-right: 12px;
+    /*position: fixed;*/
+    right: 0;
+    bottom: 52px !important;
+    z-index: 1;
     cursor: pointer;
+    opacity: 0.5;
 }
 
-.amp-default-skin .vjs-menu{
-     z-index: 10;
+
+
+.amp-default-skin .amp-logo:hover {
+     height: 34px;
+     width: 34px;
+}
+
+.amp-default-skin .vjs-menu {
+    z-index: 2;
 }
 
 .amp-default-skin.vjs-error .vjs-error-display::before {
@@ -59,5 +70,3 @@
 .amp-default-skin .vjs-volume-level {
     background: #7ed127;
 }
-
-
