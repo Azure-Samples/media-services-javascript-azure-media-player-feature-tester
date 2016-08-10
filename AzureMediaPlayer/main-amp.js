@@ -317,7 +317,7 @@ var initialize = function () {
 
     if (queryString.captions) {
         config.advanced = true;
-        var captionslist = queryString.captions.split(";");
+        var captionslist = decodeURIComponent(queryString.captions).split(";");
         for (var i = 0; i < captionslist.length; i++) {
             var captionspair = captionslist[i].split(",");
             config.captions.push({ "label": captionspair[0], "language": captionspair[1], "trackurl": (decodeURIComponent(captionspair[2].replace(/\+/g, " "))) });
@@ -325,7 +325,7 @@ var initialize = function () {
     }
     if (queryString.subtitles) {
         config.advanced = true;
-        var subtitlelist = queryString.subtitles.split(";");
+        var subtitlelist = decodeURIComponent(queryString.subtitles).split(";");
         for (var i = 0; i < subtitlelist.length; i++) {
             var subtitlespair = subtitlelist[i].split(",");
             config.subtitles.push({ "label": subtitlespair[0], "language": subtitlespair[1], "trackurl": (decodeURIComponent(subtitlespair[2].replace(/\+/g, " "))) });
