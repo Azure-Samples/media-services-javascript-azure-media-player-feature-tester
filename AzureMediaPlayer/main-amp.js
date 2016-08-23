@@ -598,9 +598,18 @@ var appendSourceUrl = function (url) {
                 "heartBeatIntervalMs": 10000,
                 "disableGeoLocation": true
             },*/
-            appInsights: {
+            /*appInsights: {
                 'debug': false,
                 'metricsToTrack': ['loaded', 'error', 'playbackSummary']
+            },*/
+            analytics_collectData: {
+                'debug': false,
+                //'metricsToTrack': ['heartbeat', 'loaded', 'viewed', 'ended', 'playTime', 'percentsPlayed', 'play', 'pause', 'seek', 'fullscreen', 'error', 'buffering', 'bitrateQuality', 'playbackSummary', 'downloadInfo']
+                'metricsToTrack': ['loaded', 'error', 'playbackSummary', 'heartbeat'],
+                //'heartbeatInterval': 45000
+            },
+            analytics_sendAI: {
+                //'trackAllDownloadedSegments': true
             },
             ga: {
                 'eventsToTrack': ['playerConfig', 'loaded', 'playTime', 'percentsPlayed', 'start', 'end', 'play', 'pause', 'error', 'buffering', 'fullscreen', 'bitrate'],
