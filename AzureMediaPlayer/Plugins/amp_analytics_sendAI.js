@@ -46,6 +46,7 @@
                         }
                     }
                 }
+
                 if (options.debug) {
                     console.log("Logging to AI: " + stringify);
                 }
@@ -75,7 +76,7 @@
                         properties.playIntervals = player.getData.playIntervals;
                     }
 
-                    //appInsights.trackEvent(event, properties, metrics);
+                    appInsights.trackEvent(event, properties, metrics);
                     if (player.analyticsDebug) {
                         console.log("queuing to Application Insights...'event': " + event);
                         console.log("'properties': ");
@@ -122,7 +123,7 @@
             }
         }
         catch (err) {
-                console.log("Unable to load correctly due to exception." + err);
+            console.log("Unable to load correctly due to exception." + err);
         }
     });
 
