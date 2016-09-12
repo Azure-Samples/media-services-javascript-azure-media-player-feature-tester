@@ -428,7 +428,9 @@
                 if (player.currentDownloadBitrate()) {
                     this.downloadedChunks += 1;
                     this.sumBitrate += player.currentDownloadBitrate();
-                    this.downloadsByBitrate[player.currentDownloadBitrate()] += 1;
+                    if (this.downloadsByBitrate) {
+                        this.downloadsByBitrate[player.currentDownloadBitrate()] += 1;
+                    }
 
                     if (this.videoBuffer) {
                         if (metricsToTrack.downloadInfo) {
