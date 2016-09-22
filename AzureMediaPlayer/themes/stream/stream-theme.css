@@ -52,7 +52,7 @@
 }
 
 .amp-default-skin.vjs-error .vjs-error-display::before {
-    content: url(stream-icon-green.svg);
+    content: url(stream-icon-burgundy.svg);
     width: 170px;
     height: 75px;
     margin: 0;
@@ -64,9 +64,9 @@
 }
 
 .amp-default-skin .vjs-play-progress {
-    background-color: #7ed127;
+    background-color: #c30052;
 }
 
 .amp-default-skin .vjs-volume-level {
-    background: #7ed127;
+    background: #c30052;
 }
