@@ -738,7 +738,7 @@ var displayConfig = function () {
     }
 
     if (document.getElementById('tech')) {
-        switch (myPlayer.techName) {
+        switch (myPlayer.techName_) {
             case "AzureHtml5JS":
                 $("#tech").text("JavaScript + HTML5 (MSE)");
                 break;
@@ -755,7 +755,7 @@ var displayConfig = function () {
                 $("#tech").text("Native HTML5 (Type 1)");
                 break;
             default:
-                $("#tech").text(myPlayer.techName);
+                $("#tech").text(myPlayer.techName_);
         }
     }
 
