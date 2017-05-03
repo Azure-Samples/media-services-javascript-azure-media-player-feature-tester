@@ -1630,6 +1630,12 @@ $(document).ready(function () {
         myPlayer.addEventListener("seeked", setPeriodicUpdateProperties);
         myPlayer.addEventListener("downloadbitratechanged", setPeriodicUpdateProperties);
         document.getElementById("azuremediaplayer").focus();
+    } else {
+        var isFullscreenAllowed = window.document.fullscreenEnabled || window.document.webkitFullscreenEnabled || window.document.mozFullScreenEnabled || window.document.msFullscreenEnabled;
+        if (!isFullscreenAllowed) {
+           var buttonComponent = myPlayer.controlBar.fullscreenToggle;
+           buttonComponent.el().style.display = "none";
+        }
     }
 
     if (document.getElementById("selectSource")) {
