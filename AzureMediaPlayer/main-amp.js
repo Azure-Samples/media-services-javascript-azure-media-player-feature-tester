@@ -28,6 +28,7 @@ var config = {
     autoplay: true,
     muted: false,
     language: "en",
+    startTime: 0,
     disableurlrewriter: false,
     captions: [],
     subtitles: [],
@@ -37,7 +38,7 @@ var config = {
     myOptions: {},
     sessionID: "",
     logo: true,
-    theme: "amp"
+    theme: "amp-default"
 };
 
 function generateInstanceId() {
@@ -219,6 +220,12 @@ var initialize = function () {
         config.language = queryString.language.toLowerCase();
     }
 
+    if (queryString.st) {
+        if ($.isNumeric(queryString.st)) {
+            config.startTime = Number(queryString.st);
+        }
+    }
+
     if (queryString.disableurlrewriter) {
         if (queryString.disableurlrewriter == "true") {
             config.advanced = true;
@@ -341,16 +348,13 @@ var initialize = function () {
         }
     }
     if (queryString.theme) {
-        if (queryString.theme == "stream") {
+        if (queryString.theme.toLowerCase() == "stream") {
             config.theme = "stream";
-            //$("<link/>", {
-            //    rel: "stylesheet",
-            //    type: "text/css",
-            //    href: "/AzureMediaPlayer/themes/stream/stream-theme.css"
-            //}).appendTo("head");
 
-            $('<style type="text/css">.amp-default-skin .vjs-loading-spinner{background:url(AzureMediaPlayer/themes/stream/streamloading.png);width:170px;height:75px;animation:loading 1.5s steps(48) infinite;margin:0;position:absolute;top:50%;left:50%;-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.amp-default-skin .vjs-loading-spinner:before{content:none}@keyframes loading{100%{background-position:-8160px}}.amp-default-skin .amp-logo{background-image:url(AzureMediaPlayer/themes/stream/stream-icon-watermark.svg);width:32px;height:32px;top:auto!important;left:auto!important;margin-right:12px;right:0;bottom:52px!important;z-index:1;cursor:pointer;opacity:.5}.amp-default-skin .amp-logo:hover{height:34px;width:34px}.amp-default-skin .vjs-menu{z-index:2}.amp-default-skin.vjs-error .vjs-error-display::before{content:url(AzureMediaPlayer/themes/stream/stream-icon-burgundy.svg);width:170px;height:75px;margin:0;position:absolute;top:50%;left:50%;-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.amp-default-skin .vjs-play-progress{background-color:#c30052}.amp-default-skin .vjs-volume-level{background:#c30052}</style>').appendTo($('head'));
+            $('<style type="text/css">.amp-stream-skin .vjs-loading-spinner{background:url(AzureMediaPlayer/themes/stream/streamloading.png);width:170px;height:75px;animation:loading 1.5s steps(48) infinite;margin:0;position:absolute;top:50%;left:50%;-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.amp-stream-skin .vjs-loading-spinner:before{content:none}@keyframes loading{100%{background-position:-8160px}}.amp-stream-skin .amp-logo{display:none}.amp-stream-skin .amp-logo > div,.amp-stream-skin .amp-logo > span {background-image: none;</style>').appendTo($('head'));
 
+        } else if (queryString.theme.toLowerCase() == "amp-flush") {
+            config.theme = "amp-flush";
         }
     }
 
@@ -593,15 +597,6 @@ var appendSourceUrl = function (url) {
             "enabled": config.logo
         },
         plugins: {
-            /*EventHubQoS: {
-                "appName": "AMP Demo Page",
-                "heartBeatIntervalMs": 10000,
-                "disableGeoLocation": true
-            },*/
-            /*appInsights: {
-                'debug': false,
-                'metricsToTrack': ['loaded', 'error', 'playbackSummary']
-            },*/
             analytics_collectData: {
                 'debug': false,
                 //'metricsToTrack': ['heartbeat', 'loaded', 'viewed', 'ended', 'playTime', 'percentsPlayed', 'play', 'pause', 'seek', 'fullscreen', 'error', 'buffering', 'bitrateQuality', 'playbackSummary', 'downloadInfo']
@@ -614,19 +609,16 @@ var appendSourceUrl = function (url) {
             ga: {
                 'eventsToTrack': ['playerConfig', 'loaded', 'playTime', 'percentsPlayed', 'start', 'end', 'play', 'pause', 'error', 'buffering', 'fullscreen', 'bitrate'],
                 'debug': false
-            }/*,
-            PlayerAnalytics: {
-                sessionID: config.sessionID,
-                eventHubNamespace: 'mediaanalytics',
-                eventHubQueueName: 'ma',
-                eventHubPublisherId: 'AMP' + '_' + Math.floor((Math.random() * 10000000) + 1),
-                eventBufferLength: 2,
-                TokenApiUrl: "http://playeranalytics.azurewebsites.net/api/EventHubSasToken",
-                ApplicationID: "demo1",
-                streamName: ''
-            }*/
+            }
         }
     };
+
+    if (config.theme == "stream") {
+        myOptions.plugins.streamIconPlugin = {
+            externalLink: "https://stream.microsoft.com"
+        };
+    }
+
     switch (config.heuristicprofile) {
         case "quickstart":
             myOptions.heuristicProfile = "Quick Start";
@@ -679,10 +671,19 @@ var appendSourceUrl = function (url) {
     }
 
     //initialize player and set options
+    //if (!window.amp) {
+    //    setTimeout(appendSourceUrl(url), 500);
+    //} else {
     if (!myPlayer) {
         myPlayer = amp("azuremediaplayer", myOptions);
     } else {
         myPlayer.options(myOptions);
+    }
+
+    if (config.startTime) {
+        myPlayer.addEventListener(amp.eventName.canplaythrough, function () {
+            myPlayer.currentTime(config.startTime);
+        });
     }
 
     //if DD+ 
@@ -703,7 +704,7 @@ var appendSourceUrl = function (url) {
 
     //save settings
     config.mySourceList = mySourceList;
-    config.myTrackList = myTrackList;
+    config.myTrackList = myTrackList.slice();
     config.myOptions = myOptions;
 
     //Register Events
@@ -711,9 +712,9 @@ var appendSourceUrl = function (url) {
         registerEvents();
         //chartControl();
     }
-
     //set source
     myPlayer.src(mySourceList, myTrackList);
+
 };
 
 var displayConfig = function () {
@@ -738,7 +739,7 @@ var displayConfig = function () {
     }
 
     if (document.getElementById('tech')) {
-        switch (myPlayer.techName_) {
+        switch (myPlayer.currentTechName()) {
             case "AzureHtml5JS":
                 $("#tech").text("JavaScript + HTML5 (MSE)");
                 break;
@@ -755,7 +756,7 @@ var displayConfig = function () {
                 $("#tech").text("Native HTML5 (Type 1)");
                 break;
             default:
-                $("#tech").text(myPlayer.techName_);
+                $("#tech").text(myPlayer.currentTechName());
         }
     }
 
@@ -983,8 +984,19 @@ var updateShareUrl = function () {
 }
 
 var playerCode = function () {
-    $('#playercode-head').val('<link href="//amp.azure.net/libs/amp/' + myPlayer.getAmpVersion() + '/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">\n<script src="//amp.azure.net/libs/amp/' + myPlayer.getAmpVersion() + '/azuremediaplayer.min.js"></script>');
-    $('#playercode-body').val('<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" tabindex="0"></video>');
+    $('#playercode-head').val('<link href="//amp.azure.net/libs/amp/' + myPlayer.getAmpVersion() + '/skins/' + ((config.theme=="amp-flush")?"amp-flush-skin":"amp-default-skin")+'/azuremediaplayer.min.css" rel="stylesheet">\n<script src="//amp.azure.net/libs/amp/' + myPlayer.getAmpVersion() + '/azuremediaplayer.min.js"></script>');
+    var skinClass;
+    switch (config.theme) {
+        case "amp-flush":
+            skinClass = "amp-flush-skin";
+            break;
+        case "stream":
+            skinClass = "amp-stream-skin";
+            break;
+        default:
+            skinClass = "amp-default-skin";
+    }
+    $('#playercode-body').val('<video id="azuremediaplayer" class="azuremediaplayer ' + skinClass + ' amp-big-play-centered" tabindex="0"></video>');
 
     //create the JS code
     var jscode = "";
@@ -1590,330 +1602,334 @@ function email(toEmail) {
     }
 }
 
-$(document).ready(function () {
-    initialize();
-    if (document.getElementById("selectSource")) {
-        updateSampleList();
-        $('#playersetup').show();
-        $('#playerdiagnostics').hide();
-        $('#playercode').hide();
-        $('#embedcode').hide();
-        $('#shareurl').hide();
-        $(".graphsRow").hide();
-        updateEmbedCode();
-        updateShareUrl();
-        setupProperties();
-        document.getElementById("txtLog").value = "";
-    }
-
-    appendSourceUrl(config.url);
-
-    if (document.getElementById("selectSource")) {
-        chartControl();
-        playerCode();
-        updateTextLogUA();
-        myPlayer.addEventListener("error", function () {
-            updateProperties();
-            stopIntervalUpdateProperties();
-        });
-        myPlayer.addEventListener("loadedmetadata", function (e) {
-            displayConfig();
-            displayCopyrightInfo();
-        });
-
-        //update cadence for properties table
-        startIntervalUpdateProperties();
-
-        myPlayer.addEventListener("playing", startIntervalUpdateProperties);
-        myPlayer.addEventListener("ended", stopIntervalUpdateProperties);
-        myPlayer.addEventListener("pause", setPeriodicUpdateProperties);
-        myPlayer.addEventListener("seeked", setPeriodicUpdateProperties);
-        myPlayer.addEventListener("downloadbitratechanged", setPeriodicUpdateProperties);
-        document.getElementById("azuremediaplayer").focus();
+var setup = function () {
+    if (!window.amp || !window.scriptsLoaded) {
+        setTimeout(setup, 100);
     } else {
-        var isFullscreenAllowed = window.document.fullscreenEnabled || window.document.webkitFullscreenEnabled || window.document.mozFullScreenEnabled || window.document.msFullscreenEnabled;
-        if (!isFullscreenAllowed) {
-           var buttonComponent = myPlayer.controlBar.fullscreenToggle;
-           buttonComponent.el().style.display = "none";
-        }
-    }
-
-    if (document.getElementById("selectSource")) {
-        //Update Player is selected
-        $(".config-body #config-save").click(function (e) {
-            updateConfig()
-            //Page Reload Method
-            window.location.search = updateParamsInAddressURL();
-
-            //----------Channel change method---------------------
-            //myPlayer.dispose();
-            //myPlayer = null;
-            //document.getElementById("video").innerHTML = '<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster=""><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>';
-            ////$('#video').append('<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster=""><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>');
-            //appendSourceUrl(config.url);
-            //window.history.pushState(null, null, updateParamsInAddressURL());
-            //updateShareUrl();
-            //updateEmbedCode();
-            //displayConfig();
-            //displayCopyrightInfo();
-            //loadPlugins();
-        });
-
-        //Updated source from the selectable samples
-        $("#selectSource").change(function (e) {
-
-            $(".config-body #adaptive-url").val($("#selectSource").val());
-
-            //Reset options on the page to default
-            //$("input[name='advanced'][value='advanced']").prop('checked', false);
-            //$("#advancedOptions").hide();
-            $("#urlHelp").show();
-            $("#heuristicprofile").val("hybrid");
-            $("input[name='autoplay']").prop('checked', true);
-            $("input[name='muted']").prop('checked', false);
-            $("#selectFormat").val("auto");
-            $("#selectLang").val("en");
-            $("#formatOtherVal").hide();
-            $("input[name='disableUrlRewriter']").prop('checked', false);
-            $("#selectTech").val("auto");
-            $("input[name='protection'][value='aes']").prop('checked', false);
-            $("#aesToken").val("");
-            $("input[name='protection'][value='playready']").prop('checked', false).attr('disabled', false);
-            $("#playreadyToken").val("").attr('disabled', false);
-            $("input[name='protection'][value='widevine']").prop('checked', false).attr('disabled', false);
-            $("#widevineToken").val("").attr('disabled', false);
-            while (trackNumber > 0) {
-                removeTrack();
-            }
-            $("#poster-url").val("");
-
-            //set values based on selected stream
-            if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("aes") == "true") {
-                $("input[name='advanced'][value='advanced']").prop('checked', true);
-                $("#advancedOptions").show();
-                $("#urlHelp").hide();
-                $("input[name='protection'][value='aes']").prop('checked', true);
-                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("aestoken") != "") {
-                    $("#aesToken").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("aestoken")).replace(/\+/g, " "));
-                }
-                //disable drm
-                $("input[name='protection'][value='playready']").prop('checked', false).attr('disabled', true);
-                $("input[name='protection'][value='widevine']").prop('checked', false).attr('disabled', true);
-                $("#playreadyToken").attr('disabled', true);
-                $("#widevineToken").attr('disabled', true);
-            } else {
-                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("playready") == "true") {
-                    $("input[name='advanced'][value='advanced']").prop('checked', true);
-                    $("#advancedOptions").show();
-                    $("#urlHelp").hide();
-                    $("input[name='protection'][value='playready']").prop('checked', true);
-                    if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("playreadytoken") != "") {
-                        $("#playreadyToken").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("playreadytoken")).replace(/\+/g, " "));
-                    }
-                }
-                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("widevine") == "true") {
-                    $("input[name='advanced'][value='advanced']").prop('checked', true);
-                    $("#advancedOptions").show();
-                    $("#urlHelp").hide();
-                    $("input[name='protection'][value='widevine']").prop('checked', true);
-                    if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("widevinetoken") != "") {
-                        $("#widevineToken").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("widevinetoken")).replace(/\+/g, " "));
-                    }
-                }
-            }
-
-            if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("poster") != "") {
-                $("input[name='advanced'][value='advanced']").prop('checked', true);
-                $("#advancedOptions").show();
-                $("#urlHelp").hide();
-                $("#poster-url").val(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("poster"))
-            }
-
-            var captionslistfromsourcelist = document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("captions");
-            if (captionslistfromsourcelist != "") {
-                $("input[name='advanced'][value='advanced']").prop('checked', true);
-                $("#advancedOptions").show();
-                $("#urlHelp").hide();
-                var captionslist = captionslistfromsourcelist.split(";");
-                for (var i = 0; i < captionslist.length; i++) {
-                    addTrack();
-                    $("#trackkind" + (trackNumber - 1)).val("captions")
-                    var captionspair = captionslist[i].split(",");
-                    $("#tracklabel" + (trackNumber - 1)).val(captionspair[0]);
-                    $("#tracklang" + (trackNumber - 1)).val(captionspair[1]);
-                    $("#trackurl" + (trackNumber - 1)).val(captionspair[2]);
-                }
-
-            }
-            var subtitleslistfromsourcelist = document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("subtitles");
-            if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("subtitles") != "") {
-                $("input[name='advanced'][value='advanced']").prop('checked', true);
-                $("#advancedOptions").show();
-                $("#urlHelp").hide();
-                var subtitleslist = subtitleslistfromsourcelist.split(";");
-                for (var i = 0; i < subtitleslist.length; i++) {
-                    addTrack();
-                    $("#trackkind" + (trackNumber - 1)).val("subtitles")
-                    var subtitlespair = subtitleslist[i].split(",");
-                    $("#tracklabel" + (trackNumber - 1)).val(subtitlespair[0]);
-                    $("#tracklang" + (trackNumber - 1)).val(subtitlespair[1]);
-                    $("#trackurl" + (trackNumber - 1)).val(subtitlespair[2]);
-                }
-            }
-
-        });
-
-        $(".nav-pills .menuitem").click(function (e) {
-            $('#playersetup').hide();
+        initialize();
+        if (document.getElementById("selectSource")) {
+            updateSampleList();
+            $('#playersetup').show();
             $('#playerdiagnostics').hide();
             $('#playercode').hide();
             $('#embedcode').hide();
             $('#shareurl').hide();
-            $('#playersetup-button').removeClass("active");
-            $('#playerdiagnostics-button').removeClass("active");
-            $('#playercode-button').removeClass("active");
-            $('#embedcode-button').removeClass("active");
-            $('#shareurl-button').removeClass("active");
-            $('#code-button').css("background-color", "none");;
+            $(".graphsRow").hide();
+            updateEmbedCode();
+            updateShareUrl();
+            setupProperties();
+            document.getElementById("txtLog").value = "";
+        }
+        appendSourceUrl(config.url);
 
-            var buttonId = e.currentTarget.id;
-
-            $('#' + buttonId).addClass("active");
-            if (buttonId == "playercode-button" || buttonId == "embedcode-button" || buttonId == "shareurl-button") {
-                $('#code-button').css("background-color", "#eee");
-            }
-
-            $('#' + buttonId.split("-button")[0]).show();
-            if (buttonId == "playerdiagnostics-button") {
+        if (document.getElementById("selectSource")) {
+            chartControl();
+            playerCode();
+            updateTextLogUA();
+            myPlayer.addEventListener("error", function () {
                 updateProperties();
-                updateGraphs();
-                if (bwGraph) {
-                    bwGraph.resize();
-                }
-                if (bufferGraph) {
-                    bufferGraph.resize();
-                }
+                stopIntervalUpdateProperties();
+            });
+            myPlayer.addEventListener("loadedmetadata", function (e) {
+                displayConfig();
+                displayCopyrightInfo();
+            });
 
+            //update cadence for properties table
+            startIntervalUpdateProperties();
+
+            myPlayer.addEventListener("playing", startIntervalUpdateProperties);
+            myPlayer.addEventListener("ended", stopIntervalUpdateProperties);
+            myPlayer.addEventListener("pause", setPeriodicUpdateProperties);
+            myPlayer.addEventListener("seeked", setPeriodicUpdateProperties);
+            myPlayer.addEventListener("downloadbitratechanged", setPeriodicUpdateProperties);
+            document.getElementById("azuremediaplayer").focus();
+        } else {
+            var isFullscreenAllowed = window.document.fullscreenEnabled || window.document.webkitFullscreenEnabled || window.document.mozFullScreenEnabled || window.document.msFullscreenEnabled;
+            if (!isFullscreenAllowed) {
+                var buttonComponent = myPlayer.controlBar.fullscreenToggle;
+                buttonComponent.el().style.display = "none";
             }
-        });
+        }
 
-        $('#getshareurlbutton').click(function (e) {
-            $('#playersetup').hide();
-            $('#playerdiagnostics').hide();
-            $('#playercode').hide();
-            $('#embedcode').hide();
-            $('#shareurl').hide();
-            $('#playersetup-button').removeClass("active");
-            $('#playerdiagnostics-button').removeClass("active");
-            $('#playercode-button').removeClass("active");
-            $('#embedcode-button').removeClass("active");
-            $('#shareurl-button').removeClass("active");
-            $('#code-button').css("background-color", "none");;
+        if (document.getElementById("selectSource")) {
+            //Update Player is selected
+            $(".config-body #config-save").click(function (e) {
+                updateConfig()
+                //Page Reload Method
+                window.location.search = updateParamsInAddressURL();
 
-            var buttonId = e.currentTarget.id;
+                //----------Channel change method---------------------
+                //myPlayer.dispose();
+                //myPlayer = null;
+                //document.getElementById("video").innerHTML = '<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster=""><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>';
+                ////$('#video').append('<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" autoplay controls preload="auto" width="100%" height="500" poster=""><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>');
+                //appendSourceUrl(config.url);
+                //window.history.pushState(null, null, updateParamsInAddressURL());
+                //updateShareUrl();
+                //updateEmbedCode();
+                //displayConfig();
+                //displayCopyrightInfo();
+                //loadPlugins();
+            });
 
-            $('#shareurl-button').addClass("active");
-            $('#code-button').css("background-color", "#eee");
-            $('#shareurl').show();
-        });
+            //Updated source from the selectable samples
+            $("#selectSource").change(function (e) {
 
-        $('#download-logs').click(function (e) {
-            /*try {
-                var isFileSaverSupported = !!new Blob;
-            } catch (e) {
-                isFileSaverSupported = false;
-            }*/
+                $(".config-body #adaptive-url").val($("#selectSource").val());
 
-            var textToWrite = myPlayer.getMemoryLog(false);
-            var fileName = "AmpTrace" + Date.now().toString() + ".txt";
-
-            if (textToWrite) {
-                if (window.saveAs) {
-                    var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
-                    saveAs(textFileAsBlob, fileName);
-                } else if (window.saveTextAs) {
-                    saveTextAs(textToWrite, fileName);
-                } else {
-                    var link = document.getElementById("downloadlink");
-                    link.download = fileName;
-                    link.style.display = "inline-block";
-                    link.href = 'data:text/plain;charset=utf-8,' + textToWrite;
-                }
-            }
-        });
-
-        $("#emailAddress").bind('keyup', function (event) {
-            $("#email-logs").prop("disabled", !validateEmail($("#emailAddress").val()));
-        });
-
-        $("#email-logs").click(function (e) {
-            email($("#emailAddress").val());
-        });
-
-        //toggle advanded functions
-        $("input[name='advanced'][value='advanced']").change(function () {
-            if ($(this).is(':checked')) {
-                $("#advancedOptions").show();
-                $("#urlHelp").hide();
-            } else {
-                $("#advancedOptions").hide();
+                //Reset options on the page to default
+                //$("input[name='advanced'][value='advanced']").prop('checked', false);
+                //$("#advancedOptions").hide();
                 $("#urlHelp").show();
-            }
-        });
-
-        //format = other display text
-        $("#selectFormat").change(function (e) {
-            if ($("#selectFormat").val() == "other") {
-                $("#formatOtherVal").show();
-            } else {
+                $("#heuristicprofile").val("hybrid");
+                $("input[name='autoplay']").prop('checked', true);
+                $("input[name='muted']").prop('checked', false);
+                $("#selectFormat").val("auto");
+                $("#selectLang").val("en");
                 $("#formatOtherVal").hide();
+                $("input[name='disableUrlRewriter']").prop('checked', false);
+                $("#selectTech").val("auto");
+                $("input[name='protection'][value='aes']").prop('checked', false);
+                $("#aesToken").val("");
+                $("input[name='protection'][value='playready']").prop('checked', false).attr('disabled', false);
+                $("#playreadyToken").val("").attr('disabled', false);
+                $("input[name='protection'][value='widevine']").prop('checked', false).attr('disabled', false);
+                $("#widevineToken").val("").attr('disabled', false);
+                while (trackNumber > 0) {
+                    removeTrack();
+                }
+                $("#poster-url").val("");
+
+                //set values based on selected stream
+                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("aes") == "true") {
+                    $("input[name='advanced'][value='advanced']").prop('checked', true);
+                    $("#advancedOptions").show();
+                    $("#urlHelp").hide();
+                    $("input[name='protection'][value='aes']").prop('checked', true);
+                    if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("aestoken") != "") {
+                        $("#aesToken").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("aestoken")).replace(/\+/g, " "));
+                    }
+                    //disable drm
+                    $("input[name='protection'][value='playready']").prop('checked', false).attr('disabled', true);
+                    $("input[name='protection'][value='widevine']").prop('checked', false).attr('disabled', true);
+                    $("#playreadyToken").attr('disabled', true);
+                    $("#widevineToken").attr('disabled', true);
+                } else {
+                    if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("playready") == "true") {
+                        $("input[name='advanced'][value='advanced']").prop('checked', true);
+                        $("#advancedOptions").show();
+                        $("#urlHelp").hide();
+                        $("input[name='protection'][value='playready']").prop('checked', true);
+                        if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("playreadytoken") != "") {
+                            $("#playreadyToken").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("playreadytoken")).replace(/\+/g, " "));
+                        }
+                    }
+                    if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("widevine") == "true") {
+                        $("input[name='advanced'][value='advanced']").prop('checked', true);
+                        $("#advancedOptions").show();
+                        $("#urlHelp").hide();
+                        $("input[name='protection'][value='widevine']").prop('checked', true);
+                        if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("widevinetoken") != "") {
+                            $("#widevineToken").val(decodeURIComponent(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("widevinetoken")).replace(/\+/g, " "));
+                        }
+                    }
+                }
+
+                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("poster") != "") {
+                    $("input[name='advanced'][value='advanced']").prop('checked', true);
+                    $("#advancedOptions").show();
+                    $("#urlHelp").hide();
+                    $("#poster-url").val(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("poster"))
+                }
+
+                var captionslistfromsourcelist = document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("captions");
+                if (captionslistfromsourcelist != "") {
+                    $("input[name='advanced'][value='advanced']").prop('checked', true);
+                    $("#advancedOptions").show();
+                    $("#urlHelp").hide();
+                    var captionslist = captionslistfromsourcelist.split(";");
+                    for (var i = 0; i < captionslist.length; i++) {
+                        addTrack();
+                        $("#trackkind" + (trackNumber - 1)).val("captions")
+                        var captionspair = captionslist[i].split(",");
+                        $("#tracklabel" + (trackNumber - 1)).val(captionspair[0]);
+                        $("#tracklang" + (trackNumber - 1)).val(captionspair[1]);
+                        $("#trackurl" + (trackNumber - 1)).val(captionspair[2]);
+                    }
+
+                }
+                var subtitleslistfromsourcelist = document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("subtitles");
+                if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("subtitles") != "") {
+                    $("input[name='advanced'][value='advanced']").prop('checked', true);
+                    $("#advancedOptions").show();
+                    $("#urlHelp").hide();
+                    var subtitleslist = subtitleslistfromsourcelist.split(";");
+                    for (var i = 0; i < subtitleslist.length; i++) {
+                        addTrack();
+                        $("#trackkind" + (trackNumber - 1)).val("subtitles")
+                        var subtitlespair = subtitleslist[i].split(",");
+                        $("#tracklabel" + (trackNumber - 1)).val(subtitlespair[0]);
+                        $("#tracklang" + (trackNumber - 1)).val(subtitlespair[1]);
+                        $("#trackurl" + (trackNumber - 1)).val(subtitlespair[2]);
+                    }
+                }
+
+            });
+
+            $(".nav-pills .menuitem").click(function (e) {
+                $('#playersetup').hide();
+                $('#playerdiagnostics').hide();
+                $('#playercode').hide();
+                $('#embedcode').hide();
+                $('#shareurl').hide();
+                $('#playersetup-button').removeClass("active");
+                $('#playerdiagnostics-button').removeClass("active");
+                $('#playercode-button').removeClass("active");
+                $('#embedcode-button').removeClass("active");
+                $('#shareurl-button').removeClass("active");
+                $('#code-button').css("background-color", "none");;
+
+                var buttonId = e.currentTarget.id;
+
+                $('#' + buttonId).addClass("active");
+                if (buttonId == "playercode-button" || buttonId == "embedcode-button" || buttonId == "shareurl-button") {
+                    $('#code-button').css("background-color", "#eee");
+                }
+
+                $('#' + buttonId.split("-button")[0]).show();
+                if (buttonId == "playerdiagnostics-button") {
+                    updateProperties();
+                    updateGraphs();
+                    if (bwGraph) {
+                        bwGraph.resize();
+                    }
+                    if (bufferGraph) {
+                        bufferGraph.resize();
+                    }
+
+                }
+            });
+
+            $('#getshareurlbutton').click(function (e) {
+                $('#playersetup').hide();
+                $('#playerdiagnostics').hide();
+                $('#playercode').hide();
+                $('#embedcode').hide();
+                $('#shareurl').hide();
+                $('#playersetup-button').removeClass("active");
+                $('#playerdiagnostics-button').removeClass("active");
+                $('#playercode-button').removeClass("active");
+                $('#embedcode-button').removeClass("active");
+                $('#shareurl-button').removeClass("active");
+                $('#code-button').css("background-color", "none");;
+
+                var buttonId = e.currentTarget.id;
+
+                $('#shareurl-button').addClass("active");
+                $('#code-button').css("background-color", "#eee");
+                $('#shareurl').show();
+            });
+
+            $('#download-logs').click(function (e) {
+                /*try {
+                    var isFileSaverSupported = !!new Blob;
+                } catch (e) {
+                    isFileSaverSupported = false;
+                }*/
+
+                var textToWrite = myPlayer.getMemoryLog(false);
+                var fileName = "AmpTrace" + Date.now().toString() + ".txt";
+
+                if (textToWrite) {
+                    if (window.saveAs) {
+                        var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
+                        saveAs(textFileAsBlob, fileName);
+                    } else if (window.saveTextAs) {
+                        saveTextAs(textToWrite, fileName);
+                    } else {
+                        var link = document.getElementById("downloadlink");
+                        link.download = fileName;
+                        link.style.display = "inline-block";
+                        link.href = 'data:text/plain;charset=utf-8,' + textToWrite;
+                    }
+                }
+            });
+
+            $("#emailAddress").bind('keyup', function (event) {
+                $("#email-logs").prop("disabled", !validateEmail($("#emailAddress").val()));
+            });
+
+            $("#email-logs").click(function (e) {
+                email($("#emailAddress").val());
+            });
+
+            //toggle advanded functions
+            $("input[name='advanced'][value='advanced']").change(function () {
+                if ($(this).is(':checked')) {
+                    $("#advancedOptions").show();
+                    $("#urlHelp").hide();
+                } else {
+                    $("#advancedOptions").hide();
+                    $("#urlHelp").show();
+                }
+            });
+
+            //format = other display text
+            $("#selectFormat").change(function (e) {
+                if ($("#selectFormat").val() == "other") {
+                    $("#formatOtherVal").show();
+                } else {
+                    $("#formatOtherVal").hide();
+                }
+            });
+
+            //disable DRM if AES selected
+            $("input[name='protection'][value='aes']").change(function () {
+                if ($(this).is(':checked')) {
+
+                    $("input[name='protection'][value='playready']").prop('checked', false).attr('disabled', true);
+                    $("#playreadyToken").attr('disabled', true);
+                    $("input[name='protection'][value='widevine']").prop('checked', false).attr('disabled', true);
+                    $("#widevineToken").attr('disabled', true);
+                } else {
+                    $("input[name='protection'][value='playready']").attr('disabled', false);
+                    $("#playreadyToken").attr('disabled', false);
+                    $("input[name='protection'][value='widevine']").attr('disabled', false);
+                    $("#widevineToken").attr('disabled', false);
+                }
+            });
+
+            //protection display token text
+            $("#selectContentProtection").change(function (e) {
+                if ($("#selectContentProtection").val() != "none") {
+                    $("#token").show();
+                } else {
+                    $("#token").hide();
+                }
+            });
+
+            //add tracks
+            $("#addtrack").click(function (e) {
+                addTrack();
+            });
+        }
+
+        //logo click can happen on both demo and embed pages
+        $(".amp-logo").css({ "cursor": "pointer" });
+        $(".amp-logo").click(function (e) {
+            if (myPlayer && !myPlayer.error()) {
+                myPlayer.pause();
+            }
+            if (config.theme == "amp-default") {
+                window.open("http://aka.ms/ampinfo", "_blank");
+            } else if (config.theme == "stream") {
+                window.open("https://stream.microsoft.com", "_blank");
             }
         });
-
-        //disable DRM if AES selected
-        $("input[name='protection'][value='aes']").change(function () {
-            if ($(this).is(':checked')) {
-
-                $("input[name='protection'][value='playready']").prop('checked', false).attr('disabled', true);
-                $("#playreadyToken").attr('disabled', true);
-                $("input[name='protection'][value='widevine']").prop('checked', false).attr('disabled', true);
-                $("#widevineToken").attr('disabled', true);
-            } else {
-                $("input[name='protection'][value='playready']").attr('disabled', false);
-                $("#playreadyToken").attr('disabled', false);
-                $("input[name='protection'][value='widevine']").attr('disabled', false);
-                $("#widevineToken").attr('disabled', false);
-            }
-        });
-
-        //protection display token text
-        $("#selectContentProtection").change(function (e) {
-            if ($("#selectContentProtection").val() != "none") {
-                $("#token").show();
-            } else {
-                $("#token").hide();
-            }
-        });
-
-        //add tracks
-        $("#addtrack").click(function (e) {
-            addTrack();
-        });
-
-
     }
+}
 
-    //logo click can happen on both demo and embed pages
-    $(".amp-logo").css({ "cursor": "pointer" });
-    $(".amp-logo").click(function (e) {
-        if (myPlayer && !myPlayer.error()) {
-            myPlayer.pause();
-        }
-        if(config.theme == "amp")  {
-            window.open("http://aka.ms/ampinfo", "_blank");
-        } else if (config.theme == "stream") {
-            window.open("https://stream.microsoft.com", "_blank");
-        }
-    });
-
+$(document).ready(function () {
+    setup();
 });
