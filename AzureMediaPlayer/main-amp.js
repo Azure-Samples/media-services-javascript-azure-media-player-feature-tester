@@ -688,6 +688,10 @@ var appendSourceUrl = function (url) {
 
     if (config.muted) {
         myPlayer.muted(true)
+        myPlayer.addEventListener(amp.eventName.canplaythrough, function () {
+            $("#azuremediaplayer_html5_api").attr("muted", true);
+            $("#azuremediaplayer_AzureHtml5JS_api").attr("muted", true);
+        });
     }
 
     //if DD+ 
