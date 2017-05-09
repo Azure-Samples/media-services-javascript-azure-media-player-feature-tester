@@ -573,7 +573,7 @@ var appendSourceUrl = function (url) {
         "nativeControlsForTouch": false,
         "controls": true,
         "autoplay": config.autoplay,
-        "muted": config.muted,
+        //"muted": config.muted, //muted not working
         "language": config.language,
         skinConfig: {
             audioTracksMenu: {
@@ -684,6 +684,10 @@ var appendSourceUrl = function (url) {
         myPlayer.addEventListener(amp.eventName.canplaythrough, function () {
             myPlayer.currentTime(config.startTime);
         });
+    }
+
+    if (config.muted) {
+        myPlayer.muted(true)
     }
 
     //if DD+ 
