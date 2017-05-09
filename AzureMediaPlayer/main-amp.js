@@ -351,7 +351,7 @@ var initialize = function () {
         if (queryString.theme.toLowerCase() == "stream") {
             config.theme = "stream";
 
-            $('<style type="text/css">.amp-stream-skin .vjs-loading-spinner{background:url(AzureMediaPlayer/themes/stream/streamloading.png);width:170px;height:75px;animation:loading 1.5s steps(48) infinite;margin:0;position:absolute;top:50%;left:50%;-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.amp-stream-skin .vjs-loading-spinner:before{content:none}@keyframes loading{100%{background-position:-8160px}}.amp-stream-skin .amp-logo{display:none}.amp-stream-skin .amp-logo > div,.amp-stream-skin .amp-logo > span {background-image: none;</style>').appendTo($('head'));
+            $('<style type="text/css">.amp-stream-skin .vjs-loading-spinner{background:url(AzureMediaPlayer/themes/stream/streamloading.png);width:170px;height:75px;animation:loading 1.5s steps(48) infinite;margin:0;position:absolute;top:50%;left:50%;-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.amp-stream-skin .vjs-loading-spinner:before{content:none}@keyframes loading{100%{background-position:-8160px}}.amp-stream-skin .amp-logo{display:none}.amp-stream-skin .amp-logo > div,.amp-stream-skin .amp-logo > span {background-image: none;}</style>').appendTo($('head'));
 
         } else if (queryString.theme.toLowerCase() == "amp-flush") {
             config.theme = "amp-flush";
