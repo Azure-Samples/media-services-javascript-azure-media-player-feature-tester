@@ -52,11 +52,11 @@
 
         var ampUrl = "//amp.azure.net/libs/amp/" + ampVersion + "/azuremediaplayer.min.js";
 
-        var skinUrl = (theme == "stream") ? "AzureMediaPlayer/themes/stream/player-skin.css" : ("//amp.azure.net/libs/amp/" + ampVersion + "/skins/" + ((theme == "amp-flush") ? "amp-flush" : "amp-default") + "/azuremediaplayer.min.css");
+        var skinUrl = (theme == "stream") ? "AzureMediaPlayer/themes/stream/player-skin.css?v=2" : ("//amp.azure.net/libs/amp/" + ampVersion + "/skins/" + ((theme == "amp-flush") ? "amp-flush" : "amp-default") + "/azuremediaplayer.min.css");
         var pluginCollectDataUrl = "AzureMediaPlayer/Plugins/amp_analytics_collectData"+((parseInt(ampVersion) <= 1)?"":"V2")+".js";
         var pluginSendAIUrl = "AzureMediaPlayer/Plugins/amp_analytics_sendAI.js";
         var pluginGAUrl = "AzureMediaPlayer/plugins/amp-ga.js";
-        var pluginStreamUrl = "AzureMediaPlayer/themes/stream/player-skin.js";
+        var pluginStreamUrl = "AzureMediaPlayer/themes/stream/player-skin.js?v=2";
 
         //Load Theme Skin
         $("<link/>", { 
@@ -121,7 +121,7 @@
         <div class="row">
             <div class="col-md-9 col-md-push-3">
                 <section>
-                    <div id="videoContainer">
+                    <div id="videoContainer" style="overflow:hidden">
                         <!--<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin amp-big-play-centered" width="100%" height="auto" tabindex=0><p class="amp-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</p></video>-->
                         <script>
                             var videoHeight = 500;
