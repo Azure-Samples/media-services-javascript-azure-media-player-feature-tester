@@ -992,7 +992,7 @@ var updateShareUrl = function () {
 }
 
 var playerCode = function () {
-    $('#playercode-head').val('<link href="//amp.azure.net/libs/amp/' + myPlayer.getAmpVersion() + '/skins/' + ((config.theme=="amp-flush")?"amp-flush-skin":"amp-default-skin")+'/azuremediaplayer.min.css" rel="stylesheet">\n<script src="//amp.azure.net/libs/amp/' + myPlayer.getAmpVersion() + '/azuremediaplayer.min.js"></script>');
+    $('#playercode-head').val('<link href="//amp.azure.net/libs/amp/' + myPlayer.getAmpVersion() + '/skins/' + ((config.theme == "amp-flush") ? "amp-flush-skin" : "amp-default-skin") + '/azuremediaplayer.min.css" rel="stylesheet">\n<script src="//amp.azure.net/libs/amp/' + myPlayer.getAmpVersion() + '/azuremediaplayer.min.js"></script>');
     var skinClass;
     switch (config.theme) {
         case "amp-flush":
