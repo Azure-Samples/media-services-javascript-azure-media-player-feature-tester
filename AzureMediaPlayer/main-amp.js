@@ -27,6 +27,7 @@ var config = {
     heuristicprofile: "hybrid",
     autoplay: true,
     muted: false,
+    controls: true,
     language: "en",
     startTime: 0,
     disableurlrewriter: false,
@@ -347,18 +348,20 @@ var initialize = function () {
             config.logo = false;
         }
     }
+    if (queryString.controls) {
+        if (queryString.controls == "false") {
+            config.controls = false;
+        }
+    }
     if (queryString.theme) {
         if (queryString.theme.toLowerCase() == "stream") {
             config.theme = "stream";
-
-            $('<style type="text/css">.amp-stream-skin .vjs-loading-spinner{background:url(AzureMediaPlayer/themes/stream/streamloading.png);width:170px;height:75px;animation:loading 1.5s steps(48) infinite;margin:0;position:absolute;top:50%;left:50%;-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.amp-stream-skin .vjs-loading-spinner:before{content:none}@keyframes loading{100%{background-position:-8160px}}.amp-stream-skin .amp-logo{display:none}.amp-stream-skin .amp-logo > div,.amp-stream-skin .amp-logo > span {background-image: none;}</style>').appendTo($('head'));
 
         } else if (queryString.theme.toLowerCase() == "amp-flush") {
             config.theme = "amp-flush";
         }
     }
 
-    //make config nicer
     var consoleLogConfig = "";
     for (var key in config) {
         consoleLogConfig += "\t" + key + ": " + config[key] + "\n";
@@ -571,7 +574,7 @@ var appendSourceUrl = function (url) {
     var myOptions = {
         //sources: mySourceList,
         "nativeControlsForTouch": false,
-        "controls": true,
+        "controls": config.controls,
         "autoplay": config.autoplay,
         //"muted": config.muted, //muted not working
         "language": config.language,
@@ -899,7 +902,7 @@ var updateParamsInAddressURL = function () {
     }
 
     urlParams += "?url=" + encodeURIComponent(manifestURL).replace(/'/g, "%27").replace(/"/g, "%22");
-    if (config.advanced == true) {
+    //if (config.advanced == true) {
         if (config.format != "auto") {
             urlParams += "&format=" + encodeURIComponent(config.format).replace(/'/g, "%27").replace(/"/g, "%22");
         }
@@ -977,9 +980,12 @@ var updateParamsInAddressURL = function () {
             }
         }
         if (config.poster != "") {
-            urlParams += "&poster=" + encodeURIComponent(config.poster).replace(/'/g, "%27").replace(/"/g, "%22");;
+            urlParams += "&poster=" + encodeURIComponent(config.poster).replace(/'/g, "%27").replace(/"/g, "%22");
         }
-    }
+        if (config.theme != "amp-default") {
+            urlParams += "&theme=" + encodeURIComponent(config.theme).replace(/'/g, "%27").replace(/"/g, "%22");
+        }
+    //}
     return urlParams;
 }
 
