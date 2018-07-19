@@ -629,6 +629,9 @@ var appendSourceUrl = function (url) {
         case "highquality":
             myOptions.heuristicProfile = "High Quality";
             break;
+        case "quickstartlive":
+            myOptions.heuristicProfile = "Low Latency";
+
         default:
             myOptions.heuristicProfile = "Hybrid";
     }
