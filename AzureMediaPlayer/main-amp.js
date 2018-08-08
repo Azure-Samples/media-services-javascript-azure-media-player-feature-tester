@@ -631,6 +631,7 @@ var appendSourceUrl = function (url) {
             break;
         case "lowlatency":
             myOptions.heuristicProfile = "LowLatency";
+            break;
 
         default:
             myOptions.heuristicProfile = "Hybrid";
