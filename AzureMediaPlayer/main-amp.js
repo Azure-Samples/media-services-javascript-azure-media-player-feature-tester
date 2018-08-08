@@ -624,13 +624,13 @@ var appendSourceUrl = function (url) {
 
     switch (config.heuristicprofile) {
         case "quickstart":
-            myOptions.heuristicProfile = "Quick Start";
+            myOptions.heuristicProfile = "QuickStart";
             break;
         case "highquality":
-            myOptions.heuristicProfile = "High Quality";
+            myOptions.heuristicProfile = "HighQuality";
             break;
-        case "quickstartlive":
-            myOptions.heuristicProfile = "Low Latency";
+        case "lowlatency":
+            myOptions.heuristicProfile = "LowLatency";
 
         default:
             myOptions.heuristicProfile = "Hybrid";
