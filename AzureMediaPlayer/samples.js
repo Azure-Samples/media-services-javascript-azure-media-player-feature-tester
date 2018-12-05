@@ -1,7 +1,7 @@
 ﻿var jsonSamplesList = [
   {
       "title": "Azure Media Services Overview",
-      "src": "//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest",
+      "src": "//amssamples.streaming.mediaservices.windows.net/3b970ae0-39d5-44bd-b3a3-3136143d6435/AzureMediaServicesPromo.ism/manifest",
       "format": "auto",
       "aes": false,
       "aestoken": "",
