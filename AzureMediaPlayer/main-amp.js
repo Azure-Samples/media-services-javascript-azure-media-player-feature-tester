@@ -39,7 +39,8 @@ var config = {
     myOptions: {},
     sessionID: "",
     logo: true,
-    theme: "amp-default"
+    theme: "amp-default",
+    ampVersion: ""
 };
 
 function generateInstanceId() {
@@ -188,7 +189,6 @@ var initialize = function () {
     if (queryString.url) {
         config.url = decodeURIComponent(queryString.url).replace(/\+/g, " ");
     }
-
 
     if (queryString.heuristicprofile) {
         if (queryString.heuristicprofile != "hybrid") {
@@ -361,6 +361,10 @@ var initialize = function () {
             config.theme = "amp-flush";
         }
     }
+    if (queryString.version) {
+        config.ampVersion = queryString.version;
+    }
+
 
     var consoleLogConfig = "";
     for (var key in config) {
@@ -988,6 +992,9 @@ var updateParamsInAddressURL = function () {
         }
         if (config.theme != "amp-default") {
             urlParams += "&theme=" + encodeURIComponent(config.theme).replace(/'/g, "%27").replace(/"/g, "%22");
+        }
+        if (config.ampVersion) {
+            urlParams += "&version=" + encodeURIComponent(config.ampVersion);
         }
     //}
     return urlParams;
