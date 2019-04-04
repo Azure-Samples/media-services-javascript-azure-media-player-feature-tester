@@ -1741,8 +1741,7 @@ var setup = function () {
                 $("#selectFormat").val("auto");
                 $("#selectLang").val("en");
                 $("#formatOtherVal").hide();
-                $("input[name='disableUrlRewriter']").prop('checked', false);
-                $("input[name='cea']").prop('checked', false);
+                $("input[name='disableUrlRewriter']").prop('checked', false);                
                 $("#selectTech").val("auto");
                 $("input[name='protection'][value='aes']").prop('checked', false);
                 $("#aesToken").val("");
