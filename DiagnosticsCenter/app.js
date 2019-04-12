@@ -300,6 +300,10 @@
             myOptions.traceConfig = undefined;
         }
         myOptions.autoplay = document.getElementById('autoplayChk').checked;
+        
+        if (document.getElementById('cea708captions').checked) {
+            myOptions.cea708CaptionsSettings = {enabled: true, scrLang: 'en', label: 'Live CC'};
+        }
 
         AmpDiagnosticCenter.myPlayer.options(myOptions);
         AmpDiagnosticCenter.myPlayer.src(mySourceList);

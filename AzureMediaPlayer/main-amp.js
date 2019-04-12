@@ -31,6 +31,7 @@ var config = {
     language: "en",
     startTime: 0,
     disableurlrewriter: false,
+    cea708captions: false,
     captions: [],
     subtitles: [],
     poster: "",
@@ -201,6 +202,13 @@ var initialize = function () {
         if (queryString.autoplay == "false") {
             config.advanced = true;
             config.autoplay = false;
+        }
+    }
+
+    if (queryString.cea708captions) {
+        if (queryString.cea708captions == "true") {
+            config.advanced = true;
+            config.cea708captions = true;
         }
     }
 
@@ -391,6 +399,7 @@ var initialize = function () {
         $("#heuristicProfile").val(config.heuristicprofile);
         $("input[name='autoplay']").prop('checked', config.autoplay);
         $("input[name='muted']").prop('checked', config.muted);
+        $("input[name='cea708captions']").prop('checked', config.cea708captions);
 
         //Setup UI for Advanced: Format
         $("#formatOtherVal").hide();
@@ -676,6 +685,10 @@ var appendSourceUrl = function (url) {
         myOptions.poster = config.poster;
     }
 
+    if (config.cea708captions) {
+        myOptions.cea708CaptionsSettings = {enabled: true, srclang: 'en', label: 'Live CC'};
+    }
+
     //add axinom header for Axinom Widevine content
     if ((url.trim().toLowerCase().match("samplestreamseu.streaming.mediaservices.windows.net/65b76566-1381-4540-87ab-7926568901d8/bbb_sunflower_1080p_30fps_normal.ism".toLowerCase())) || ((url.trim().toLowerCase().match("samplestreamseu.streaming.mediaservices.windows.net/60d15401-a440-4f1f-bb97-0e1ffa2ff17d/76474ddb-f917-4b1a-9f13-042ed1365e4e.ism".toLowerCase())))) {
         AzureHtml5JS.KeySystem.WidevineCustomAuthorizationHeader = "X-AxDRM-Message";
@@ -719,8 +732,7 @@ var appendSourceUrl = function (url) {
             }
         });
     }
-
-
+    
     //save settings
     config.mySourceList = mySourceList;
     config.myTrackList = myTrackList.slice();
@@ -840,14 +852,19 @@ var updateConfig = function () {
     config.captions = [];
     config.subtitles = [];
     config.poster = "";
+    config.cea708captions = false;
 
     if ($("input[name='advanced']").is(':checked')) {
         config.advanced = true;
 
         config.heuristicprofile = $("#heuristicProfile").val();
-
+      
         if (!($("input[name='autoplay']").is(':checked'))) {
             config.autoplay = false;
+        }
+
+        if (($("input[name='cea708captions']").is(':checked'))) {
+            config.cea708captions = true;
         }
 
         if (($("input[name='muted']").is(':checked'))) {
@@ -928,6 +945,9 @@ var updateParamsInAddressURL = function () {
         }
         if (config.autoplay == false) {
             urlParams += "&autoplay=false";
+        }
+        if (config.cea708captions == true) {
+            urlParams += "&cea708captions=true";
         }
         if (config.muted == true) {
             urlParams += "&muted=true";
@@ -1037,6 +1057,9 @@ var playerCode = function () {
     }
     if (config.language != "en") {
         jscode += "\t" + "language: " + config.language + "," + "\n"
+    }
+    if (config.cea708captions) {
+        jscode += "\t" + "cea708CaptionsSettings: {enabled: true, srclang: 'en', label: 'Live CC'}," + "\n"
     }
 
     //Options for tech order
@@ -1709,11 +1732,12 @@ var setup = function () {
                 $("#urlHelp").show();
                 $("#heuristicprofile").val("hybrid");
                 $("input[name='autoplay']").prop('checked', true);
+                $("input[name='cea708captions']").prop('checked', false);
                 $("input[name='muted']").prop('checked', false);
                 $("#selectFormat").val("auto");
                 $("#selectLang").val("en");
                 $("#formatOtherVal").hide();
-                $("input[name='disableUrlRewriter']").prop('checked', false);
+                $("input[name='disableUrlRewriter']").prop('checked', false);                
                 $("#selectTech").val("auto");
                 $("input[name='protection'][value='aes']").prop('checked', false);
                 $("#aesToken").val("");
