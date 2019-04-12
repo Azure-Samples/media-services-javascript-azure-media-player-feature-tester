@@ -732,11 +732,7 @@ var appendSourceUrl = function (url) {
             }
         });
     }
-
-    if (config.cea708captions) {
-        myOptions.cea708CaptionsSettings = {enabled: true, srclang: 'en', label: 'Live CC'};
-    }
-
+    
     //save settings
     config.mySourceList = mySourceList;
     config.myTrackList = myTrackList.slice();
