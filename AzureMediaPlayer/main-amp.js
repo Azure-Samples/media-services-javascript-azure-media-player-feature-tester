@@ -1,6 +1,7 @@
 var myPlayer;
 var videoTag;
 var trackNumber = 0;
+var imsc1Number = 0;
 var bwGraph = null;
 var bufferGraph = null;
 var bitrateEventGraph = null;
@@ -32,6 +33,7 @@ var config = {
     startTime: 0,
     disableurlrewriter: false,
     cea708captions: false,
+    imsc1Captions: [],
     captions: [],
     subtitles: [],
     poster: "",
@@ -331,6 +333,14 @@ var initialize = function () {
         }
     }
 
+    if (queryString.imsc1Captions) {
+        config.advanced = true;
+        var imsc1list = decodeURIComponent(queryString.imsc1Captions).split(";");
+        for (var i = 0; i < imsc1list.length; i++) {
+            var pair = imsc1list[i].split(",");
+            config.imsc1Captions.push({ "label": pair[0], "srclang": pair[1] });
+        }
+    }
     if (queryString.captions) {
         config.advanced = true;
         var captionslist = decodeURIComponent(queryString.captions).split(";");
@@ -432,6 +442,21 @@ var initialize = function () {
         $("#playreadyToken").val(config.playreadytoken);
         $("input[name='protection'][value='widevine']").prop('checked', config.widevine);
         $("#widevineToken").val(config.widevinetoken);
+
+        // set imsc1 captions
+        if (config.imsc1Captions.length > 0) {
+            for (var i = 0; i < config.imsc1Captions.length; i++) {
+                addImsc1();
+                var obj = config.imsc1Captions[i];
+                for (var key in obj) {
+                    if (key == "label") {
+                        $("#imsc1label" + (imsc1Number - 1)).val(obj[key].toString())
+                    } else if (key == "srclang") {
+                        $("#imsc1Locale" + (imsc1Number - 1)).val(obj[key].toString());
+                    }
+                }
+            }
+        }
 
         //Setup UI for Advanced: Tracks
         if (config.captions.length > 0) {
@@ -689,6 +714,10 @@ var appendSourceUrl = function (url) {
         myOptions.cea708CaptionsSettings = {enabled: true, srclang: 'en', label: 'Live CC'};
     }
 
+    if (config.imsc1Captions.length > 0) {
+        myOptions.imsc1CaptionsSettings = config.imsc1Captions;
+    }
+
     //add axinom header for Axinom Widevine content
     if ((url.trim().toLowerCase().match("samplestreamseu.streaming.mediaservices.windows.net/65b76566-1381-4540-87ab-7926568901d8/bbb_sunflower_1080p_30fps_normal.ism".toLowerCase())) || ((url.trim().toLowerCase().match("samplestreamseu.streaming.mediaservices.windows.net/60d15401-a440-4f1f-bb97-0e1ffa2ff17d/76474ddb-f917-4b1a-9f13-042ed1365e4e.ism".toLowerCase())))) {
         AzureHtml5JS.KeySystem.WidevineCustomAuthorizationHeader = "X-AxDRM-Message";
@@ -853,6 +882,7 @@ var updateConfig = function () {
     config.subtitles = [];
     config.poster = "";
     config.cea708captions = false;
+    config.imsc1Captions = [];
 
     if ($("input[name='advanced']").is(':checked')) {
         config.advanced = true;
@@ -895,6 +925,10 @@ var updateConfig = function () {
                     config.subtitles.push({ "label": ($("#tracklabel" + i).val().trim() || ($("#tracklang" + i).val() || "Subtitle")), "language": ($("#tracklang" + i).val() || "und"), "trackurl": $("#trackurl" + i).val().trim() });
                 }
             }
+        }
+
+        for (var i = 0; i < imsc1Number; i++) {
+            config.imsc1Captions.push({'label': ($("#imsc1label" + i).val().trim() || 'Caption'), 'srclang': ($("#imsc1Locale" + i).val().trim() || 'und')});
         }
 
         //cannot be aes AND drm -> only OR with current precedance for aes
@@ -984,6 +1018,20 @@ var updateParamsInAddressURL = function () {
                 }
             }
         }
+        if (config.imsc1Captions.length > 0) {
+            urlParams += "&imsc1Captions="
+            for (var i = 0; i < config.imsc1Captions.length; i++) {
+                var obj = config.imsc1Captions[i];
+                for (var key in obj) {
+                    if (key == "label" || key == "srclang") {
+                        urlParams += obj[key].toString() + ",";
+                    }
+                }
+                if (i < config.imsc1Captions.length - 1) {
+                    urlParams += ";";
+                }
+            }
+        }
         if (config.aes == true) {
             urlParams += "&aes=true";
             if (config.aestoken != "") {
@@ -1060,6 +1108,9 @@ var playerCode = function () {
     }
     if (config.cea708captions) {
         jscode += "\t" + "cea708CaptionsSettings: {enabled: true, srclang: 'en', label: 'Live CC'}," + "\n"
+    }
+    if (config.imsc1Captions.length > 0) {
+        jscode += "\t" + "imsc1CaptionsSettings: " + JSON.stringify(config.imsc1Captions);
     }
 
     //Options for tech order
@@ -1164,6 +1215,23 @@ var removeTrack = function () {
     if (trackNumber > 0) {
         $("#track" + (trackNumber - 1)).remove();
         trackNumber--;
+    }
+}
+
+var addImsc1 = function () {
+    if (document.getElementById("imsc1CaptionsList")) {
+        $("#imsc1CaptionsList").append('<div id="imsc1' + imsc1Number + '">'
+                                    + '<div class="col-md-2 col-md-offset-2" style="padding-top:2px"><input style="width:100%;display:inline-block" type="text" class="input-sm form-control" id="imsc1label' + imsc1Number + '" placeholder="Captions Label"></div>'
+                                    + '<div class="col-md-3" style="padding-top:2px"><input style="width:100%;display:inline-block" type="text" class="input-sm form-control" id="imsc1Locale' + imsc1Number + '" placeholder="Captions Locale (E.g. en-us)"></div>'
+                                    + '<br /><br /></div>');
+        imsc1Number++;
+    }
+}
+
+var removeImsc1 = function () {
+    if (imsc1Number > 0) {
+        $("#imsc1" + (imsc1Number - 1)).remove();
+        imsc1Number--;
     }
 }
 
@@ -1745,6 +1813,9 @@ var setup = function () {
                 $("#playreadyToken").val("").attr('disabled', false);
                 $("input[name='protection'][value='widevine']").prop('checked', false).attr('disabled', false);
                 $("#widevineToken").val("").attr('disabled', false);
+                while (imsc1Number > 0) {
+                    removeImsc1();
+                }
                 while (trackNumber > 0) {
                     removeTrack();
                 }
@@ -1961,6 +2032,11 @@ var setup = function () {
             //add tracks
             $("#addtrack").click(function (e) {
                 addTrack();
+            });
+
+            //add imsc1 captions
+            $("#addImsc1").click(function (e) {
+                addImsc1();
             });
         }
 
