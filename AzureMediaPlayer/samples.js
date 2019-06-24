@@ -29,7 +29,7 @@
   },
   {
       "title": "Live (Smooth Ingest) - 24x7",
-      "src": "//b028.wpc.azureedge.net/80B028/Samples/a38e6323-95e9-4f1f-9b38-75eba91704e4/5f2ce531-d508-49fb-8152-647eba422aec.ism/manifest",
+      "src": "//ampdemolive-usct.streaming.media.azure.net/1f48130b-a059-42ac-9595-501b0824188d/85306180-5146-44e7-91e8-2be2529f7528.ism/manifest",
       "format": "auto",
       "aes": false,
       "aestoken": "",
@@ -57,7 +57,7 @@
   },
   {
       "title": "DRM (PlayReady/Widevine) - Live (Smooth Ingest)",
-      "src": "//b028.wpc.azureedge.net/80B028/SampleStream/3f6088ec-9e1f-4db7-b7d9-3ec07183ce7d/e405bd0a-a34f-40e2-b70b-4322c46f5cb7.ism/manifest",
+      "src": "//ampdemolive-usct.streaming.media.azure.net/738c6e3a-6d6b-44f2-b143-05b899873317/dd35ec07-0648-46e0-8246-cba4b51777e4.ism/manifest",
       "format": "auto",
       "aes": false,
       "aestoken": "",
@@ -113,7 +113,7 @@
   },
   {
       "title": "AES (no token) - Live (Smooth Ingest)",
-      "src": "//b028.wpc.azureedge.net/80B028/Samples/0e8848ca-1db7-41a3-8867-fe911144c045/d34d8807-5597-47a1-8408-52ec5fc99027.ism/manifest",
+      "src": "//ampdemolive-usct.streaming.media.azure.net/bf05ef74-1714-4217-81a9-6c0ae734be64/1a48db6b-16f4-4883-9f03-3e1491b14697.ism/manifest",
       "format": "auto",
       "aes": true,
       "aestoken": "",
@@ -169,7 +169,7 @@
   },
   {
       "title": "PlayReady (dynamic/no token) - Live (Smooth Ingest)",
-      "src": "//b028.wpc.azureedge.net/80B028/Samples/859b335f-eebc-4ff1-ac03-98e9b614e2c1/0cc164eb-193e-48cb-bc6b-041cc28307e4.ism/manifest",
+      "src": "//ampdemolive-usct.streaming.media.azure.net/ee87b195-e441-4358-a6de-d188a2ef66f7/99bb8b58-dbb7-4901-9f92-c43648e92837.ism/manifest",
       "format": "auto",
       "aes": false,
       "aestoken": "",
