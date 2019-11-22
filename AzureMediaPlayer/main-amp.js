@@ -516,9 +516,9 @@ var initialize = function () {
 
         //Setup UI for Advanced: Wall Clock Time Display
         $("input[name='wallclockdisplay'][value='enabled']").prop('checked', config.wallClockDisplayEnabled);
-        if(config.wallClockDisplayEnabled){
+        if(config.wallClockDisplayEnabled) {
             showWallClockDisplaySettings();
-        }else{
+        } else {
             hideWallClockDisplaySettings();
         }
         $("input[name='wallclockdisplay'][value='useLocalTimeZone']").prop('checked', config.useLocalTimeZone);
@@ -756,7 +756,7 @@ var appendSourceUrl = function (url) {
         myOptions.imsc1CaptionsSettings = config.imsc1Captions;
     }
 
-    if (config.wallClockDisplayEnabled){
+    if (config.wallClockDisplayEnabled) {
         myOptions.wallClockTimeDisplaySettings = {enabled: true, useLocalTimeZone: config.useLocalTimeZone, timezone: config.wallClockDisplayTimezone, controlBar12HourFormat: config.controlBar12Hour}
     }
 
@@ -1341,9 +1341,11 @@ var hideWallClockDisplaySettings = function(){
         $("#useLocalTimeZoneDiv").remove();
         $("#timezoneDiv").remove();
         $("#controlBar12HourDiv").remove();
-        for(var i=0; i<4; i++){
-            $("#wallClockDisplaySettingsRow").find("br")[0].remove();
-        }
+        // remove 4 break tags
+        $("#wallClockDisplaySettingsRow").find("br")[0].remove();
+        $("#wallClockDisplaySettingsRow").find("br")[0].remove();
+        $("#wallClockDisplaySettingsRow").find("br")[0].remove();
+        $("#wallClockDisplaySettingsRow").find("br")[0].remove();
     }
 }
 
