@@ -11,7 +11,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "On Demand [Azure Promo]",
@@ -25,7 +26,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "Live (Smooth Ingest) - 24x7",
@@ -39,7 +41,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "DRM (PlayReady/Widevine) - On Demand [Big Buck Bunny]",
@@ -53,7 +56,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "DRM (PlayReady/Widevine) - Live (Smooth Ingest)",
@@ -67,7 +71,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "AES (no token) - On Demand [Sintel]",
@@ -81,7 +86,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "AES (SWT token) - On Demand [Big Buck Bunny Trailer]",
@@ -95,7 +101,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "AES (JWT token) - On Demand [Tears of Steel Teaser]",
@@ -109,7 +116,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "AES (no token) - Live (Smooth Ingest)",
@@ -123,7 +131,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "PlayReady (static/no token) - On Demand [Tears of Steel Teaser]",
@@ -137,7 +146,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "PlayReady (dynamic/no token) - On Demand [Sintel Trailer]",
@@ -151,7 +161,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "PlayReady (dynamic/SWT token) - On Demand [Big Buck Bunny]",
@@ -165,7 +176,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "PlayReady (dynamic/no token) - Live (Smooth Ingest)",
@@ -179,7 +191,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "Subtitles (WebVTT) - On Demand [Tears of Steel]",
@@ -193,7 +206,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "English,en,//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-en.vtt;Spanish,es,//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-es.vtt;French,fr,//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-fr.vtt;Italian,it,//amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-it.vtt",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "Dynamic Manifest - On Demand [Elephant's Dream]",
@@ -207,7 +221,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "Multi-Audio - On Demand [Elephant's Dream]",
@@ -221,7 +236,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "Multi-Audio - On Demand [Sintel]",
@@ -235,7 +251,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "Dolby Digital Plus - On Demand [Silent]",
@@ -249,7 +266,8 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
   {
       "title": "4K - On Demand [Llama Drama]",
@@ -263,36 +281,39 @@
       "widevinetoken": "",
       "captions": "",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
   },
-    {
-        "title": "Progressive MP4 [Azure Promo]",
-        "src": "//amssamples.streaming.mediaservices.windows.net/2e91931e-0d29-482b-a42b-9aadc93eb825/AzurePromo.mp4",
-        "format": "mp4",
-        "aes": false,
-        "aestoken": "",
-        "playready": false,
-        "playreadytoken": "",
-        "widevine": false,
-        "widevinetoken": "",
-        "captions": "",
-        "subtitles": "",
-        "poster": ""
-    },
-      {
-          "title": "Progressive MP3 [Elephant's Dream]",
-          "src": "//amssamples.streaming.mediaservices.windows.net/bddc6db2-3f95-4137-872a-b62a6c19e891/ElephantsDreamAudio.mp3",
-          "format": "audio/mp3",
-          "aes": false,
-          "aestoken": "",
-          "playready": false,
-          "playreadytoken": "",
-          "widevine": false,
-          "widevinetoken": "",
-          "captions": "",
-          "subtitles": "",
-          "poster": ""
-      },
+  {
+      "title": "Progressive MP4 [Azure Promo]",
+      "src": "//amssamples.streaming.mediaservices.windows.net/2e91931e-0d29-482b-a42b-9aadc93eb825/AzurePromo.mp4",
+      "format": "mp4",
+      "aes": false,
+      "aestoken": "",
+      "playready": false,
+      "playreadytoken": "",
+      "widevine": false,
+      "widevinetoken": "",
+      "captions": "",
+      "subtitles": "",
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
+  },
+  {
+      "title": "Progressive MP3 [Elephant's Dream]",
+      "src": "//amssamples.streaming.mediaservices.windows.net/bddc6db2-3f95-4137-872a-b62a6c19e891/ElephantsDreamAudio.mp3",
+      "format": "audio/mp3",
+      "aes": false,
+      "aestoken": "",
+      "playready": false,
+      "playreadytoken": "",
+      "widevine": false,
+      "widevinetoken": "",
+      "captions": "",
+      "subtitles": "",
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
+  },
   {
       "title": "Indexer Demo [Microsoft HoloLens Demo]",
       "src": "//nimbuspm.origin.mediaservices.windows.net/aed33834-ec2d-4788-88b5-a4505b3d032c/Microsoft's HoloLens Live Demonstration.ism/manifest",
@@ -305,6 +326,22 @@
       "widevinetoken": "",
       "captions": "Indexer,en,http://nimbuspm.origin.mediaservices.windows.net/aed33834-ec2d-4788-88b5-a4505b3d032c/pp4_blog_demo.vtt",
       "subtitles": "",
-      "poster": ""
+      "poster": "",
+      "wallClockTimeDisplayEnabled": false
+  },
+  {
+      "title": "Wall Clock Time Display Demo [Live2VOD Camera Footage]",
+      "src": "//amssamples.streaming.mediaservices.windows.net/8ee51b46-181b-47fe-b397-0f9da9a65e32/00170c28-e4f4.ism/manifest",
+      "format": "auto",
+      "aes": false,
+      "aestoken": "",
+      "playready": false,
+      "playreadytoken": "",
+      "widevine": false,
+      "widevinetoken": "",
+      "captions": "",
+      "subtitles": "",
+      "poster": "",
+      "wallClockTimeDisplayEnabled": true
   }
 ]
