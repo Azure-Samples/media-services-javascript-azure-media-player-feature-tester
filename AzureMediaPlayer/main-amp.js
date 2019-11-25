@@ -43,7 +43,11 @@ var config = {
     sessionID: "",
     logo: true,
     theme: "amp-default",
-    ampVersion: ""
+    ampVersion: "",
+    wallClockDisplayEnabled: false,
+    useLocalTimeZone: false,
+    wallClockDisplayTimezone: 0,
+    controlBar12Hour: true
 };
 
 function generateInstanceId() {
@@ -361,6 +365,22 @@ var initialize = function () {
         config.poster = decodeURIComponent(queryString.poster).replace(/\+/g, " ");
         config.advanced = true;
     }
+    if (queryString.wallClockDisplayEnabled) {
+        if(queryString.wallClockDisplayEnabled == "true"){
+            config.advanced = true;
+            config.wallClockDisplayEnabled = true;
+
+            if(queryString.useLocalTimeZone == "true"){
+                config.useLocalTimeZone = true;
+            }
+            if(queryString.wallClockDisplayTimezone !== "0"){
+                config.wallClockDisplayTimezone = queryString.wallClockDisplayTimezone;
+            }
+            if(queryString.controlBar12Hour == "false"){
+                config.controlBar12Hour = false;
+            }
+        }
+    }
     if (queryString.wm) {
         if (queryString.wm == 0) {
             config.logo = false;
@@ -493,6 +513,18 @@ var initialize = function () {
         }
         //Setup UI for Advanced: Protection
         $("#poster-url").val(config.poster);
+
+        //Setup UI for Advanced: Wall Clock Time Display
+        $("input[name='wallclockdisplay'][value='enabled']").prop('checked', config.wallClockDisplayEnabled);
+        if(config.wallClockDisplayEnabled) {
+            showWallClockDisplaySettings();
+        } else {
+            hideWallClockDisplaySettings();
+        }
+        $("input[name='wallclockdisplay'][value='useLocalTimeZone']").prop('checked', config.useLocalTimeZone);
+        $("input[name='wallclockdisplay'][value='controlBar12Hour']").prop('checked', config.controlBar12Hour);
+        $("#wallClockDisplayTimezone").val(config.wallClockDisplayTimezone);
+        $("#wallClockDisplayTimezone").attr('disabled', config.useLocalTimeZone);
     }
 };
 
@@ -651,6 +683,12 @@ var appendSourceUrl = function (url) {
                 'eventsToTrack': ['playerConfig', 'loaded', 'playTime', 'percentsPlayed', 'start', 'end', 'play', 'pause', 'error', 'buffering', 'fullscreen', 'bitrate'],
                 'debug': false
             }
+        },
+        wallClockDisplaySettings: {
+            enabled: false,
+            useLocalTimeZone: false,
+            timezone: 0,
+            controlBar12HourFormat: true
         }
     };
 
@@ -716,6 +754,10 @@ var appendSourceUrl = function (url) {
 
     if (config.imsc1Captions.length > 0) {
         myOptions.imsc1CaptionsSettings = config.imsc1Captions;
+    }
+
+    if (config.wallClockDisplayEnabled) {
+        myOptions.wallClockTimeDisplaySettings = {enabled: true, useLocalTimeZone: config.useLocalTimeZone, timezone: config.wallClockDisplayTimezone, controlBar12HourFormat: config.controlBar12Hour}
     }
 
     //add axinom header for Axinom Widevine content
@@ -883,6 +925,10 @@ var updateConfig = function () {
     config.poster = "";
     config.cea708captions = false;
     config.imsc1Captions = [];
+    config.wallClockDisplayEnabled = false;
+    config.useLocalTimeZone = false;
+    config.wallClockDisplayTimezone = 0;
+    config.controlBar12Hour = true;
 
     if ($("input[name='advanced']").is(':checked')) {
         config.advanced = true;
@@ -947,6 +993,17 @@ var updateConfig = function () {
             if (config.playreadytoken == config.widevinetoken) {
                 config.token = config.playreadytoken;
             }
+        }
+
+        if ($("input[name='wallclockdisplay'][value='enabled']").is(':checked')) {
+            config.wallClockDisplayEnabled = true;
+            if ($("input[name='wallclockdisplay'][value='useLocalTimeZone']").is(':checked')) {
+                config.useLocalTimeZone = true;
+            }
+            if (!($("input[name='wallclockdisplay'][value='controlBar12Hour']").is(':checked'))) {
+                config.controlBar12Hour = false;
+            }
+            config.wallClockDisplayTimezone = parseInt($("#wallClockDisplayTimezone").val());
         }
     }
 }
@@ -1053,6 +1110,26 @@ var updateParamsInAddressURL = function () {
                         urlParams += "&widevinetoken=" + encodeURIComponent(config.widevinetoken).replace(/'/g, "%27").replace(/"/g, "%22");
                     }
                 }
+            }
+        }
+        if(config.wallClockDisplayEnabled == true){
+            urlParams += "&wallClockDisplayEnabled=true";
+            if(config.useLocalTimeZone == true){
+                urlParams += "&useLocalTimeZone=true";
+            }
+            if(config.wallClockDisplayTimezone){
+                if(!isNaN(config.wallClockDisplayTimezone)){
+                    if(config.wallClockDisplayTimezone < -12){
+                        config.wallClockDisplayTimezone = -12;
+                    }
+                    if(config.wallClockDisplayTimezone > 14){
+                        config.wallClockDisplayTimezone = 14;
+                    }
+                    urlParams += "&wallClockDisplayTimezone="+config.wallClockDisplayTimezone.toString();
+                }
+            }
+            if(config.controlBar12Hour == false){
+                urlParams += "&controlBar12Hour=false";
             }
         }
         if (config.poster != "") {
@@ -1235,6 +1312,43 @@ var removeImsc1 = function () {
     }
 }
 
+var showWallClockDisplaySettings = function(){
+    if (document.getElementById("wallClockDisplaySettingsRow") && !document.getElementById("useLocalTimeZoneDiv")) {
+        $("#wallClockDisplaySettingsRow").append('<div class="col-sm-4" style="padding-top:3.4px" id="useLocalTimeZoneDiv">'
+                                                +   '<input type="checkbox" name="wallclockdisplay" value="useLocalTimeZone"> Use Local Time Zone '
+                                                + '</div>'
+                                                + '<div class="col-sm-6" id="timezoneDiv">'
+                                                +   '<input style="width:100%;display:inline-block" type="text" class="input-sm form-control" id="wallClockDisplayTimezone" placeholder="Or enter custom timezone (E.g. -8 for PST) range is [-12, 14]">'
+                                                + '</div><br /><br />'
+                                                + '<div class="col-sm-4 col-sm-offset-2" style="padding-top:3.4px" id="controlBar12HourDiv">'
+                                                + '<input type="checkbox" name="wallclockdisplay" value="controlBar12Hour" checked> Control Bar 12-hour Format'
+                                                + '</div><br /><br />');
+
+        //disable timezone textbox if local timezone checked
+        $("input[name='wallclockdisplay'][value='useLocalTimeZone']").change(function () {
+            if ($(this).is(':checked')) {
+                $("#wallClockDisplayTimezone").val("");
+                $("#wallClockDisplayTimezone").attr("disabled", true);
+            } else {
+                $("#wallClockDisplayTimezone").attr("disabled", false);
+            }
+        });
+    }
+}
+
+var hideWallClockDisplaySettings = function(){
+    if(document.getElementById("useLocalTimeZoneDiv")){
+        $("#useLocalTimeZoneDiv").remove();
+        $("#timezoneDiv").remove();
+        $("#controlBar12HourDiv").remove();
+        // remove 4 break tags
+        $("#wallClockDisplaySettingsRow").find("br")[0].remove();
+        $("#wallClockDisplaySettingsRow").find("br")[0].remove();
+        $("#wallClockDisplaySettingsRow").find("br")[0].remove();
+        $("#wallClockDisplaySettingsRow").find("br")[0].remove();
+    }
+}
+
 var updateSampleList = function () {
     if (document.getElementById("selectSource")) {
         if (jsonSamplesList.length > 0) {
@@ -1252,6 +1366,7 @@ var updateSampleList = function () {
                 .attr("captions", jsonSamplesList[i].captions)
                 .attr("subtitles", jsonSamplesList[i].subtitles)
                 .attr("poster", jsonSamplesList[i].poster)
+                .attr("wallClockTimeDisplayEnabled", jsonSamplesList[i].wallClockTimeDisplayEnabled)
                 .text(jsonSamplesList[i].title));
             }
         } else {
@@ -1820,6 +1935,8 @@ var setup = function () {
                     removeTrack();
                 }
                 $("#poster-url").val("");
+                $("input[name='wallclockdisplay'][value='enabled']").prop('checked', false);
+                hideWallClockDisplaySettings();
 
                 //set values based on selected stream
                 if (document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("aes") == "true") {
@@ -1893,6 +2010,11 @@ var setup = function () {
                         $("#tracklang" + (trackNumber - 1)).val(subtitlespair[1]);
                         $("#trackurl" + (trackNumber - 1)).val(subtitlespair[2]);
                     }
+                }
+
+                if(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("wallClockTimeDisplayEnabled") == "true"){
+                    $("input[name='wallclockdisplay'][value='enabled']").prop('checked', true);
+                    showWallClockDisplaySettings();
                 }
 
             });
@@ -2037,6 +2159,15 @@ var setup = function () {
             //add imsc1 captions
             $("#addImsc1").click(function (e) {
                 addImsc1();
+            });
+
+            //show wall clock settings if enabled
+            $("input[name='wallclockdisplay'][value='enabled']").change(function () {
+                if ($(this).is(':checked')) {
+                    showWallClockDisplaySettings();
+                } else {
+                    hideWallClockDisplaySettings();
+                }
             });
         }
 
