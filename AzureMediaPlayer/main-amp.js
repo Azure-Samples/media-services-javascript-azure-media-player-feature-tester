@@ -2013,6 +2013,9 @@ var setup = function () {
                 }
 
                 if(document.getElementById("selectSource").options[document.getElementById("selectSource").selectedIndex].getAttribute("wallClockTimeDisplayEnabled") == "true"){
+                    $("input[name='advanced'][value='advanced']").prop('checked', true);
+                    $("#advancedOptions").show();
+                    $("#urlHelp").hide();
                     $("input[name='wallclockdisplay'][value='enabled']").prop('checked', true);
                     showWallClockDisplaySettings();
                 }
