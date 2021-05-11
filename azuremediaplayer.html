@@ -31,6 +31,7 @@
     <meta name="twitter:player:stream" content="https://amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest(format=m3u8-aapl)">
     <meta name="twitter:player:stream:content_type" content="video/mp4">
     <!-- Twitter card metadata (END)-->
+   
     <!--Bootstrap CSS -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/normalize.css">
@@ -38,7 +39,7 @@
 
     <!--Useful Libraries-->
     <script src="assets/js/vendor/modernizr-2.7.1.min.js"></script>
-    <script src="assets/js/vendor/jquery-1.11.2.min.js"></script>
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendor/bootstrap.min.js"></script>
 
     <!--Determine what version of AMP to Load-->
@@ -167,7 +168,7 @@
                         <li class="active menuitem" id="playersetup-button"><a><span class="glyphicon glyphicon-cog"></span> Setup</a></li>
                         <li class="menuitem" id="playerdiagnostics-button"><a><span class="glyphicon glyphicon-stats"></span> Diagnostics</a></li>
                         <!--<li class="menuitem" id="shareurl-button"><a><span class="glyphicon glyphicon-globe"></span> Share URL</a></li>-->
-                        <li role="presentation" class="dropdown" id="code-button">
+                        <li role="presentation" class="dropdown hidden" id="code-button" >
                             <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <span class="glyphicon glyphicon-console"></span> Code <span class="caret"></span>
                             </a>

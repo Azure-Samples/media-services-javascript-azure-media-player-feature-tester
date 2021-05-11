@@ -2022,6 +2022,7 @@ var setup = function () {
 
             });
 
+
             $(".nav-pills .menuitem").click(function (e) {
                 $('#playersetup').hide();
                 $('#playerdiagnostics').hide();
@@ -2040,6 +2041,9 @@ var setup = function () {
                 $('#' + buttonId).addClass("active");
                 if (buttonId == "playercode-button" || buttonId == "embedcode-button" || buttonId == "shareurl-button") {
                     $('#code-button').css("background-color", "#eee");
+                }
+                else{
+                    $('#code-button').css("background-color", "#fff");
                 }
 
                 $('#' + buttonId.split("-button")[0]).show();
